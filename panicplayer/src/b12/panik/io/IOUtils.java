@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: IOUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -11,6 +11,10 @@ import java.net.URL;
 import javax.media.Manager;
 import javax.media.NoPlayerException;
 import javax.media.Player;
+import javax.sound.sampled.*;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * This class provides several methods for calls to the IO. Methods to open
@@ -47,5 +51,23 @@ public class IOUtils {
      */
     public static Player getSimplePlayer(URL url) throws NoPlayerException, IOException {
         return Manager.createPlayer(url);
+    }
+
+    /**
+     * Creates a track from an URL.
+     * @param url the url to load the track from.
+     * @return the track which is to be loaded.
+     * @throws IOException if the audio file at the specified url is not
+     *          supported, or the url could not be read.
+     */
+    public static UrlTrack createTrack(URL url) throws IOException {
+        try {
+            AudioInputStream stream = AudioSystem.getAudioInputStream(url);
+            AudioFormat f = stream.getFormat();
+            double seconds = stream.getFrameLength() / f.getFrameRate();
+            return new UrlTrack(url, 0, seconds, f);
+        } catch (UnsupportedAudioFileException e) {
+            throw new IOException(e.getMessage());
+        }
     }
 }

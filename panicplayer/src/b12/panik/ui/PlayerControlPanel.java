@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -12,6 +12,8 @@ import javax.media.*;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+
+import b12.panik.util.Logging;
 
 /**
  * A panel that provides controls for a simple audio player.
@@ -36,6 +38,7 @@ public class PlayerControlPanel extends JPanel {
      */
     public PlayerControlPanel(Player p) {
         super(new BorderLayout());
+        setOpaque(false);
         this.player = p;
         infoLabel = new JLabel();
         infoLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -74,7 +77,7 @@ public class PlayerControlPanel extends JPanel {
         ControllerListener listener = new ControllerAdapter() {
 
            public void prefetchComplete(PrefetchCompleteEvent e) {
-              System.out.println("\n\tplayer prefetched\n");
+               Logging.fine("Player prefetched. Updating components");
                 // get visual component and control component from player
                 final Component vc = player.getVisualComponent();
                 removeCenterComponent();
@@ -121,7 +124,7 @@ public class PlayerControlPanel extends JPanel {
     private void removePlayerComponents() {
         removeCenterComponent();
         removeLowerComponent();
-        infoLabel.setText("No player loaded.");
+        infoLabel.setText("No main track loaded.");
         centerComponent = infoLabel;
         add(centerComponent, BorderLayout.CENTER);
     }

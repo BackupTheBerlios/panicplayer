@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Resizer.java
 //                created: 24.12.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -99,7 +99,7 @@ public class Resizer extends MouseAdapter implements MouseMotionListener {
     /** Sets the bounds for the frame, respecting its minimum size. */
     private void setBounds(Rectangle r) {
         Dimension minBounds = component.getMinimumSize();
-        if (r.width > minBounds.width && r.height > minBounds.height) {
+        if (r.width >= minBounds.width && r.height >= minBounds.height) {
             component.setBounds(r);
         }
     }

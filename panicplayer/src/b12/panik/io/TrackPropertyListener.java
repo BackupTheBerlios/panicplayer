@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ComparatorTest.java
 //                created: 10.01.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -19,7 +19,9 @@ public abstract class TrackPropertyListener implements TrackListener {
         // do nothing ... implement in subclass
     }
     
-    public void stateHasChanged(Track t) {
-        // do nothing ... implement in subclass
-    }
+    /**
+     * This informs the listener for general updates.
+     * @param t the track which has changed.
+     */
+    public abstract void stateHasChanged(Track t);
 }

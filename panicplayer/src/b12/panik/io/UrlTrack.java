@@ -1,31 +1,31 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UrlTrack.java
 //                created: 10.01.2004
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
 import java.io.File;
+import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 
-import javax.media.Buffer;
-import javax.media.Format;
-import javax.media.Time;
-import javax.media.Track;
-import javax.media.TrackListener;
+import javax.media.*;
+import javax.media.format.AudioFormat;
 
 /**
  * @author Teo
  */
-public class UrlTrack implements Track {
-    private static final double NANOS_TO_MILLIS = 1.0E-6;
-    private static final double MILLIS_TO_NANOS = 1.0E6;
-    
+public class UrlTrack implements Track, Serializable {
+    private static final double MILLIS_TO_SECONDS = 1.0E-3;
+
     //tracks url
     private URL url;
     private Time duration;
+    private Time start;
+    private AudioFormat format;
 
-	//start time in nanosecond
+    //start time in nanosecond
     private long startTime;
     private boolean enabled;
     private TrackPropertyListener listener;
@@ -37,21 +37,38 @@ public class UrlTrack implements Track {
      */
     public UrlTrack(URL wantedUrl, long wantedBegin) {
         url = wantedUrl;
-        startTime=wantedBegin;
+        // convert from millis to nanos
+        startTime = wantedBegin;
+        start = new Time(wantedBegin * MILLIS_TO_SECONDS);
+        duration = new Time(0);
+        // by default enabled
+        enabled = true;
+        format = new AudioFormat("no format");
     }
 
-	/**
-	 * Creates a new instance of <code>UrlTrack</code>.
-	 * @param file the File for this track.
-	 * @param wantedBegin the begin in milli seconds.
-	 */
-	public UrlTrack(File file, long wantedBegin) {
-		try{
-			this=new UrlTrack(file.toURL(),wantedBegin);
-		} catch (Exception e) {
-			System.out.println("unable to become url from file"); 
-		}
- 	}
+    /**
+     * Creates a new instance of <code>UrlTrack</code>.
+     * @param file the File for this track.
+     * @param wantedBegin the begin in milli seconds.
+     * @throws MalformedURLException if the file.toURL() method fails.
+     */
+    public UrlTrack(File file, long wantedBegin) throws MalformedURLException {
+        this(file.toURL(), wantedBegin);
+    }
+
+    /**
+     * Creates a new instance of <code>UrlTrack</code>.
+     * @param url the url.
+     * @param start the start in milliseconds.
+     * @param seconds the duration in seconds.
+     * @param format the format.
+     */
+    public UrlTrack(URL url, int start, double seconds, javax.sound.sampled.AudioFormat format) {
+        this(url, start);
+        this.format = new AudioFormat(format.getEncoding().toString(), format.getSampleRate(),
+                format.getSampleSizeInBits(), format.getChannels());
+        duration = new Time(seconds);
+    }
 
     /**
      * Returns the begin in milliseconds.
@@ -105,8 +122,29 @@ public class UrlTrack implements Track {
                 public void readHasBlocked(Track t) {
                     listener.readHasBlocked(t);
                 }
+
+                /** @see TrackPropertyListener#stateHasChanged(Track) */
+                public void stateHasChanged(Track t) {
+                    // do nothing
+                }
             };
         }
+    }
+
+    /**
+     * Sets the start time for this track.
+     * @param seconds the new start time.
+     */
+    public void setStartTime(double seconds) {
+        if (seconds > 0) {
+            startTime = (long) seconds * 1000;
+            start = new Time(seconds);
+        }
+    }
+
+    /** @see javax.media.Track#getFormat() */
+    public Format getFormat() {
+        return format;
     }
 
     /*
@@ -115,18 +153,12 @@ public class UrlTrack implements Track {
      *
      */
 
-	/**
-	 * Returns nothing.
-	 * @return nothing.
-	 */
-	public Time getStartTime() {
-		return new Time(startTime);
-	} 
-
-    /** @see javax.media.Track#getFormat() */
-    public Format getFormat() {
-        // TODO implement if needed
-        return null;
+    /**
+     * Returns nothing.
+     * @return nothing.
+     */
+    public Time getStartTime() {
+        return start;
     }
 
     /** @see javax.media.Track#readFrame(javax.media.Buffer) */

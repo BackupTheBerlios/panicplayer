@@ -1,14 +1,16 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 
+import b12.panik.util.Logging;
 import b12.panik.util.TimeFormatter;
 
 /**
@@ -29,7 +31,7 @@ public class InputProperty {
     // multipy sound file
     private int multiply = 1;
     // address
-    private URI address;
+    private URL address;
     // filename
     private File file;
 
@@ -41,7 +43,11 @@ public class InputProperty {
      * @param multiply the multiplier.
      */
     public InputProperty(URI address, File file, long offset, int multiply) {
-        this.address = address;
+        try {
+            this.address = address.toURL();
+        } catch (MalformedURLException e) {
+            Logging.warning("Address for input could not be resolved.", e);
+        }
         this.offset = offset;
         this.multiply = multiply;
         this.file = file;
@@ -150,14 +156,14 @@ public class InputProperty {
      * Returns the address.
      * @return the address.
      */
-    public URI getAddress() {
+    public URL getAddress() {
         return address;
     }
     /**
      * Sets the address.
      * @param address The address.
      */
-    public void setAddress(URI address) {
+    public void setAddress(URL address) {
         this.address = address;
     }
     /**

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -11,7 +11,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.*;
-import javax.media.control.TrackControl;
 import javax.media.protocol.DataSource;
 
 import b12.panik.player.MixEffect;
@@ -21,7 +20,7 @@ import b12.panik.util.Logging;
  * Input class for generic media.
  * @author kariem
  */
-public class MediaInput implements ControllerListener {
+public class MediaInput {
 
    // register effect plugin
    static {
@@ -49,11 +48,12 @@ public class MediaInput implements ControllerListener {
     * Reads from a given <code>URL</code> and returns an associated player.
     *
     * @param url the url from which is read.
+    * @param listener the controller listener.
     * @return a realized player for the source url.
     * @throws MediaIOException if no <code>Player</code> can be found or a
     *          problem was encountered while connecting to <code>url</code>.
     */
-   public Player read(URL url) throws MediaIOException {
+   public Player read(URL url, ControllerListener listener) throws MediaIOException {
       Logging.fine(getClass().getName(), "read(URL)", "Protocol: " + url.getProtocol());
       MediaLocator locator = new MediaLocator(url);
       if (locator == null) {
@@ -62,7 +62,7 @@ public class MediaInput implements ControllerListener {
       // Create a player for this rtp session
       try {
          Player p = Manager.createPlayer(locator);
-         p.addControllerListener(this);
+         p.addControllerListener(listener);
          return p;
       } catch (NoPlayerException e) {
          throw new MediaIOException("No player can be found.", e);
@@ -71,6 +71,13 @@ public class MediaInput implements ControllerListener {
       }
    }
 
+   /**
+    * Reads from a data source.
+    * @param ds the data source.
+    * @return a corresponding player.
+    * @throws MediaIOException if an error occured when trying to connect to
+    *          the source, or no player could be created.
+    */
    public Player read(DataSource ds) throws MediaIOException {
       try {
          Player p = Manager.createPlayer(ds);
@@ -82,8 +89,15 @@ public class MediaInput implements ControllerListener {
       }
    }
 
-   //teo
-   public Processor readProcessor(URL url) throws MediaIOException {
+   /**
+    * Creates a processor from an URL.
+    * @param url the url.
+    * @param listener the controller listener.
+    * @return a processor.
+    * @throws MediaIOException if an error occured when trying to connect to
+    *          the source, or no processor could be created.
+    */
+   public Processor readProcessor(URL url, ControllerListener listener) throws MediaIOException {
       Logging.fine(getClass().getName(), "read(URL)", "Protocol: " + url.getProtocol());
       MediaLocator locator = new MediaLocator(url);
       if (locator == null) {
@@ -92,7 +106,7 @@ public class MediaInput implements ControllerListener {
       // Create a player for this rtp session
       try {
          Processor p = Manager.createProcessor(locator);
-         p.addControllerListener(this);
+         p.addControllerListener(listener);
          p.configure();
          return p;
       } catch (NoProcessorException e) {
@@ -102,67 +116,22 @@ public class MediaInput implements ControllerListener {
       }
    }
 
-   //fin teo
-   //teo
-   public Processor readProcessor(File f) throws MediaIOException {
-      try {
-         return readProcessor(f.toURL());
-      } catch (MalformedURLException e) {
-         throw new MediaIOException("Path to file could not be parsed as URL.", e);
-      }
-   }
-
-   //fin teo
    /**
-    * Reads a file.
+    * Creates a processor from a file.
     * @param f the file.
-    * @return the player for reading the file.
-    * @throws MediaIOException if the file could not be parsed.
+    * @param listener the controller listener.
+    * @return a processor.
+    * @throws MediaIOException if an error occured when trying to connect to
+    *          the source, or no processor could be created.
     */
-   public Player read(File f) throws MediaIOException {
+   public Processor readProcessor(File f, ControllerListener listener) throws MediaIOException {
       try {
-         return read(f.toURL());
+         return readProcessor(f.toURL(), listener);
       } catch (MalformedURLException e) {
          throw new MediaIOException("Path to file could not be parsed as URL.", e);
       }
    }
 
-   /** @see ControllerListener#controllerUpdate(ControllerEvent) */
-   public void controllerUpdate(ControllerEvent event) {
-      // TODO handle controller events
-      // - payload change should result in a new player to be generated
-      //   => inform receiver of created player of a payload change
-      // - (optional) handle new receive stream
-      // in configured state add mixeffect codec for processing
-
-      System.out.println(event.toString());
-
-      if (event instanceof ConfigureCompleteEvent) {
-
-         Processor p = (Processor) event.getSource();
-         // So I can use it as a player.
-         p.setContentDescriptor(null);
-
-         TrackControl[] trackControls = p.getTrackControls();
-
-         /*
-          Format format = MixEffect.FORMATS_INPUT[0];
-          if (!setTrackFormat(trackControls, format)) {
-          Logging.warning("Could not transcode any track to " + format);
-          }
-          */
-         final Codec[] codecChain = new Codec[]{new MixEffect()};
-         System.out.println("number of track controls: " + trackControls.length);
-         for (int i = 0; i < trackControls.length; i++) {
-            try {
-               System.out.println(trackControls[i].getFormat());
-               trackControls[i].setCodecChain(codecChain);
-            } catch (UnsupportedPlugInException e) {
-               Logging.warning("Not supported plugin", e);
-            }
-         }
-      }
-   }
 
    /*
    boolean setTrackFormat(TrackControl[] trackControls, Format format) {
@@ -171,7 +140,6 @@ public class MediaInput implements ControllerListener {
       Format f;
 
       for (int i = 0; i < trackControls.length; i++) {
-         // TODO set codec mixeffect
          //teo:
          try {
             Format essai = trackControls[i].getFormat();

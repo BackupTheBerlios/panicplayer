@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuFile.java
 //                created: 29.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -34,7 +34,7 @@ public class MenuFile extends JMenu {
     public MenuFile() {
         super("File");
 
-        itemOpen = new JMenuItem("Open File");
+        itemOpen = new JMenuItem("Load Main Track...");
         itemOpen.setAccelerator(KeyStroke.getKeyStroke("control O"));
         itemOpen.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UIUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -53,6 +53,28 @@ public class UIUtils {
      */
     public static final void openExceptionDialog(Component parent, Throwable t) {
         openExceptionDialog(parent, t, t.getMessage());
+    }
+    
+    /**
+     * Returns the background color of the given component. If the component is
+     * transparent (<code>isOpaque() == true</code>), the background color of
+     * the parent component is returned.
+     * 
+     * @param c the coponent in question.
+     * @return the color of the given component, or the background color of
+     *          the first parent component which is opaque. This method returns
+     *          <code>null</code> if neither the component nor any of its 
+     *          parent components are opaque.
+     */
+    public static Color getBackground(Component c) {
+        if (c.isOpaque()) {
+            return c.getBackground();
+        }
+        final Container parent = c.getParent();
+        if (parent != null) {
+            return getBackground(parent);
+        }
+        return null;
     }
 
     /**

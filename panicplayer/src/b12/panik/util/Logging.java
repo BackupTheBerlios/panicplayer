@@ -1,11 +1,11 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Logger.java
 //                created: 26.10.2003
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
-import java.io.File;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.logging.*;
@@ -71,10 +71,8 @@ public class Logging {
     /**
      * Adds a new file for logging.
      *
-     * @param filename
-     *            the file name.
-     * @param level
-     *            the log level.
+     * @param filename the file name.
+     * @param level the log level.
      */
     public static void addLogFile(String filename, Level level) {
         try {
@@ -94,6 +92,27 @@ public class Logging {
         }
     }
 
+    /**
+     * Attaches a log stream.
+     * @param os the output stream to attach.
+     */
+    public static void attachLogStream(final OutputStream os) {
+        Handler handler = new PrintStreamHandler(os);
+        logger.addHandler(handler);
+    }
+    
+    /**
+     * Returns a reader that reads from the logging.
+     * @return a reader.
+     * @throws IOException if an error occured in the unterlying io.
+     */
+    public static Reader getReader() throws IOException {
+        PipedOutputStream out = new PipedOutputStream();
+        attachLogStream(out);
+        InputStreamReader r = new InputStreamReader(new BufferedInputStream(new PipedInputStream(out)));
+        return r;
+    }
+    
     /**
      * Returns the current log file.
      * @return the current log file.
@@ -117,8 +136,7 @@ public class Logging {
      * Creates a new logfile with the given file name. The level of logging
      * will be LVL_FINE by default.
      *
-     * @param filename
-     *            the name of the log file.
+     * @param filename the name of the log file.
      * @see #addLogFile(String)
      */
     public static void addLogFile(String filename) {
@@ -128,11 +146,9 @@ public class Logging {
     /**
      * Sets the application-wide logging level. Default is INFO.
      *
-     * @param newLevel
-     *            the new logging level.
-     * @throws SecurityException
-     *             if a security manager exists and if the caller does not have
-     *             LoggingPermission("control").
+     * @param newLevel the new logging level.
+     * @throws SecurityException if a security manager exists and if the caller
+     *          does not have LoggingPermission("control").
      */
     public static void setLevel(byte newLevel) throws SecurityException {
         logger.setLevel(getLevel(newLevel));
@@ -148,8 +164,7 @@ public class Logging {
     /**
      * Write debug message to the logger.
      *
-     * @param msg
-     *            the message.
+     * @param msg the message.
      */
     public static void fine(String msg) {
         logger.fine(msg);
@@ -162,8 +177,7 @@ public class Logging {
      *            the source class of the logging message.
      * @param sourceMethod
      *            the source method of the logging message.
-     * @param msg
-     *            the message to be logged.
+     * @param msg the message to be logged.
      */
     public static void fine(String sourceClass, String sourceMethod, String msg) {
         logger.logp(getLevel(LVL_FINE), sourceClass, sourceMethod, msg);
@@ -172,8 +186,7 @@ public class Logging {
     /**
      * Write config message to the logger.
      *
-     * @param msg
-     *            the message.
+     * @param msg the message.
      */
     public static void config(String msg) {
         logger.config(msg);
@@ -182,8 +195,7 @@ public class Logging {
     /**
      * Write info message to the logger.
      *
-     * @param msg
-     *            the message.
+     * @param msg the message.
      */
     public static void info(String msg) {
         logger.info(msg);
@@ -192,8 +204,7 @@ public class Logging {
     /**
      * Write warning message to the logger.
      *
-     * @param msg
-     *            the message.
+     * @param msg the message.
      */
     public static void warning(String msg) {
         logger.warning(msg);
@@ -202,21 +213,18 @@ public class Logging {
     /**
      * Write warning message to the logger and include throwable.
      *
-     * @param msg
-     *            the message.
-     * @param thrown
-     *            the throwable that was thrown
+     * @param msg the message.
+     * @param thrown the throwable that was thrown
      */
     public static void warning(String msg, Throwable thrown) {
         logger.log(getLevel(LVL_WARNING), msg, thrown);
-        thrown.printStackTrace();
+        //thrown.printStackTrace();
     }
 
     /**
      * Write extremely important message to the logger.
      *
-     * @param msg
-     *            the message.
+     * @param msg the message.
      */
     public static void severe(String msg) {
         logger.severe(msg);
@@ -225,10 +233,8 @@ public class Logging {
     /**
      * Write extremely important message to the logger and include throwable.
      *
-     * @param msg
-     *            the message.
-     * @param thrown
-     *            the throwable that was thrown
+     * @param msg the message.
+     * @param thrown the throwable that was thrown
      */
     public static void severe(String msg, Throwable thrown) {
         logger.log(getLevel(LVL_SEVERE), msg, thrown);
@@ -237,12 +243,9 @@ public class Logging {
     /**
      * Delegate for logger.
      *
-     * @param sourceClass
-     *            source class.
-     * @param sourceMethod
-     *            source method.
-     * @param thrown
-     *            throwable that is thrown.
+     * @param sourceClass source class.
+     * @param sourceMethod source method.
+     * @param thrown throwable that is thrown.
      */
     public static void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
         logger.throwing(sourceClass, sourceMethod, thrown);
@@ -251,8 +254,7 @@ public class Logging {
     /**
      * Returns the <code>Level</code> associated with the given byte.
      *
-     * @param lvl
-     *            one of LVL_*.
+     * @param lvl one of LVL_*.
      * @return the associated Level.
      */
     private static Level getLevel(byte lvl) {
@@ -267,6 +269,36 @@ public class Logging {
                 return Level.SEVERE;
             default :
                 return Level.INFO;
+        }
+    }
+    
+    static class PrintStreamHandler extends Handler {
+
+        private PrintStream stream;
+        private final SimpleFormatter format;
+        
+        PrintStreamHandler(OutputStream stream) {
+            if (stream instanceof PrintStream) {
+                this.stream = (PrintStream) stream;
+            } else {
+                stream = new PrintStream(stream);
+            }
+            format = new SimpleFormatter();
+        }
+        
+        /** @see java.util.logging.Handler#close() */
+        public void close() throws SecurityException {
+            stream.close();
+        }
+
+        /** @see java.util.logging.Handler#flush() */
+        public void flush() {
+            stream.flush();
+        }
+
+        /** @see java.util.logging.Handler#publish(java.util.logging.LogRecord) */
+        public void publish(LogRecord record) {
+            stream.print(format.format(record));
         }
     }
 }

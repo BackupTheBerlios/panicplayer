@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -9,12 +9,16 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
 import b12.panik.io.MediaIOException;
+import b12.panik.io.UrlTrack;
 import b12.panik.player.PanicAudioPlayer;
+import b12.panik.util.ConstraintsException;
 import b12.panik.util.Logging;
 
 /**
@@ -42,10 +46,8 @@ public class Configuration {
     /**
      * Creates a new instance of <code>Configuration</code>.
      *
-     * @param uri
-     *            the address.
-     * @throws ConfigurationException
-     *             if an error occured in the configuration.
+     * @param uri the address.
+     * @throws ConfigurationException if an error occured in the configuration.
      */
     public Configuration(String uri) throws ConfigurationException {
         effectInput = new ArrayList();
@@ -115,8 +117,7 @@ public class Configuration {
     /**
      * Saves the configuration to the default configuration file.
      *
-     * @throws IOException
-     *             on IO error.
+     * @throws IOException on IO error.
      */
     public void save() throws IOException {
         writeTo(new File(DEFAULT_CONF_FILE));
@@ -125,10 +126,8 @@ public class Configuration {
     /**
      * Writes the configuration to the given file.
      *
-     * @param f
-     *            the file.
-     * @throws IOException
-     *             on IO error.
+     * @param f the file.
+     * @throws IOException on IO error.
      */
     public void writeTo(File f) throws IOException {
         try {
@@ -140,7 +139,8 @@ public class Configuration {
     }
 
     /**
-     * Creates a ParsedObject from the information in this <code>Configuration</code>
+     * Creates a ParsedObject from the information in this
+     * <code>Configuration</code>
      *
      * @return a new <code>ParsedObject</code>.
      */
@@ -195,8 +195,7 @@ public class Configuration {
     /**
      * Adds an effect property to the input.
      *
-     * @param ip
-     *            the new input property.
+     * @param ip the new input property.
      */
     public void addEffectProperty(InputProperty ip) {
         effectInput.add(ip);
@@ -214,8 +213,7 @@ public class Configuration {
     /**
      * Sets the input property.
      *
-     * @param ip
-     *            the new input property.
+     * @param ip the new input property.
      */
     public void setInputProperty(InputProperty ip) {
         inputProperty = ip;
@@ -233,8 +231,7 @@ public class Configuration {
     /**
      * Sets the output properties.
      *
-     * @param outputProps
-     *            The output properties.
+     * @param outputProps The output properties.
      */
     public void setOutputProps(Properties outputProps) {
         this.outputProps = outputProps;
@@ -248,8 +245,45 @@ public class Configuration {
      *          more information.
      */
     public void loadSoundFile(File f) throws MediaIOException {
-        setInputProperty(new InputProperty(f, 0));
-        player.loadSoundFile(f);
+        URL url;
+        try {
+            url = f.toURL();
+            loadMainTrack(url);
+        } catch (IOException e) {
+            throw new MediaIOException(e);
+        }
+    }
+
+    /**
+     * Loads the sound with the given URL into the configuration.
+     * @param url the url.
+     * @throws MediaIOException if an error occurred while creating the
+     *          player.
+     */
+    public void loadMainTrack(URL url) throws MediaIOException {
+        setInputProperty(new InputProperty(new File(url.toString()), 0));
+        player.setMainTrack(url);
+    }
+
+    /**
+     * Adds a single track to the configuration.
+     * @param url the url to load.
+     * @return the created track.
+     * @throws MediaIOException if an IO error occurs, or the URL could not
+     *          be correctly converted.
+     */
+    public UrlTrack addTrack(URL url) throws MediaIOException {
+        try {
+            UrlTrack track = player.addTrack(url);
+            addEffectProperty(new InputProperty(new URI(url.toString()), 0, 1));
+            return track;
+        } catch (IOException e) {
+            throw new MediaIOException(e);
+        } catch (ConstraintsException e) {
+            throw new MediaIOException(e);
+        } catch (Exception e) {
+            throw new MediaIOException(e);
+        }
     }
 
     /**
