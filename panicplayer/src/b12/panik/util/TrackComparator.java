@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TrackComparator.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -36,7 +36,7 @@ public class TrackComparator implements Comparator {
         if (dif != 0) {
             return dif;
         }
-        // compare durations
+        // compare durations ... shorter duration first
         dif = tComp.compare(track1.getDuration(), track2.getDuration());
         if (dif != 0) {
             return dif;
