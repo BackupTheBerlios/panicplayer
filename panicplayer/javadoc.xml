@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="MM1 - Massenpanik" default="javadoc">
+    <target name="javadoc">
+        <javadoc destdir="doc\api" access="protected" source="1.4"
+            use="false" notree="true" nonavbar="false" noindex="true"
+            splitindex="false" author="false" version="false"
+            nodeprecatedlist="true" nodeprecated="true"
+            classpath="bin;lib\xercesImpl.jar;lib\xml-apis.jar;lib\junit.jar"
+            doctitle="MM1 - Massenpanik API Documentation">
+            <packageset dir="src" defaultexcludes="yes">
+      			<include name="b12/**/*" />
+		    </packageset>            
+        </javadoc>
+    </target>
+</project>
