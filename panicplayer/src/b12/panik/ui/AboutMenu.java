@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: AboutMenu.java
 //                created: 30.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -36,7 +36,7 @@ public class AboutMenu extends JMenu {
     void about() {
         SplashScreen about = new SplashScreen("res/about.gif",
                 "PanicPlayer Project by Kariem, Georg & Oliver");
-        about.showFor(7700);
+        about.showUntilClick();
     }
 
 }
