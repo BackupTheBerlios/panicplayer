@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuFile.java
 //                created: 29.11.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -48,7 +48,7 @@ public class MenuFile extends JMenu {
                 openUrl();
             }
         });
-        
+
         JMenuItem itemClose = new JMenuItem("Quit");
         itemClose.setAccelerator(KeyStroke.getKeyStroke("control Q"));
         itemClose.addActionListener(new ActionListener() {
@@ -70,38 +70,27 @@ public class MenuFile extends JMenu {
 
     void openFile() {
         FileDialog fd = new FileDialog();
-        fd.setMultiSelectionEnabled(true);
 
         Logging.fine("File dialog opened to load track.");
         int returnVal = fd.showOpenDialog(SwingUtilities.windowForComponent(this));
         if (returnVal == FileDialog.APPROVE_OPTION) {
-            File[] files = fd.getSelectedFiles();
-            openFiles(files);
+            File f = fd.getSelectedFile();
+            openFiles(f);
         } else {
             Logging.fine("Dialog closed without selection.");
         }
     }
 
-    private void openFiles(final File[] files) {
-        if (files != null && files.length > 0) {
-            Thread fileOpener = new Thread("File Opener") {
-                /** @see java.lang.Thread#run() */
-                public void run() {
-                    for (int i = 0; i < files.length; i++) {
-                        fireChange(PROP_FILE_OPEN, null, files[i]);
-                        Logging.fine("File opened: " + files[i]);
-                    }
-                }
-            };
-            fileOpener.start();
-        }
+    private void openFiles(final File f) {
+        fireChange(PROP_FILE_OPEN, null, f);
+        Logging.fine("File opened: " + f);
     }
 
     void openUrl() {
         String selection = JOptionPane.showInputDialog(SwingUtilities.windowForComponent(this),
                 "Please enter the URL (rtp://<host>[path]).", "Select input URL",
                 JOptionPane.QUESTION_MESSAGE);
-     
+
         if (selection != null) {
             firePropertyChange(PROP_FILE_URL, null, selection);
         }

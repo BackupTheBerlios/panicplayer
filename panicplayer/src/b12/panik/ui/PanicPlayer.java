@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.28 $
+//              $Revision: 1.29 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -107,7 +107,7 @@ public class PanicPlayer extends JFrame {
                 } else if (name.equals(MenuFile.PROP_FILE_OPEN)) {
                     loadMainTrack((File) evt.getNewValue());
                 } else if (name.equals(MenuFile.PROP_FILE_URL)) {
-                    loadMainTrackURL((String)evt.getNewValue());
+                    loadMainTrackURL((String) evt.getNewValue());
                 }
             }
         });
@@ -214,13 +214,26 @@ public class PanicPlayer extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // retrieve URL of the file
                 FileDialog fd = new FileDialog();
+                fd.setMultiSelectionEnabled(true);
                 int returnVal = fd.showOpenDialog(PanicPlayer.this);
                 if (returnVal == FileDialog.APPROVE_OPTION) {
-                    URI uri = fd.getSelectedFile().toURI();
-                    try {
-                        conf.addTrack(uri);
-                    } catch (Exception ex) {
-                        Logging.severe("Error adding track: " + uri, ex);
+                    final File[] files = fd.getSelectedFiles();
+
+                    if (files != null && files.length > 0) {
+                        Thread fileOpener = new Thread("File Opener") {
+                            /** @see java.lang.Thread#run() */
+                            public void run() {
+                                for (int i = 0; i < files.length; i++) {
+                                    URI uri = files[i].toURI();
+                                    try {
+                                        conf.addTrack(uri);
+                                    } catch (Exception ex) {
+                                        Logging.severe("Error adding track: " + uri, ex);
+                                    }
+                                }
+                            }
+                        };
+                        fileOpener.start();
                     }
                 }
 
@@ -237,8 +250,7 @@ public class PanicPlayer extends JFrame {
             }
         });
         pnlFops.add(btnLoadConfig);
-        
-        
+
         // TODO add listeners that load sound/config on button click
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -281,7 +293,7 @@ public class PanicPlayer extends JFrame {
             UIUtils.openExceptionDialog(this, t, errorCause);
         }
     }
-    
+
     /**
      * Loads the main track from a file.
      * @param f the file.

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.22 $
+//              $Revision: 1.23 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -319,7 +319,9 @@ public class MixEffect implements Codec, TrackManager {
         offsetedArrays = new TreeSet(new OffsetedArrayComparator());
         for (Iterator iter = urlTracks.iterator(); iter.hasNext(); ) {
             UrlTrack currentUrlTrack = (UrlTrack) iter.next();
-            offsetedArrays.add(new OffsetedArray(currentUrlTrack, timePer1000Byte));
+            if (currentUrlTrack.isEnabled()) {
+                offsetedArrays.add(new OffsetedArray(currentUrlTrack, timePer1000Byte));
+            }
         }
     }
 

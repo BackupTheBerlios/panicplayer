@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -105,14 +105,12 @@ public class OffsetedArray {
      */
     public OffsetedArray(UrlTrack urlTrack, double timePer1000Bytes) {
         AudioFormat trackFormat = (AudioFormat) urlTrack.getFormat();
-        System.out.println("time per 1000 bytes: " + timePer1000Bytes);
         if (trackFormat != null) {
             int frameSize = trackFormat.getFrameSizeInBits();
             double frameRate = trackFormat.getFrameRate();
             if (frameSize > 0 && frameRate > 0) {
                 timePer1000Bytes = IOUtils.timePer1000Byte(frameSize, frameRate);
             }
-            System.out.println("         changed to: " + timePer1000Bytes);
         }
         name = urlTrack.getUri().toString();
         startIndex = (long) (1000 * urlTrack.getBegin() / timePer1000Bytes);
@@ -122,13 +120,6 @@ public class OffsetedArray {
             int numberOfBytes = inputStream.available();
             byte[] contentResult = new byte[numberOfBytes];
             inputStream.read(contentResult, 0, numberOfBytes);
-            /*            if (invGain != 1) {
-             for (int i = 0; i < contentResult.length; i++) {
-             contentResult[i] = intToUnsignedByte(unsignedByteToInt(contentResult[i])
-             / invGain);
-             }
-             }
-             */
             content = contentResult;
         } catch (Exception e) {
             System.out.println("inputStream ungettable");
