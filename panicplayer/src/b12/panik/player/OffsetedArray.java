@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -12,14 +12,23 @@ import javax.sound.sampled.AudioSystem;
 import b12.panik.io.UrlTrack;
 
 /**
- * 
- * @author kariem
+
+ * A array of byte with a start index.
+
+ * @author olivier
+
  */
+
 public class OffsetedArray {
     private long startIndex;
-    //private long byteNumber;
     private byte[] content;
     
+	/**
+	 * Creates a new instance of <code>OffsetedArray</code> from a buffer.
+	 * @param buffer the source buffer.
+	 * @param beginIndex the startIndex in byte.
+	 * @param invGain the inverse of the gain.
+	 */
     public OffsetedArray(Buffer buffer,long beginIndex, int invGain) {
         startIndex=beginIndex;
         byte[] inputData=(byte[])buffer.getData();
@@ -32,13 +41,18 @@ public class OffsetedArray {
 				content[i]=intToUnsignedByte(unsignedByteToInt(inputData[i+offset])/invGain);
 			}
 		}
-		//content = (byte[])buffer.getData();
-		//byteNumber=content.length;
     }
     
+	/**
+	 * Creates a new null instance of <code>OffsetedArray</code>.
+	 */    
     public OffsetedArray() {
     }
  
+	/**
+	 * Creates a new instance of <code>OffsetedArray</code> as a copy of a given OffsetedArray.
+	 * @param original the OffsetedArray to be copied.
+	 */
 	public OffsetedArray(OffsetedArray original) {
 		startIndex=original.getStartIndex();
 		content=new byte[((int) original.getDurationIndex())];
@@ -46,7 +60,13 @@ public class OffsetedArray {
 			content[i]=original.getByteI(i);
 		}    	
 	 }
-    
+
+	/**
+	 * Creates a new instance of <code>OffsetedArray</code> from an other OffsetedArray.
+	 * @param source the source OffsetedArray.
+	 * @param beginIndex the startIndex in byte.
+	 * @param endIndex the endIndex in byte.
+	 */    
     public OffsetedArray(OffsetedArray source,long beginIndex,long endIndex) {
     	startIndex=beginIndex;
     	int length=((int) (endIndex-beginIndex));
@@ -58,10 +78,8 @@ public class OffsetedArray {
     			content=new byte[0];
     			return;
     		}
-    	
-    	//System.out.println("sur une longueur de: "+length);
+
     	for (int i = 0; i < length; i++) {
-    		//System.out.println("on tente d ajouter le "+i);
     		j=i+((int) beginIndex)-((int) source.getStartIndex());
     		if(j<0) {
     			content[i]=byteZero();
@@ -74,16 +92,17 @@ public class OffsetedArray {
     		}    
 		}       
     }
-    
+
+	/**
+	 * Creates a new instance of <code>OffsetedArray</code> from a urlTracks.
+	 * @param urlTrack the source UrlTrack.
+	 * @param timePer1000Bytes the time in ms for 1000 byte.
+	 * @param invGain the inverse of the gain.
+	 */    
     public OffsetedArray(UrlTrack urlTrack, double timePer1000Bytes, int invGain) {
     	startIndex=(long) Math.floor(((double) (1000*urlTrack.getBegin()))/timePer1000Bytes);
-    	System.out.print("le begin est: "+urlTrack.getBegin()+" le time est de "+timePer1000Bytes+" le startIndex est de "+startIndex);
     	try{
-    		System.out.println("l url est "+urlTrack.getUrl());
     		AudioInputStream inputStream = AudioSystem.getAudioInputStream(urlTrack.getUrl());
-    		
-    		System.out.println("format de l url track: "+inputStream.getFormat());
-    		
 			int numberOfBytes=inputStream.available();
 			byte[] contentResult=new byte[numberOfBytes];
 			inputStream.read(contentResult,0,numberOfBytes);
@@ -93,34 +112,60 @@ public class OffsetedArray {
 				}
 			}
 			content=contentResult;
-			System.out.println(" le nb de byte: "+numberOfBytes);
     	} catch (Exception e) {
     		System.out.println("inputStream ungettable");
     		content=new byte[0];
     		return;
     	}    	
     }
-    
+
+	/**
+	 * Return the i° byte of an OffsetedArray.
+	 * @param index the index of the wanted byte.
+	 * @return the index° byte
+	 */        
     public byte getByteI(int index) {
     	return content[index];
     }
     
+    /**
+     * Return the start index of an array.
+     * @return the start index
+     */
     public long getStartIndex() {
         return startIndex;
     }
+    
+    /**
+     * Set the startIndex.
+     * @param wantedStart the wanted startIndex
+     */
 	public void setStartIndex(long wantedStart) {
 		   startIndex=wantedStart;
 	}
 	
+	/**
+	 * Set the content of an OffsetedArray.
+	 * @param wantedContent the wanted content.
+	 */
 	public void setContent(byte[] wantedContent) {
 		content=wantedContent; 
 	}
 	
+	/**
+	 * Return the duration in byte of an OffsetedArray.
+	 * @return the duration in byte
+	 */
     public long getDurationIndex() {
-        //return durationIndex;
         return content.length;
     }
     
+    /**
+     * Add two OffsetedArrray.
+     * @param array1 the first array to add
+     * @param array2 the second array to add
+     * @return the sum of the two array
+     */
 	public static OffsetedArray addOffsetedArray(OffsetedArray array1,OffsetedArray array2) {
 		OffsetedArray result=new OffsetedArray();
 		OffsetedArray longerArray, shorterArray;
@@ -157,7 +202,6 @@ public class OffsetedArray {
 			isInShorter=((i>=shorterArray.getStartIndex())&& (i<shorterArray.getStartIndex()+shorterArray.getDurationIndex()));
 			if(isInLonger) {
 				if(isInShorter) {
-					System.out.print("+");
 					resultByte=addByte(longerArray.getByteI(i-((int) longerArray.getStartIndex())),shorterArray.getByteI(i-((int) shorterArray.getStartIndex())));
 				} else {
 					resultByte=longerArray.getByteI(i-((int) longerArray.getStartIndex()));
@@ -170,44 +214,51 @@ public class OffsetedArray {
 				}
 			}
 			resultContent[i-((int) begin)]=resultByte;
-
 		}
 		
-		System.out.println("");
-	
 		result.setStartIndex(begin);
 		result.setContent(resultContent);
 		return result;		
 	} 
     
+    /**
+     * Return the content as a buffer
+     * @return the buffer which corresponds to the content.
+     */
     public Buffer toBuffer() {
     	Buffer bufferResult=new Buffer();
     	bufferResult.setData(content);
     	return bufferResult;
     }
     
+    /**
+     * Return the byte who corresponds to 0.
+     * @return the zero byte.
+     */
     public static byte byteZero() {
     	return ((byte) 0);
     }
     
+    /**
+     * Add two unsigned byte.
+     * @param byte1 the first byte to add.
+     * @param byte2 the second byte to add.
+     * @return the sum.
+     */
     public static byte addByte(byte byte1,byte byte2) {
-    	//System.out.println("on ajoute "+((int) byte1)+" a "+((int) byte2)+" le res est "+(((int) byte1)+((int) byte2)));
-    	//int intResult=(((int) byte1)+((int) byte2)) /2;
-    	//byte result=byte1+byte2;
-    	
     	int int1=unsignedByteToInt(byte1);
     	int int2=unsignedByteToInt(byte2);
-    	
- 		
-		int intResultTemp=int1+int2;
-		
+ 		int intResultTemp=int1+int2;
 		return intToUnsignedByte(intResultTemp);
-    	
+ 
     }
     
+    /**
+     * Adjust the content in order to have an array with the wanted length. 
+     * @param length the wanted length
+     */
     public void setSizeTo(long length) {
     	if(content.length<length) 	{
-    		System.out.println("uncorrect outputBuffer length");
     		byte[] newContent=new byte[((int) length)];
     		for(int i=0;i<content.length;i++) {
     			newContent[i]=content[i];
@@ -219,7 +270,6 @@ public class OffsetedArray {
     	}
     	if(content.length>length)
     	{
-			System.out.println("uncorrect outputBuffer length");
 			byte[] newContent=new byte[((int) length)];
 			for(int i=0;i<length;i++) {
 				newContent[i]=content[i];
@@ -228,6 +278,9 @@ public class OffsetedArray {
     	}
     } 
     
+    /**
+     * Display one byte on 800 of the content.
+     */
     public void printShorted() {
     	for(int i=0;i<content.length;i+=800) {
     		System.out.print(content[i]+" ");   
@@ -235,6 +288,10 @@ public class OffsetedArray {
     	System.out.println("");
     }
     
+    /**
+     * Put the content in a buffer
+     * @param buffer the buffer where to put the content
+     */
     public void putData(Buffer buffer) {
     	byte[] resultContent=new byte[content.length+buffer.getOffset()];
     	for(int i=0;i<content.length;i++) {
@@ -243,6 +300,11 @@ public class OffsetedArray {
     	buffer.setData(resultContent);    	
     }
     
+    /**
+     * Convert an unsigned byte in an integer
+     * @param b the unsigned byte
+     * @return the integer value of the unsigned byte
+     */
     private static int unsignedByteToInt(byte b) {
 		int intResult=((new Byte(b)).intValue());
 		if(intResult<0) 	{
@@ -251,6 +313,11 @@ public class OffsetedArray {
 		return intResult;
     } 
     
+    /**
+     * Convert an int in an unsigned byte
+     * @param i the int to convert
+     * @return the byte value of the int
+     */
     private static byte intToUnsignedByte(int i) {
 		if(i>255) {
 			i=255;

@@ -4,7 +4,7 @@
 
 //                created: 29.10.2003
 
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 
 // ----------------------------------------------------------------------------
 
@@ -24,18 +24,13 @@ import b12.panik.player.OffsetedArray;
 
 /**
 
- * A <code>Comparator</code> that compares <code>Track</code>s.
+ * A <code>Comparator</code> that compares <code>OffsetedArray</code>s.
 
  * @author olivier
 
  */
 
 public class OffsetedArrayComparator implements Comparator {
-
-
-
-   // private static final TimeComparator tComp = new TimeComparator();
-
 
 
     /** @see Comparator#compare(Object, Object) */
@@ -50,15 +45,15 @@ public class OffsetedArrayComparator implements Comparator {
 
     /**
 
-     * Compares two <code>Track</code> objects.
+     * Compares two <code>OffsetedArray</code> objects.
 
      *
 
-     * @param track1 the first track.
+     * @param array1 the first OffsetedArray.
 
-     * @param track2 the second track-
+     * @param array2 the second OffsetedArray-
 
-     * @return the difference in start time and duration. If these are not
+     * @return the difference in start index. If these are not
 
      *          different, their difference in hash code is returned.
 
@@ -66,7 +61,7 @@ public class OffsetedArrayComparator implements Comparator {
 
     public int compare(OffsetedArray array1, OffsetedArray array2) {
 
-        // compare start times
+        // compare start index
 
         long dif=array1.getStartIndex()-array2.getStartIndex();
         
