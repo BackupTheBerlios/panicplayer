@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TimeComparator.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -26,7 +26,6 @@ public class TimeComparator implements Comparator {
      * @return their differents in nanoseconds as <code>int</code>.
      */
     public int compare(Time time1, Time time2) {
-        Utils.convertToInt(time1.getNanoseconds() - time2.getNanoseconds());
-        return 0;
+        return Utils.convertToInt(time1.getNanoseconds() - time2.getNanoseconds());
     }
 }

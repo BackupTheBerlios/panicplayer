@@ -1,7 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <project name="MM1 - Massenpanik" default="javadoc">
+	
+	<property name="doc" value="docs"/>
+	
     <target name="javadoc">
-        <javadoc destdir="docs\api" access="protected" source="1.4"
+        <javadoc destdir="${doc}/api" access="protected" source="1.4"
             use="false" notree="true" nonavbar="false" noindex="true"
             splitindex="false" author="false" version="false"
             nodeprecatedlist="true" nodeprecated="true"
