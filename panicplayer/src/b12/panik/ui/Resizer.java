@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Resizer.java
 //                created: 24.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -92,7 +92,6 @@ public class Resizer extends MouseAdapter implements MouseMotionListener {
                 pressPoint.y = resizePoint.y - (frameLoc.y - oldY);
                 
                 component.validate();
-                component.repaint();
             }
         }
     }
