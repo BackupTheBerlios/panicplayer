@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.15 $
+//              $Revision: 1.16 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -63,7 +63,7 @@ public class PanicAudioPlayer implements ControllerListener {
     /** Resets the player to an initial state. */
     public void reset() {
         mainComponent.reset();
-        mixEffect.reset();
+        mixEffect.resetVisuals();
     }
 
     /**

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.19 $
+//              $Revision: 1.20 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -367,14 +367,15 @@ public class MixEffect implements Codec, TrackManager {
         // TODO Implement method
     }
 
-    /** 
-     * Resets the mixeffect to its initial state.
-     * 
-     * @see PlugIn#reset() 
-     */
+    /** @see PlugIn#reset() */
     public void reset() {
-       urlTracks.clear();
-       tracksPanel.reset();
+        // do nothing
+    }
+    
+    /** Resets the mixeffect to its initial state. */
+    public void resetVisuals() {
+        urlTracks.clear();
+        tracksPanel.reset();
     }
 
     /** @see Controls#getControls() */
