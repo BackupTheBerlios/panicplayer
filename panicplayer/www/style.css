@@ -4,9 +4,37 @@ body {
 	font-family: lucida sans unicode, verdana, arial, helvetica, sans-serif;
 }
 
+p {
+	margin-bottom: 1em;
+	margin-top: 0em;
+	line-height: 1.4em;
+}
+
+a {
+	text-decoration: none;
+}
+
 a:hover {
 	background: #ddddff;
 	color: #c30000;
+}
+
+h1 {
+	font-size: 130%;
+	margin-bottom: 0.25em;
+}
+
+h2 {
+	font-size: 110%;
+	margin-bottom: 0.5em;
+	text-align: left;
+}
+
+h3 {
+	font-size: 100%;
+	margin-bottom: 0.2em;
+	text-align: left;
+	font-variant: small-caps;
 }
 
 pre {
@@ -16,4 +44,11 @@ pre {
 	margin: 1em;
 	font-size: 11px;
 	border: 1px dotted #222222;
+}
+
+hr {
+	border-width: 0 0 1px 0;
+	border-style: solid;
+	height: 0;
+	clear: both;
 }
