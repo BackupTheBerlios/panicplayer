@@ -1,0 +1,19 @@
+@charset "iso-8859-1";
+
+body {
+	font-family: lucida sans unicode, verdana, arial, helvetica, sans-serif;
+}
+
+a:hover {
+	background: #ddddff;
+	color: #c30000;
+}
+
+pre {
+	color: inherit;
+	background: #FFFFCC;
+	padding: 0.5em;
+	margin: 1em;
+	font-size: 11px;
+	border: 1px dotted #222222;
+}

@@ -1,0 +1,83 @@
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <title>Programming Guidelines</title>
+</head>
+<body>
+    <h1>[b12] Programming Guidelines - <em>0.1</em></h1>
+    <sub>last change: Kariem - <em>29-oct-2003</em></sub>
+
+    <p> This document describes several rules the programmer is recommended to
+    stick to, in order to produce code, which is readable and extendable and
+    that fits with the other sources of the project. If you don't stick to them
+    we can't do anything about it, but try to do so. </p>
+
+
+    <h2>Text Files<a name="textfiles"></a></h2>
+
+    <p> Try to start each text file with a descriptive header that shows the
+    title, CVS revision number, and information on the last change (author,
+    date) </p>
+
+    <pre>
+    [b12] <i>title</i> - $Revision: 1.1 $
+          last change: <i>author</i> $Date: 2003/10/29 09:18:42 $
+    </pre>
+
+    <p> In general break the line at character 80 and try not to insert any
+    TABs. Try to create text files that are easily readable. </p>
+
+
+    <h2>HTML files</h2>
+    TODO write constraints for HTML documents.
+
+
+
+    <h2>Source Files (.java)</h2>
+
+    <p>The standard header for a source file contains a short information about the
+    filename, creation date and the CVS revision number. It should look like
+    this:</p>
+
+    <pre>
+    // ----------------------------------------------------------------------------
+    // [b12] Java Source File: <i>filename</i>.java
+    //                created: dd.MM.yyyy
+    //              $Revision: 1.1 $
+    // ----------------------------------------------------------------------------
+    </pre>
+
+    <p> The revision field is updated automatically by the revision control
+    system.</p>
+
+
+    <h3>Limits</h3>
+
+    <p> In order to obtain useful and manageable sources there are some limits.
+    If something does not abide to these constraints try to refactor the
+    type/method.</p>
+
+    <ul>
+
+        <li>The line length is limited to 80 characters (see
+        <a href="#textfiles">Text Files</a> in general)</li>
+
+        <li>A source file should at most hold 1500 lines.</li>
+
+        <li>A method should at most hold 75 lines.</li>
+
+        <li>A type should at most consist of 700 lines.</li>
+
+    </ul>
+
+
+    <h3>Comments</h3>
+
+    <p>Javadoc for all types and public and protected methods and fields is
+    obligatory. Try to be as descriptive as possible. In-line comments are also
+    very useful so please exercise this option for others who have a look at
+    your code and for yourself. If you look at your badly documented code the
+    after a long coding night, you might not understand everything.</p>
+
+</body>
+</html>
