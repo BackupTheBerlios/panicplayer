@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -72,7 +72,9 @@ public class PlayerControlPanel extends JPanel {
         // TODO use PanicAudioPlayer in here
         // construct listener with this component
         ControllerListener listener = new ControllerAdapter() {
-            public void realizeComplete(RealizeCompleteEvent event) {
+           
+           public void prefetchComplete(PrefetchCompleteEvent e) {
+              System.out.println("\n\tplayer prefetched\n");
                 // get visual component and control component from player
                 final Component vc = player.getVisualComponent();
                 removeCenterComponent();
@@ -96,7 +98,7 @@ public class PlayerControlPanel extends JPanel {
             }
         };
         player.addControllerListener(listener);
-        player.realize();
+        player.prefetch();
     }
 
     void removeCenterComponent() {
