@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuFile.java
 //                created: 29.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -15,7 +15,7 @@ import b12.panik.util.Logging;
 
 /**
  * The file menu.
- * 
+ *
  * @author kariem
  */
 public class MenuFile extends JMenu {

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: DragObject.java
 //                created: 30.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -31,51 +31,51 @@ import javax.swing.JLabel;
  * Window>Preferences>Java>Code Generation>Code and Comments
  */
 public class DragObject extends JLabel {
-  
-  public DragObject(String s) {    
+
+  public DragObject(String s) {
 	this.setText(s);
-	this.setOpaque(true);    
+	this.setOpaque(true);
 	this.dragSource = DragSource.getDefaultDragSource();
 	this.dgListener = new DGListener();
 	this.dsListener = new DSListener();
-    
+
 	// component, action, listener
 	this.dragSource.createDefaultDragGestureRecognizer(
 	  this,
 	  this.dragAction,
-	  this.dgListener); 
+	  this.dgListener);
   }
-  
+
   public DragObject(String s, int a) {
 	if (a != DnDConstants.ACTION_NONE &&
 	  a != DnDConstants.ACTION_COPY &&
 	  a != DnDConstants.ACTION_MOVE &&
-	  a != DnDConstants.ACTION_COPY_OR_MOVE &&      
+	  a != DnDConstants.ACTION_COPY_OR_MOVE &&
 	  a != DnDConstants.ACTION_LINK
 	) throw new IllegalArgumentException("action" + a);
-    
+
 	this.dragAction = a;
 	this.setText(s);
-	this.setOpaque(true);    
+	this.setOpaque(true);
 	this.dragSource = DragSource.getDefaultDragSource();
 	this.dgListener = new DGListener();
 	this.dsListener = new DSListener();
-    
+
 	// component, action, listener
 	this.dragSource.createDefaultDragGestureRecognizer(
 	  this,
 	  this.dragAction,
-	  this.dgListener); 
+	  this.dgListener);
   }
 
-  
+
   /**
    * DGListener
    * a listener that will start the drag.
    * has access to top level's dsListener and dragSource
    * @see java.awt.dnd.DragGestureListener
    * @see java.awt.dnd.DragSource
-   * @see java.awt.datatransfer.StringSelection      
+   * @see java.awt.datatransfer.StringSelection
    */
   class DGListener implements DragGestureListener {
 	/**
@@ -92,31 +92,31 @@ public class DragObject extends JLabel {
 	  if((e.getDragAction() & DragObject.this.dragAction) == 0)
 	return;
 	  System.out.println( "kicking off drag");
-      
-	  Transferable transferable = new StringTransferable( DragObject.this.getText() );      
+
+	  Transferable transferable = new StringTransferable( DragObject.this.getText() );
 
 	  try {
 	e.startDrag(DragSource.DefaultCopyNoDrop,
 	  transferable,
 	  DragObject.this.dsListener);
 
-	
+
 	  }catch( InvalidDnDOperationException idoe ) {
 	System.err.println( idoe );
 	  }
 	}
   }
-  
+
   /**
    * DSListener
    * a listener that will track the state of the DnD operation
-   * 
+   *
    * @see java.awt.dnd.DragSourceListener
    * @see java.awt.dnd.DragSource
-   * @see java.awt.datatransfer.StringSelection      
+   * @see java.awt.datatransfer.StringSelection
    */
   class DSListener implements DragSourceListener {
-    
+
 	/**
 	 * @param e the event
 	 */
@@ -128,7 +128,7 @@ public class DragObject extends JLabel {
 
 	  	  System.out.println( "dragdropend action " + e.getDropAction() );
 
-	  
+
 	  if(e.getDropAction() == DnDConstants.ACTION_MOVE)
 	DragObject.this.setText("");
 	}
@@ -140,10 +140,10 @@ public class DragObject extends JLabel {
 	  System.out.println( "DragObject enter " + e);
 	  DragSourceContext context = e.getDragSourceContext();
 	  int myaction = e.getDropAction();
-	  if( (myaction & DragObject.this.dragAction) != 0) {	
-	context.setCursor(DragSource.DefaultCopyDrop);	  
+	  if( (myaction & DragObject.this.dragAction) != 0) {
+	context.setCursor(DragSource.DefaultCopyDrop);
 	  } else {
-	context.setCursor(DragSource.DefaultCopyNoDrop);	  	
+	context.setCursor(DragSource.DefaultCopyNoDrop);
 	  }
 	}
 	/**
@@ -158,42 +158,42 @@ public class DragObject extends JLabel {
 	  System.out.println("dl dragOver source actions" + sa);
 	  System.out.println("user action" + ua);
 	  System.out.println("drop actions" + da);
-	  System.out.println("target actions" + ta);      
+	  System.out.println("target actions" + ta);
 	}
 	/**
 	 * @param e the event
 	 */
 	public void dragExit(DragSourceEvent e) {
-	  System.out.println( "DragObject exit " + e);      
+	  System.out.println( "DragObject exit " + e);
 	  DragSourceContext context = e.getDragSourceContext();
 	}
 
 	/**
 	 * for example, press shift during drag to change to
 	 * a link action
-	 * @param e the event     
+	 * @param e the event
 	 */
 	public void dropActionChanged (DragSourceDragEvent e) {
-	  DragSourceContext context = e.getDragSourceContext();      
-	  context.setCursor(DragSource.DefaultCopyNoDrop);	  	
+	  DragSourceContext context = e.getDragSourceContext();
+	  context.setCursor(DragSource.DefaultCopyNoDrop);
 	}
   }
 
-  
+
   public static void main(String[] args) {
 	JFrame frame = new JFrame();
 	frame.setTitle("DragObject test");
 	Container cont = frame.getContentPane();
 	DragObject l = new DragObject("Here is some text");
 	l.setBackground(Color.black);
-	l.setForeground(Color.yellow);    
+	l.setForeground(Color.yellow);
 	cont.add( l );
 	frame.addWindowListener( new WindowAdapter() {
 	  public void windowClosing(WindowEvent e) {
 	System.exit(0);
 	  }
 	});
-	frame.setSize(300,300); 
+	frame.setSize(300,300);
 	frame.setVisible(true);
   }
 

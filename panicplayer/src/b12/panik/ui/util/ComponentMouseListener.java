@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ComponentMouseListener.java
 //                created: 01.01.2004
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -15,9 +15,9 @@ import java.awt.event.MouseEvent;
  * Simple mouse listener that may be used to highlight a component on certain
  * events. Current implementation includes "mouse over" "mouse down"
  * "mouse out". In order to override the default behaviour override the methods
- * {@linkplain #colorsOver()}, {@linkplain #colorsPressed()}, {@linkplain 
+ * {@linkplain #colorsOver()}, {@linkplain #colorsPressed()}, {@linkplain
  * #colorsOut()}.
- * 
+ *
  * @author kariem
  */
 public class ComponentMouseListener extends MouseAdapter {

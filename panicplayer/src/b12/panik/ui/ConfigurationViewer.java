@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationDialog.java
 //                created: 25.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -17,7 +17,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 /**
- * 
+ * Allows to view the current configuration.
  * @author kariem
  */
 public class ConfigurationViewer extends JDialog {
@@ -96,14 +96,14 @@ public class ConfigurationViewer extends JDialog {
                 third = new JLabel(new String("  (" + list.size() + ")"));
             }
             add(second, gbc);
-            
+
             if (third != null) {
                 gbc.gridx = 2;
                 gbc.anchor = GridBagConstraints.EAST;
                 gbc.fill = GridBagConstraints.NONE;
                 add(third, gbc);
             }
-            
+
             // increment y
             gbc.gridy++;
         }

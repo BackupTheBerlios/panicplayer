@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TrackLabel.java
 //                created: 29.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -39,7 +39,7 @@ public class TrackLabel extends JLabel {
     /**
 	 * Creates a new instance of <code>TrackLabel</code> with an associated
 	 * <code>Track</code> object.
-	 * 
+	 *
 	 * @param track the track which is rendered in this object.
 	 */
     public TrackLabel(Track track) {
@@ -54,7 +54,7 @@ public class TrackLabel extends JLabel {
     /**
 	 * Sets the amount of pixels that is used per second of the rendered track
 	 * in order to draw the <code>Track</code> in correct proportions.
-	 * 
+	 *
 	 * @param factor the amount of pixels per second.
 	 */
     public static void setPixelsPerSecond(int factor) {
@@ -63,7 +63,7 @@ public class TrackLabel extends JLabel {
 
     /**
 	 * Returns the track.
-	 * 
+	 *
 	 * @return the track.
 	 */
     public Track getTrack() {
@@ -71,7 +71,7 @@ public class TrackLabel extends JLabel {
     }
     /**
 	 * Sets the track.
-	 * 
+	 *
 	 * @param track The track.
 	 */
     public void setTrack(Track track) {

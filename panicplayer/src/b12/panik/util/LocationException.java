@@ -1,13 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: LocationException.java
 //                created: 28.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
 /**
  * This Exception is used to indicate errors that are related to an incorrect
- * location. It can be compared to a more sophisticated IOException.  
+ * location. It can be compared to a more sophisticated IOException.
  */
 public class LocationException extends Exception {
 
@@ -32,7 +32,7 @@ public class LocationException extends Exception {
     /**
      * Creates a new <code>LocationException</code> with a cause and an
      * additional message.
-     * 
+     *
      * @param message the message.
      * @param cause the cause.
      */

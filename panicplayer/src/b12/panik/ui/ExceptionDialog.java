@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ExceptionDialog.java
 //                created: 30.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -23,6 +23,6 @@ public class ExceptionDialog extends JDialog {
      */
     public ExceptionDialog(Frame owner) throws HeadlessException {
         super(owner, false);
-        
+
     }
 }

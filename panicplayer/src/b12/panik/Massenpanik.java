@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Massenpanik.java
 //                created: 26.10.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik;
 
@@ -17,14 +17,14 @@ public class Massenpanik {
 
     /**
      * The main method
-     * 
+     *
      * @param args
      *            command line arguments. The syntax is as follows
-     * 
+     *
      * <pre>
      *  &gt;program name&lt; [config.xml]
      * </pre>
-     * 
+     *
      * where <i>config.xml</i> indicates the configuration file to
      *            be read. If omitted the default configuration or the last
      *            user entered configuration is loaded.

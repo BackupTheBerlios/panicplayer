@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: IOUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -15,14 +15,14 @@ import javax.media.Player;
 /**
  * This class provides several methods for calls to the IO. Methods to open
  * files are supported by this class.
- * 
+ *
  * @author kariem
  */
 public class IOUtils {
 
     /**
      * Plays the content of a url.
-     * 
+     *
      * @param url
      *            the url.
      * @throws NoPlayerException
@@ -36,7 +36,7 @@ public class IOUtils {
 
     /**
      * Returns a simple player for the given resource.
-     * 
+     *
      * @param url
      *            the url.
      * @return a player capable of playing the data found in <code>url</code>.

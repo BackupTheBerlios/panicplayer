@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaIOException.java
 //                created: 01.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -34,7 +34,7 @@ public class MediaIOException extends Exception {
     /**
      * Creates a new <code>Exception</code> with a cause and an
      * additional message.
-     * 
+     *
      * @param message the message.
      * @param cause the cause.
      */

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -47,7 +47,7 @@ public class MediaInput implements ControllerListener {
 
    /**
     * Reads from a given <code>URL</code> and returns an associated player.
-    * 
+    *
     * @param url the url from which is read.
     * @return a realized player for the source url.
     * @throws MediaIOException if no <code>Player</code> can be found or a
@@ -138,11 +138,11 @@ public class MediaInput implements ControllerListener {
       System.out.println(event.toString());
 
       if (event instanceof ConfigureCompleteEvent) {
-         
+
          Processor p = (Processor) event.getSource();
          // So I can use it as a player.
          p.setContentDescriptor(null);
-         
+
          TrackControl[] trackControls = p.getTrackControls();
 
          /*
@@ -172,7 +172,7 @@ public class MediaInput implements ControllerListener {
 
       for (int i = 0; i < trackControls.length; i++) {
          // TODO set codec mixeffect
-         //teo: 
+         //teo:
          try {
             Format essai = trackControls[i].getFormat();
             System.out.println("format son:" + essai);

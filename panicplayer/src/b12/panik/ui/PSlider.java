@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PSlider.java
 //                created: 06.12.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -15,7 +15,7 @@ import javax.swing.event.ChangeListener;
 
 /**
  * Creates a Slider with values
- * @author Schurli 
+ * @author Schurli
  */
 public class PSlider extends JPanel {
 
@@ -27,7 +27,7 @@ public class PSlider extends JPanel {
 
     /**
 	 * Creates a Slider with parameters
-	 * 
+	 *
 	 * @param minimum
 	 *            the lowest value
 	 * @param maximum
@@ -73,7 +73,7 @@ public class PSlider extends JPanel {
             value.setText("<html><small>" + val + "</small></html>");
         value.revalidate();
     }
-    
+
     /**
 	 * @param event
 	 */
@@ -113,7 +113,7 @@ public class PSlider extends JPanel {
     }
 
     /**
-	 *  
+	 *
 	 */
 
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Utils.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -16,7 +16,7 @@ public class Utils {
 
     /**
 	 * Converts a <code>long</code> value to an <code>int</code> value.
-	 * 
+	 *
 	 * @param longInput the input as <code>int</code>.
 	 * @return the input as <code>int</code>, while too small or too big
 	 *          input values are cut down to maximum or minimum

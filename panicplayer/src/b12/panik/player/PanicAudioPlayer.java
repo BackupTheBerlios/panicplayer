@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -88,7 +88,7 @@ public class PanicAudioPlayer {
     * Sets the main <code>Track</code>, the "background" track for this
     * player. If the <code>Track</code> was successfully loaded it is
     * returned by this method.
-    * 
+    *
     * @param location the location of the track.
     * @return the newly created track.
     * @throws LocationException if the track could not be found.
@@ -101,10 +101,10 @@ public class PanicAudioPlayer {
 
    /**
     * Adds a <code>Track</code> to this player's tracks.
-    * 
+    *
     * @param location the location of the track.
     * @return the newly created track.
-    * 
+    *
     * @throws LocationException if the track could not be found.
     * @throws ConstraintsException if the loaded track's properties conflict
     *          with previously entered information (e.g. the new track is
@@ -119,7 +119,7 @@ public class PanicAudioPlayer {
 
    /**
     * Removes a previously added <code>Track</code> from this player.
-    * 
+    *
     * @param t the track to be removed
     * @return <code>true</code> if this collection changed as a result of
     *          the call
@@ -129,9 +129,9 @@ public class PanicAudioPlayer {
    }
 
    /*
-    * 
+    *
     * player controls to be used from the outside
-    * 
+    *
     */
 
    /** starts the player */
@@ -170,7 +170,7 @@ public class PanicAudioPlayer {
    /**
     * Returns the main component of this audio player, which is used to control
     * the player itself.
-    * 
+    *
     * @param parent the parent component which will be validatet on a
     *         component change. If <code>parent</code> is <code>null</code>
     *         no update will be performed.

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaOutput.java
 //                created: 01.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -28,7 +28,7 @@ public class MediaOutput {
 
     /**
      * Writes a data source to its destination.
-     * 
+     *
      * @param source
      *            the source to write.
      * @param destUrl
@@ -110,7 +110,7 @@ public class MediaOutput {
     /**
      * Writes <code>source</code> to <code>destUrl</code> without further
      * processing.
-     * 
+     *
      * @param source
      *            the source.
      * @param destUrl

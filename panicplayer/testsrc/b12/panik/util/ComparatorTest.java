@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ComparatorTest.java
 //                created: 29.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -22,12 +22,12 @@ public class ComparatorTest extends TestCase {
     private static final int NB_TEST_UNITS = 100;
 
     private Random random;
-    
+
     /** @see junit.framework.TestCase#setUp() */
     protected void setUp() throws Exception {
         random = new Random();
     }
-    
+
     /** Test for time comparator. */
     public final void testTimeComparator() {
         Time[] times = new Time[NB_TEST_UNITS];
@@ -84,7 +84,7 @@ public class ComparatorTest extends TestCase {
             System.out.println(i.next());
         }
         */
-        
+
         // order collection and convert to array
         Collections.sort(tracksList, new TrackComparator());
         Track[] shuffledTracks = (Track[]) tracksList.toArray(
@@ -113,7 +113,7 @@ public class ComparatorTest extends TestCase {
             }
             tmpTrack = shuffledTracks[i];
         }
-        
+
         /* commented out output
         System.out.println("ordered tracks:");
         for (int i = 0; i < shuffledTracks.length; i++) {
@@ -121,11 +121,11 @@ public class ComparatorTest extends TestCase {
         }
         */
     }
-    
+
     private Track createEmptyTrack(final long start, final long duration) {
         return new Track() {
             // only getStartTime() and getDuration() are implemented
-            
+
             public Time getStartTime() {
                 return new Time(start);
             }
@@ -133,7 +133,7 @@ public class ComparatorTest extends TestCase {
             public Time getDuration() {
                 return new Time(duration);
             }
-            
+
             /** @see java.lang.Object#toString() */
             public String toString() {
                 // returns a visual representation of start and duration (ascii)
@@ -146,11 +146,11 @@ public class ComparatorTest extends TestCase {
                 }
                 return buf.toString();
             }
-            
+
             //
             // for interface implementation purposes
             //
-            
+
             public Format getFormat() {
                 return null;
             }

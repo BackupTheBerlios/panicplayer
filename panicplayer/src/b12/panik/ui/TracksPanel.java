@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanel.java
 //                created: 29.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -40,7 +40,7 @@ public class TracksPanel extends JPanel {
         final Dimension dimDrop = new Dimension(300, 200);
         dropPanel.setPreferredSize(dimDrop);
         dropPanel.setOpaque(false); //in order to see border of panel
-        
+
         // drag panel
         JPanel availablePanel = new JPanel();
         Dimension dimAvailable = new Dimension(300, 100);
@@ -53,21 +53,21 @@ public class TracksPanel extends JPanel {
         add(availablePanel, new GridBagConstraints(0, 1, 1, 1, 1, .4,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
                 0));
-        
+
 		DragObject dragLabel = new DragObject("DragME",DnDConstants.ACTION_COPY_OR_MOVE);
 			dragLabel.setBackground(Color.white);
-			dragLabel.setOpaque(true);    
+			dragLabel.setOpaque(true);
 			availablePanel.add(dragLabel);
-			
+
 		DropObject dropLabel = new DropObject("DropME",DnDConstants.ACTION_COPY_OR_MOVE);
 			dropLabel.setBackground(Color.yellow);
-			dropLabel.setOpaque(true);        
+			dropLabel.setOpaque(true);
 			dropPanel.add(dropLabel);
-	
+
         // TODO initialize with default information
     }
-    
-    
+
+
     /** @see javax.swing.JComponent#paintComponent(java.awt.Graphics) */
     protected void paintComponent(Graphics g) {
         if (ui != null) {
@@ -81,11 +81,11 @@ public class TracksPanel extends JPanel {
             }
         }
     }
-    
+
 
     /**
      * Sets the tracks for this <code>TracksPanel</code>.
-     * 
+     *
      * @param tracks
      *            the new tracks.
      */

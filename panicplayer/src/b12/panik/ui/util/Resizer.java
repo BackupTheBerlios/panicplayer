@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Resizer.java
 //                created: 24.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -11,7 +11,7 @@ import java.awt.event.*;
 import javax.swing.JPanel;
 
 /**
- * A component that resizes a frame. 
+ * A component that resizes a frame.
  * @author kariem
  */
 public class Resizer extends MouseAdapter implements MouseMotionListener {
@@ -64,13 +64,13 @@ public class Resizer extends MouseAdapter implements MouseMotionListener {
             final int difX = resizePoint.x - pressPoint.x;
             final int difY = resizePoint.y - pressPoint.y;
 
-            
+
             if (Math.abs(difX) > 2 || Math.abs(difY) > 2) {
                 Rectangle compBounds = component.getBounds();
-                
+
                 int oldX = compBounds.x;
                 int oldY = compBounds.y;
-                
+
                 if ((edge & BOTTOM) != 0) {
                     compBounds.height += difY;
                     if ((edge & LEFT) != 0) {
@@ -78,19 +78,19 @@ public class Resizer extends MouseAdapter implements MouseMotionListener {
                         compBounds.width -= difX;
                     } else if ((edge & RIGHT) != 0) {
                         compBounds.width += difX;
-                    } 
+                    }
                 } else if ((edge & LEFT) != 0) {
                     compBounds.x += difX;
                     compBounds.width -= difX;
                 } else if ((edge & RIGHT) != 0) {
                     compBounds.width += difX;
                 }
-                setBounds(compBounds);                        
-                
+                setBounds(compBounds);
+
                 Point frameLoc = component.getLocation();
                 pressPoint.x = resizePoint.x - (frameLoc.x - oldX);
                 pressPoint.y = resizePoint.y - (frameLoc.y - oldY);
-                
+
                 component.validate();
             }
         }
@@ -132,12 +132,12 @@ public class Resizer extends MouseAdapter implements MouseMotionListener {
             }
         }
     }
-    
+
     /** @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent) */
     public void mousePressed(MouseEvent e) {
         pressPoint = e.getPoint();
     }
-    
+
     /** @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent) */
     public void mouseReleased(MouseEvent e) {
         pressPoint = null;
@@ -147,13 +147,13 @@ public class Resizer extends MouseAdapter implements MouseMotionListener {
         edge = (byte) i;
         resizing = true;
     }
-    
+
     private void resetCursor() {
         panel.setCursor(Cursor.getDefaultCursor());
         edge = 0;
         resizing = false;
     }
-    
+
     private boolean isLeft(Rectangle r, Point p) {
         return p.x <= r.x + THRESHOLD;
     }

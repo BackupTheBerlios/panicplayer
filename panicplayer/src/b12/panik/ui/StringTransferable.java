@@ -14,7 +14,7 @@ import java.util.List;
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: StringTranferable.java
 //                created: 30.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 
 /**
@@ -27,12 +27,12 @@ public class StringTransferable implements Transferable, ClipboardOwner {
 
   public static final DataFlavor plainTextFlavor = DataFlavor.plainTextFlavor;
   public static final DataFlavor localStringFlavor = DataFlavor.stringFlavor;
-  
+
   public static final DataFlavor[] flavors = {
 	StringTransferable.plainTextFlavor,
 	StringTransferable.localStringFlavor
   };
-  
+
   private static final List flavorList = Arrays.asList( flavors );
   private String string;
 
@@ -43,7 +43,7 @@ public class StringTransferable implements Transferable, ClipboardOwner {
   public StringTransferable(String string) {
 	this.string = string;
   }
-  
+
   private void dumpFlavor(DataFlavor flavor) {
 	System.out.println( "getMimeType " +
 	  flavor.getMimeType() );
@@ -66,21 +66,21 @@ public class StringTransferable implements Transferable, ClipboardOwner {
 	System.out.println( "isFlavorJavaFileListType " +
 	  flavor.isFlavorJavaFileListType() );
   }
-     
+
   public synchronized DataFlavor[] getTransferDataFlavors() {
 //	  return (DataFlavor[]) flavorList.toArray();
 	return flavors;
   }
-     
+
   public boolean isDataFlavorSupported( DataFlavor flavor ) {
 	return ( flavorList.contains( flavor ) );
   }
-  
+
   public synchronized Object getTransferData(DataFlavor flavor)
 	throws UnsupportedFlavorException, IOException {
 	System.err.println( "getTransferData(): ");
-	dumpFlavor(flavor);    
-    
+	dumpFlavor(flavor);
+
 	if (flavor.equals(StringTransferable.plainTextFlavor)) {
 	  return new ByteArrayInputStream(this.string.getBytes("Unicode"));
 	} else if (StringTransferable.localStringFlavor.equals(flavor)) {
@@ -92,10 +92,10 @@ public class StringTransferable implements Transferable, ClipboardOwner {
   public String toString() {
 	return "StringTransferable";
   }
-  
+
   public void lostOwnership(Clipboard clipboard, Transferable contents) {
 	System.out.println ("StringTransferable lost ownership of "  +
 	  clipboard.getName());
-	System.out.println ("data: " + contents);    
+	System.out.println ("data: " + contents);
   }
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Logger.java
 //                created: 26.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -47,7 +47,7 @@ public class Logging {
 
     /**
      * Sets the log file for the application.
-     * 
+     *
      * @param filename the file name.
      */
     public static void setLogFile(String filename) {
@@ -62,7 +62,7 @@ public class Logging {
 
     /**
      * Adds a new file for logging.
-     * 
+     *
      * @param filename
      *            the file name.
      * @param level
@@ -101,7 +101,7 @@ public class Logging {
     /**
      * Creates a new logfile with the given file name. The level of logging
      * will be LVL_FINE by default.
-     * 
+     *
      * @param filename
      *            the name of the log file.
      * @see #addLogFile(String)
@@ -112,7 +112,7 @@ public class Logging {
 
     /**
      * Sets the application-wide logging level. Default is INFO.
-     * 
+     *
      * @param newLevel
      *            the new logging level.
      * @throws SecurityException
@@ -132,7 +132,7 @@ public class Logging {
 
     /**
      * Write debug message to the logger.
-     * 
+     *
      * @param msg
      *            the message.
      */
@@ -142,7 +142,7 @@ public class Logging {
 
     /**
      * Write debug message to the logger with additional information.
-     * 
+     *
      * @param sourceClass
      *            the source class of the logging message.
      * @param sourceMethod
@@ -156,7 +156,7 @@ public class Logging {
 
     /**
      * Write config message to the logger.
-     * 
+     *
      * @param msg
      *            the message.
      */
@@ -166,7 +166,7 @@ public class Logging {
 
     /**
      * Write info message to the logger.
-     * 
+     *
      * @param msg
      *            the message.
      */
@@ -176,7 +176,7 @@ public class Logging {
 
     /**
      * Write warning message to the logger.
-     * 
+     *
      * @param msg
      *            the message.
      */
@@ -186,7 +186,7 @@ public class Logging {
 
     /**
      * Write warning message to the logger and include throwable.
-     * 
+     *
      * @param msg
      *            the message.
      * @param thrown
@@ -199,7 +199,7 @@ public class Logging {
 
     /**
      * Write extremely important message to the logger.
-     * 
+     *
      * @param msg
      *            the message.
      */
@@ -209,7 +209,7 @@ public class Logging {
 
     /**
      * Write extremely important message to the logger and include throwable.
-     * 
+     *
      * @param msg
      *            the message.
      * @param thrown
@@ -221,7 +221,7 @@ public class Logging {
 
     /**
      * Delegate for logger.
-     * 
+     *
      * @param sourceClass
      *            source class.
      * @param sourceMethod
@@ -235,7 +235,7 @@ public class Logging {
 
     /**
      * Returns the <code>Level</code> associated with the given byte.
-     * 
+     *
      * @param lvl
      *            one of LVL_*.
      * @return the associated Level.

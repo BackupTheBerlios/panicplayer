@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TrackComparator.java
 //                created: 29.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -15,16 +15,16 @@ import javax.media.Track;
  */
 public class TrackComparator implements Comparator {
 
-    private static final TimeComparator tComp = new TimeComparator(); 
-    
+    private static final TimeComparator tComp = new TimeComparator();
+
     /** @see Comparator#compare(Object, Object) */
     public int compare(Object o1, Object o2) {
         return compare((Track) o1, (Track) o2);
     }
-    
+
     /**
      * Compares two <code>Track</code> objects.
-     * 
+     *
      * @param track1 the first track.
      * @param track2 the second track-
      * @return the difference in start time and duration. If these are not

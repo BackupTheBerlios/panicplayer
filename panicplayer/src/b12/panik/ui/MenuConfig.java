@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuConfig.java
 //                created: 25.12.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -37,14 +37,14 @@ public class MenuConfig extends JMenu {
     public MenuConfig(Configuration config) {
         super("Configuration");
         this.config = config;
-        
+
         itemShow = new JMenuItem("Show Registered Plugins");
         itemShow.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 showInfo();
             }
         });
-        
+
         itemEdit = new JMenuItem("Edit Config...");
         itemEdit.setAccelerator(KeyStroke.getKeyStroke("control C"));
         itemEdit.addActionListener(new ActionListener() {
@@ -60,7 +60,7 @@ public class MenuConfig extends JMenu {
                 // TODO save configuration
             }
         });
-        
+
         itemLoad = new JMenuItem("Load Config from File...");
         itemLoad.setAccelerator(KeyStroke.getKeyStroke("control L"));
         itemLoad.addActionListener(new ActionListener() {

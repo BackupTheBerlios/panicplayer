@@ -14,8 +14,8 @@ public class GainEffect implements Effect {
     protected Format[] supportedOutputFormats = new Format[0];
     /** selected Gain **/
     protected float gain = 1.2F;
-    /** 
-     * initialize the formats 
+    /**
+     * initialize the formats
      */
     public GainEffect() {
         supportedInputFormats = new Format[]{/*	    new AudioFormat(
@@ -36,23 +36,23 @@ public class GainEffect implements Effect {
                 AudioFormat.SIGNED, 16, Format.NOT_SPECIFIED, Format.byteArray)};
         System.err.println("Set gain by: " + gain);
     }
-    /** 
-     * get the resources needed by this effect 
+    /**
+     * get the resources needed by this effect
      */
     public void open() throws ResourceUnavailableException {
     }
-    /** 
-     * free the resources allocated by this codec 
+    /**
+     * free the resources allocated by this codec
      */
     public void close() {
     }
-    /** 
-     * reset the codec 
+    /**
+     * reset the codec
      */
     public void reset() {
     }
     /**
-     * no controls for this simple effect 
+     * no controls for this simple effect
      */
     public Object[] getControls() {
         return (Object[]) new Control[0];
@@ -74,42 +74,42 @@ public class GainEffect implements Effect {
         }
     }
     /************** format methods *************/
-    /** 
-     * set the input format 
+    /**
+     * set the input format
      */
     public Format setInputFormat(Format input) {
         // the following code assumes valid Format
         inputFormat = (AudioFormat) input;
         return (Format) inputFormat;
     }
-    /** 
-     * set the output format 
+    /**
+     * set the output format
      */
     public Format setOutputFormat(Format output) {
         // the following code assumes valid Format
         outputFormat = (AudioFormat) output;
         return (Format) outputFormat;
     }
-    /** 
-     * get the input format 
+    /**
+     * get the input format
      */
     protected Format getInputFormat() {
         return inputFormat;
     }
-    /** 
-     * get the output format 
+    /**
+     * get the output format
      */
     protected Format getOutputFormat() {
         return outputFormat;
     }
-    /** 
-     * supported input formats 
+    /**
+     * supported input formats
      */
     public Format[] getSupportedInputFormats() {
         return supportedInputFormats;
     }
-    /** 
-     * output Formats for the selected input format 
+    /**
+     * output Formats for the selected input format
      */
     public Format[] getSupportedOutputFormats(Format in) {
         if (!(in instanceof AudioFormat))
@@ -122,20 +122,20 @@ public class GainEffect implements Effect {
                 Format.NOT_SPECIFIED, Format.byteArray);
         return new Format[]{oaf};
     }
-    /** 
-     * gain accessor method 
+    /**
+     * gain accessor method
      */
     public void setGain(float newGain) {
         gain = newGain;
     }
-    /** 
-     * return effect name 
+    /**
+     * return effect name
      */
     public String getName() {
         return EffectName;
     }
-    /** 
-     * do the processing 
+    /**
+     * do the processing
      */
     public int process(Buffer inputBuffer, Buffer outputBuffer) {
         // == prolog
@@ -181,8 +181,8 @@ public class GainEffect implements Effect {
         buffer.setData(typedArray);
         return typedArray;
     }
-    /** 
-     * utility: update the output buffer fields 
+    /**
+     * utility: update the output buffer fields
      */
     protected void updateOutput(Buffer outputBuffer, Format format, int length, int offset) {
         outputBuffer.setFormat(format);

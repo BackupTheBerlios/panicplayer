@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UIUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -22,7 +22,7 @@ public class UIUtils {
 
     /**
      * Opens an exception dialog and displays information about the cause.
-     * 
+     *
      * @param parent the parent component.
      * @param t the throwable.
      * @param message the message.
@@ -36,7 +36,7 @@ public class UIUtils {
 
     /**
      * Opens an exception dialog and displays information about the cause.
-     * 
+     *
      * @param parent the parent component.
      * @param t the throwable.
      * @param message the message.
@@ -47,7 +47,7 @@ public class UIUtils {
 
     /**
      * Opens an exception dialog and displays information about the cause.
-     * 
+     *
      * @param parent the parent component.
      * @param t the throwable.
      */
@@ -55,8 +55,8 @@ public class UIUtils {
         openExceptionDialog(parent, t, t.getMessage());
     }
 
-    /** 
-     * Centers the component on the screen. 
+    /**
+     * Centers the component on the screen.
      * @param c the component to center.
      */
     public static void center(Component c) {

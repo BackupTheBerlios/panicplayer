@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: SplashScreen.java
 //                created: 30.11.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -15,17 +15,17 @@ import javax.swing.border.Border;
 
 /**
  * The Splash Screen
- * 
- * @author schurli 
+ *
+ * @author schurli
  */
 public class SplashScreen extends JWindow {
 
     final SleeperThread sleeper;
     boolean closed = false;
-    
+
     /**
      * Creates a new splash screen.
-     * 
+     *
      * @param image the image.
      * @param text the text.
      */
@@ -42,7 +42,7 @@ public class SplashScreen extends JWindow {
         contentPane.add(new JLabel(text, JLabel.CENTER), BorderLayout.SOUTH);
         setContentPane(contentPane);
         sleeper = new SleeperThread();
-        
+
         // closes the dialog on click
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -61,11 +61,11 @@ public class SplashScreen extends JWindow {
         setVisible(true);
 
     }
-    
+
     /**
      * Shows the splash screen for <code>millis</code> milliseconds. If the
      * window is clicked the splash screen will be disposed.
-     * 
+     *
      * @param millis the amount of milliseconds.
      * @see #showUntilClick()
      */
@@ -74,7 +74,7 @@ public class SplashScreen extends JWindow {
         sleeper.setMillis(millis);
         sleeper.start();
     }
-    
+
     /** Closes this dialog */
     public void close() {
         if (!closed) {
@@ -87,11 +87,11 @@ public class SplashScreen extends JWindow {
     /** Sleeps and closes the dialog after some time.  */
     class SleeperThread extends Thread {
         long millis;
-        
+
         void setMillis(int millis) {
             this.millis = millis;
         }
-        
+
         /** @see java.lang.Thread#run() */
         public void run() {
             if (Thread.currentThread() == this) {

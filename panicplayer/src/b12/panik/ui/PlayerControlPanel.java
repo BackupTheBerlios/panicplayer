@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 /**
- * A panel that provides controls for a simple audio player. 
+ * A panel that provides controls for a simple audio player.
  * @author kariem
  */
 public class PlayerControlPanel extends JPanel {
@@ -72,7 +72,7 @@ public class PlayerControlPanel extends JPanel {
         // TODO use PanicAudioPlayer in here
         // construct listener with this component
         ControllerListener listener = new ControllerAdapter() {
-           
+
            public void prefetchComplete(PrefetchCompleteEvent e) {
               System.out.println("\n\tplayer prefetched\n");
                 // get visual component and control component from player
