@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -28,7 +28,7 @@ public class OffsetedArray {
      * Creates a new instance of <code>OffsetedArray</code> from a buffer.
      * @param buffer the source buffer.
      * @param beginIndex the startIndex in byte.
-     * @param invGain the inverse of the gain.
+     * @param signedToUnsigned whether to convert signet to unsigned.
      */
     public OffsetedArray(Buffer buffer, long beginIndex, boolean signedToUnsigned) {
         startIndex = beginIndex;
@@ -42,29 +42,11 @@ public class OffsetedArray {
         System.arraycopy(inputData, offset, content, 0, bufferLength);
 
         if (signedToUnsigned) {
-            System.out.println("converting");
             for (int i = 0; i < content.length; i++) {
                 // conversion
                 content[i] = (byte) (content[i] + 128);
             }
-        } else {
-            System.out.println("not converting");
         }
-
-        /*        if (invGain != 1) {
-         // change gain according to gain.
-         for (int i = 0; i < bufferLength; i++) {
-         content[i] = intToUnsignedByte(unsignedByteToInt(content[i]) / invGain);
-         }
-         }*/
-
-        //        for (int i = 0; i < buffer.getLength(); i++) {
-        //	if(invGain==1) {
-        //            content[i] = inputData[i + offset];
-        //	} else {
-        //		content[i]=intToUnsignedByte(unsignedByteToInt(inputData[i+offset])/invGain);
-        //	}
-        //        }
     }
 
     /** Creates a new null instance of <code>OffsetedArray</code>. */
@@ -120,7 +102,6 @@ public class OffsetedArray {
      * Creates a new instance of <code>OffsetedArray</code> from a urlTracks.
      * @param urlTrack the source UrlTrack.
      * @param timePer1000Bytes the time in ms for 1000 byte.
-     * @param invGain the inverse of the gain.
      */
     public OffsetedArray(UrlTrack urlTrack, double timePer1000Bytes) {
         AudioFormat trackFormat = (AudioFormat) urlTrack.getFormat();
@@ -206,17 +187,18 @@ public class OffsetedArray {
     public static OffsetedArray addOffsetedArray(OffsetedArray array1, OffsetedArray array2) {
         OffsetedArray result = new OffsetedArray();
         OffsetedArray longerArray, shorterArray;
-        long begin, commonBegin, commonEnd, end, length1, length2, length;
+        int begin, end, length;
         byte[] resultContent;
         byte resultByte;
         boolean isInLonger;
         boolean isInShorter;
 
         if (array1 == null) {
+            System.out.println("Array1 is null");
             return array2;
         }
-
         if (array2 == null) {
+            System.out.println("Array2 is null");
             return array1;
         }
 
@@ -228,37 +210,28 @@ public class OffsetedArray {
             shorterArray = new OffsetedArray(array1);
         }
 
-        final long longerIndexStart = longerArray.getStartIndex();
-        final long longerIndexDuration = longerArray.getDurationIndex();
-        final long shorterIndexStart = shorterArray.getStartIndex();
-        final long shorterIndexDuration = shorterArray.getDurationIndex();
+        final int firstStart = (int) longerArray.getStartIndex();
+        final int firstDur = (int) longerArray.getDurationIndex();
+        final int firstEnd = firstStart + firstDur;
 
-        begin = Math.min(longerIndexStart, shorterIndexStart);
-        end = Math.max(longerIndexStart + longerIndexDuration, shorterIndexStart
-                + shorterIndexDuration);
+        final int secondStart = (int) shorterArray.getStartIndex();
+        final int secondDur = (int) shorterArray.getDurationIndex();
+        final int secondEnd = secondStart + secondDur;
+
+        begin = Math.min(firstStart, secondStart);
+        end = Math.max(firstEnd, secondEnd);
         length = end - begin;
-        resultContent = new byte[(int) length];
+        resultContent = new byte[length];
 
-        for (int i = (int) begin; i < length + begin; i++) {
-            isInLonger = ((i >= longerIndexStart) && (i < longerIndexStart
-                    + longerIndexDuration));
-            isInShorter = ((i >= shorterIndexStart) && (i < shorterIndexStart
-                    + shorterIndexDuration));
-            if (isInLonger) {
-                if (isInShorter) {
-                    resultByte = addByte(longerArray.getByteI(i - ((int) longerIndexStart)),
-                            shorterArray.getByteI(i - ((int) shorterIndexStart)));
-                } else {
-                    resultByte = longerArray.getByteI(i - ((int) longerIndexStart));
-                }
-            } else {
-                if (isInShorter) {
-                    resultByte = shorterArray.getByteI(i - ((int) shorterIndexStart));
-                } else {
-                    resultByte = byteZero();
-                }
-            }
-            resultContent[i - ((int) begin)] = resultByte;
+        for (int i = begin; i < end; i++) {
+            isInLonger = (i >= firstStart && i < firstEnd);
+            isInShorter = (i >= secondStart && i < secondEnd);
+
+            resultByte = (byte) ((isInLonger ? longerArray.getByteI(i - firstStart) : 0) + (isInShorter
+                    ? shorterArray.getByteI(i - secondStart)
+                    : 0));
+
+            resultContent[i - begin] = resultByte;
         }
 
         result.setStartIndex(begin);
@@ -302,23 +275,17 @@ public class OffsetedArray {
      * Adjust the content in order to have an array with the wanted length. 
      * @param length the wanted length
      */
-    public void setSizeTo(long length) {
-        if (content.length < length) {
-            byte[] newContent = new byte[((int) length)];
-            for (int i = 0; i < content.length; i++) {
-                newContent[i] = content[i];
+    public void setSizeTo(int length) {
+
+        if (length != content.length) {
+            final int max = Math.min(content.length, length);
+            byte[] newContent = new byte[length];
+            System.arraycopy(content, 0, newContent, 0, max);
+            if (max < length) {
+                for (int i = max; i < length; i++) {
+                    newContent[i] = 0;
+                }
             }
-            for (int i = content.length; i < length; i++) {
-                newContent[i] = byteZero();
-            }
-            content = newContent;
-        }
-        if (content.length > length) {
-            byte[] newContent = new byte[((int) length)];
-            for (int i = 0; i < length; i++) {
-                newContent[i] = content[i];
-            }
-            content = newContent;
         }
     }
 
@@ -369,19 +336,14 @@ public class OffsetedArray {
         if (i >= 128) {
             i -= 256;
         }
-        return ((new Integer(i)).byteValue());
-    }
-
-    /** @see java.lang.Object#toString() */
-    public String toString() {
-        return getClass().getName() + " " + name;
+        return (byte) i;
     }
 
     /**
-     * @param d
+     * This is used to set the gain.
+     * @param d the gain.
      */
-    public void multiply(double d) {
-        System.out.println("multiplying : " + d);
+    void multiply(double d) {
         if (d != 1) {
             for (int i = 0; i < content.length; i++) {
                 //System.out.print(content[i] + " => ");
@@ -390,5 +352,4 @@ public class OffsetedArray {
             }
         }
     }
-
 }

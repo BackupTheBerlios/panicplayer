@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.20 $
+//              $Revision: 1.21 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -37,19 +37,8 @@ public class MixEffect implements Codec, TrackManager {
     private Format currentFormat;
     private String effectName = "PanicPlayerEffect";
 
-    //the number of tracks that can be played simultaneous
-    private int maxConcurrentTracks = 4;
-
     private SortedSet offsetedArrays;
 
-    /*    private Set playedOffsetedArrays;
-     private SortedSet nonPlayedOffsetedArrays;
-     private OffsetedArray currentOffsetedArray;
-     private OffsetedArray currentOffsetedArrayToPlay;
-     private Set offsetedArraysToAdd;
-     private SortedSet tempNonPlayedOffsetedArrays;
-     private SortedSet tempPlayedOffsetedArrays;
-     */
     /**	Time in ms per 1000 byte. */
     private double timePer1000Byte;
 
@@ -57,7 +46,6 @@ public class MixEffect implements Codec, TrackManager {
 
     private long currentBeginIndex;
     private long currentEndIndex;
-    //    private Iterator iterator;
 
     private final Set urlTracks;
 
@@ -77,22 +65,6 @@ public class MixEffect implements Codec, TrackManager {
     }
 
     /**
-     * Set the number of maximal simultaneous tracks.
-     * @param nb the desired number. 
-     */
-    public void setMaxConcurrentTracks(int nb) {
-        maxConcurrentTracks = nb;
-    }
-
-    /**
-     * Return the number of maximal simultaneous tracks.
-     * @return the number of simultaneous tracks.
-     */
-    public int getMaxConcurrentTracks() {
-        return maxConcurrentTracks;
-    }
-
-    /**
      * Adds a single input <code>UrlTrack</code> to the effect. This track will
      * not be managed.
      * @param track the track to be added.
@@ -100,7 +72,7 @@ public class MixEffect implements Codec, TrackManager {
     void addInputUrlTrack(UrlTrack track) {
         tracksPanel.addTrack(track);
     }
-    
+
     /**
      * Adds a track to this effect, which will be managed by the effect, if the
      * track is enabled.
@@ -152,64 +124,11 @@ public class MixEffect implements Codec, TrackManager {
 
     /** @see Codec#process(Buffer, Buffer) */
     public int process(Buffer inputBuffer, Buffer outputBuffer) {
-        //System.out.println("...");
-        //printShortedBuffer(inputBuffer);
         final long timeStamp = inputBuffer.getTimeStamp();
-        // calculate number of bytes from zero
-        /* System.out.println("temps en ns: "+processor.getMediaNanoseconds());
-         double temp=(double) ((processor.getMediaNanoseconds())/(((double) (1000))*timePer1000Byte));
-         long timeInByte=(long) Math.floor(temp);
-         
-         System.out.println("temps en byte: "+timeInByte); */
-
         int inputLength = (inputBuffer.getLength());
         if (!initialisationRealized) {
-            //setTimePer1000Byte();
-
-            //test
-            /*	try {
-             //                    URI urlAah =
-             //                        new File(
-             //                        "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/aaaa2.25.11k.wav").toURI();
-             URI urlAah =
-             new File("sounds/aaaa2.25.11k.wav").toURI();
-             
-             URI urlOoh =
-             new File("sounds/oooo2.5.11k.wav").toURI();
-             URI urlIih =
-             new File("sounds/iiii2.5.11k.wav").toURI();
-             
-             //             URL urlAah =
-             //             new java.net.URL(
-             //             "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/aaaa2.25.11k.wav");
-             //             URL urlOoh =
-             //             new java.net.URL(
-             //             "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/oooo2.5.11k.wav");
-             //             URL urlIih =
-             //             new java.net.URL(
-             //             "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/iiii2.5.11k.wav");
-
-             UrlTrack trackAah = new UrlTrack(urlAah, 500);
-             urlTracks.add(trackAah);
-             UrlTrack trackOoh = new UrlTrack(urlOoh, 3000);
-             urlTracks.add(trackOoh);
-             UrlTrack trackIih = new UrlTrack(urlIih, 6000);
-             urlTracks.add(trackIih);
-             UrlTrack trackOoh2=new UrlTrack(urlOoh,2000);
-             urlTracks.add(trackOoh2);
-             UrlTrack trackIih2 = new UrlTrack(urlIih, 1000);
-             urlTracks.add(trackIih2);
-             } catch (Exception e) {
-             System.out.println("********pb d url*************");
-             } */
-            //fin test
             initialiseOffsetedArrays();
             currentBeginIndex = -inputLength;
-            /*            playedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
-             if (!(offsetedArrays.isEmpty())) {
-             nonPlayedOffsetedArrays = new TreeSet(offsetedArrays);
-             }
-             */
             initialisationRealized = true;
         }
 
@@ -223,48 +142,6 @@ public class MixEffect implements Codec, TrackManager {
         currentBeginIndex = (long) byteOffset;
         currentEndIndex = currentBeginIndex + inputLength;
 
-        /*        if (!(nonPlayedOffsetedArrays.isEmpty())) {
-         iterator = nonPlayedOffsetedArrays.iterator();
-         currentOffsetedArray = (OffsetedArray) iterator.next();
-         } else {
-         currentOffsetedArray = null;
-         }
-
-         tempNonPlayedOffsetedArrays = new TreeSet(nonPlayedOffsetedArrays);
-
-         while ((currentOffsetedArray != null)
-         && (currentOffsetedArray.getStartIndex() <= currentEndIndex)) {
-         playedOffsetedArrays.add(currentOffsetedArray);
-         tempNonPlayedOffsetedArrays.remove(currentOffsetedArray);
-         if (iterator.hasNext()) {
-         currentOffsetedArray = (OffsetedArray) iterator.next();
-         } else {
-         currentOffsetedArray = null;
-         }
-         }
-
-         nonPlayedOffsetedArrays = new TreeSet(tempNonPlayedOffsetedArrays);
-         offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
-         offsetedArraysToAdd.add(new OffsetedArray(inputBuffer, currentBeginIndex,
-         maxConcurrentTracks));
-
-         tempPlayedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
-         tempPlayedOffsetedArrays.addAll(playedOffsetedArrays);
-         currentOffsetedArray = null;
-         for (Iterator i = playedOffsetedArrays.iterator(); i.hasNext(); ) {
-         currentOffsetedArray = (OffsetedArray) i.next();
-         currentOffsetedArrayToPlay = new OffsetedArray(currentOffsetedArray,
-         currentBeginIndex, currentEndIndex);
-
-         if (currentOffsetedArrayToPlay.getDurationIndex() == 0) {
-         tempPlayedOffsetedArrays.remove(currentOffsetedArray);
-         } else {
-         offsetedArraysToAdd.add(currentOffsetedArrayToPlay);
-         }
-         }
-         playedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
-         playedOffsetedArrays.addAll(tempPlayedOffsetedArrays);
-         */
         Set offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
 
         for (Iterator i = offsetedArrays.iterator(); i.hasNext(); ) {
@@ -272,61 +149,54 @@ public class MixEffect implements Codec, TrackManager {
             final long osaStart = osa.getStartIndex();
             if (osaStart <= currentBeginIndex) {
                 if (osaStart + osa.getDurationIndex() > currentBeginIndex) {
-                    offsetedArraysToAdd.add(osa);
+                    OffsetedArray newArray = new OffsetedArray(osa, currentBeginIndex,
+                            currentEndIndex);
+                    offsetedArraysToAdd.add(newArray);
                 }
             } else if (osaStart > currentBeginIndex && osaStart < currentEndIndex) {
-                offsetedArraysToAdd.add(osa);
+                OffsetedArray newArray = new OffsetedArray(osa, currentBeginIndex,
+                        currentEndIndex);
+                offsetedArraysToAdd.add(newArray);
             }
         }
 
         // add current buffer
         OffsetedArray main = new OffsetedArray(inputBuffer, currentBeginIndex, false);
-        main.name = "main";
         offsetedArraysToAdd.add(main);
 
-        System.out.println("---");
-
+        OffsetedArray outputArray;
         final int size = offsetedArraysToAdd.size();
-        if (size > 0) {
+        if (size > 1) {
             // change gain of all tracks which are going to be added
             for (Iterator i = offsetedArraysToAdd.iterator(); i.hasNext(); ) {
                 OffsetedArray os = (OffsetedArray) i.next();
-                os.multiply(1.0/size);
+                os.multiply(1.0 / size);
             }
+            outputArray = addOffsetedArrays(offsetedArraysToAdd);
+        } else {
+            outputArray = main;
         }
 
-        OffsetedArray outputArray = addOffsetedArrays(offsetedArraysToAdd);
-        outputArray.setSizeTo(((byte[]) inputBuffer.getData()).length);
+        outputArray.setSizeTo(inputBuffer.getLength());
 
         outputBuffer.copy(inputBuffer);
 
         outputArray.putData(outputBuffer);
-        //        System.out.print("out: ");
-        //        printShortedBuffer(outputBuffer);
         return BUFFER_PROCESSED_OK;
     }
 
     OffsetedArray addOffsetedArrays(Set offsetedArraysSet) {
-        System.out.println("Adding offset arrays");
         OffsetedArray offsetedArrayResult = null;
-        //        int i = 1;
-        for (Iterator iter = offsetedArraysSet.iterator(); iter.hasNext(); ) {
-            OffsetedArray currentOffsetedArray = (OffsetedArray) iter.next();
-            System.out.println("  adding " + currentOffsetedArray);
-            offsetedArrayResult = OffsetedArray.addOffsetedArray(offsetedArrayResult,
-                    currentOffsetedArray);
-            //            i++;
+        Iterator i = offsetedArraysSet.iterator();
+        if (i.hasNext()) {
+            offsetedArrayResult = (OffsetedArray) i.next();
+            for (; i.hasNext(); ) {
+                OffsetedArray currentOffsetedArray = (OffsetedArray) i.next();
+                offsetedArrayResult = OffsetedArray.addOffsetedArray(offsetedArrayResult,
+                        currentOffsetedArray);
+            }
         }
         return offsetedArrayResult;
-    }
-
-    /**
-     * Prepare the effect to restart.
-     *
-     */
-    public void prepareToRestart() {
-        initialisationRealized = false;
-        //    	currentBeginIndex=0;    	
     }
 
     /**
@@ -369,9 +239,9 @@ public class MixEffect implements Codec, TrackManager {
 
     /** @see PlugIn#reset() */
     public void reset() {
-        // do nothing
+        initialisationRealized = false;
     }
-    
+
     /** Resets the mixeffect to its initial state. */
     public void resetVisuals() {
         urlTracks.clear();
@@ -405,7 +275,7 @@ public class MixEffect implements Codec, TrackManager {
             public void run() {
                 if (this == Thread.currentThread()) {
                     try {
-                        double seconds = IOUtils.getTrackLength(url); 
+                        double seconds = IOUtils.getTrackLength(url);
                         tracksPanel.setLength(seconds);
                         setTimePer1000Byte(IOUtils.getTimePer1000Byte(url));
                     } catch (UnsupportedAudioFileException e) {

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.16 $
+//              $Revision: 1.17 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -233,10 +233,6 @@ public class PanicAudioPlayer implements ControllerListener {
                     Logging.warning("Unsupported plugin", e);
                 }
             }
-        }
-
-        if (event instanceof TransitionEvent) {
-            mixEffect.prepareToRestart();
         }
     }
 }
