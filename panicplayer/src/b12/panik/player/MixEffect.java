@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.17 $
+//              $Revision: 1.18 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -256,10 +256,6 @@ public class MixEffect implements Codec {
          */
         Set offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
 
-        // add current buffer
-        OffsetedArray main = new OffsetedArray(inputBuffer, currentBeginIndex, maxConcurrentTracks);
-        main.name = "main";
-        offsetedArraysToAdd.add(main);
 
         for (Iterator i = offsetedArrays.iterator(); i.hasNext(); ) {
             OffsetedArray osa = (OffsetedArray) i.next();
@@ -273,6 +269,12 @@ public class MixEffect implements Codec {
                 offsetedArraysToAdd.add(osa);
             }
         }
+
+        // add current buffer
+        OffsetedArray main = new OffsetedArray(inputBuffer, currentBeginIndex);
+        main.name = "main";
+        offsetedArraysToAdd.add(main);
+        
         System.out.println("---");
 
         OffsetedArray outputArray = addOffsetedArrays(offsetedArraysToAdd);
@@ -421,8 +423,7 @@ public class MixEffect implements Codec {
         offsetedArrays = new TreeSet(new OffsetedArrayComparator());
         for (Iterator iter = urlTracks.iterator(); iter.hasNext(); ) {
             UrlTrack currentUrlTrack = (UrlTrack) iter.next();
-            offsetedArrays.add(new OffsetedArray(currentUrlTrack, timePer1000Byte,
-                    maxConcurrentTracks));
+            offsetedArrays.add(new OffsetedArray(currentUrlTrack, timePer1000Byte));
         }
     }
 

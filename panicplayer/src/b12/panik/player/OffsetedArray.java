@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -32,16 +32,28 @@ public class OffsetedArray {
      */
     public OffsetedArray(Buffer buffer, long beginIndex, int invGain) {
         startIndex = beginIndex;
-        byte[] inputData = (byte[]) buffer.getData();
-        content = new byte[buffer.getLength()];
-        int offset = buffer.getOffset();
-        for (int i = 0; i < buffer.getLength(); i++) {
-            //	if(invGain==1) {
-            content[i] = inputData[i + offset];
-            //	} else {
-            //		content[i]=intToUnsignedByte(unsignedByteToInt(inputData[i+offset])/invGain);
-            //	}
+        final byte[] inputData = (byte[]) buffer.getData();
+        final int bufferLength = buffer.getLength();
+        final int offset = buffer.getOffset();
+
+        content = new byte[bufferLength];
+
+        // quick array copy
+        System.arraycopy(inputData, offset, content, 0, bufferLength);
+        if (invGain != 1) {
+            // change gain according to gain.
+            for (int i = 0; i < bufferLength; i++) {
+                content[i] = intToUnsignedByte(unsignedByteToInt(content[i]) / invGain);
+            }
         }
+
+        //        for (int i = 0; i < buffer.getLength(); i++) {
+        //	if(invGain==1) {
+        //            content[i] = inputData[i + offset];
+        //	} else {
+        //		content[i]=intToUnsignedByte(unsignedByteToInt(inputData[i+offset])/invGain);
+        //	}
+        //        }
     }
 
     /** Creates a new null instance of <code>OffsetedArray</code>. */
@@ -347,7 +359,7 @@ public class OffsetedArray {
         }
         return ((new Integer(i)).byteValue());
     }
-    
+
     /** @see java.lang.Object#toString() */
     public String toString() {
         return getClass().getName() + " " + name;
