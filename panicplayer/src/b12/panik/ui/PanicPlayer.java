@@ -1,11 +1,14 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -15,6 +18,8 @@ import java.io.File;
 import javax.media.Player;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 import b12.panik.io.MediaIOException;
 import b12.panik.io.MediaInput;
@@ -27,7 +32,7 @@ import b12.panik.util.Logging;
 public class PanicPlayer extends JFrame {
 
     private static final boolean CLOSE_PLAYER_ON_EXIT = true;
-
+    
     private PanicAudioPlayer panicAudioPlayer;
     private PlayerControlPanel panelPlayerControl;
 
@@ -39,6 +44,24 @@ public class PanicPlayer extends JFrame {
     /** Creates a new PanicPlayer. */
     public PanicPlayer() {
         super("Panic Player");
+		try {
+			String plaf = "com.stefankrause.xplookandfeel.XPLookAndFeel";
+			//String plaf = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+			UIManager.setLookAndFeel(plaf);
+		} catch (UnsupportedLookAndFeelException e) {
+			String errorCause = "Unsupported Look and Feel";
+			Logging.info(errorCause);
+		} catch (ClassNotFoundException e) {
+			String errorCause = "Look and Feel class not found";
+			Logging.info(errorCause);
+		} catch (InstantiationException e) {
+			String errorCause = "Look and Feel InstantiationException";
+			Logging.info(errorCause);
+		} catch (IllegalAccessException e) {
+			String errorCause = "Look and Feel Illegal Acces";
+			Logging.info(errorCause);
+		}
+    
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 exitApplication();
@@ -66,6 +89,7 @@ public class PanicPlayer extends JFrame {
         // Player Controls
         panelPlayerControl = new PlayerControlPanel(null);
         contentPane.add(panelPlayerControl, BorderLayout.SOUTH);
+
     }
 
 
