@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -80,10 +80,10 @@ public class PlayerControlPanel extends JPanel {
                     centerComponent = vc;
                 } else {
                     // no vis component, replace with label
-                    //visLabel.setText("No visual component for player.");
-                    PSlider volSlider = new PSlider(-50, 50, 0, "Vol");
+                    visLabel.setText("No visual component for player.");
+                    //PSlider volSlider = new PSlider(-50, 50, 0, "Vol");
                     //visLabel.add(volSlider);
-                    centerComponent = volSlider;
+                    centerComponent = visLabel;
                 }
                 add(centerComponent, BorderLayout.CENTER);
                 final Component cpc = player.getControlPanelComponent();

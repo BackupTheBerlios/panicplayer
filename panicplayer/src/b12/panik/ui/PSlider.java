@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PSlider.java
 //                created: 06.12.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -56,9 +56,24 @@ public class PSlider extends JPanel {
         txt = new JLabel(type);
         txt.setBounds(0, 135, 30, 20);
         add(txt);
+		slider.addChangeListener(new ChangeListener() {
+					public void stateChanged(ChangeEvent e) {
+						changeValue();
+					}
+				});
 
     }
 
+    private void changeValue() {
+        fireChangeEvent(new ChangeEvent(this));
+        int val = getValue();
+        if (val > 0)
+            value.setText("<html><small>+" + val + "</small></html>");
+        else
+            value.setText("<html><small>" + val + "</small></html>");
+        value.revalidate();
+    }
+    
     /**
 	 * @param event
 	 */
@@ -100,14 +115,5 @@ public class PSlider extends JPanel {
     /**
 	 *  
 	 */
-    private void changeValue() {
-        fireChangeEvent(new ChangeEvent(this));
-        int val = getValue();
-        if (val > 0)
-            value.setText("<html><small>+" + val + "</small></html>");
-        else
-            value.setText("<html><small>" + val + "</small></html>");
-        value.revalidate();
-    }
 
 }
