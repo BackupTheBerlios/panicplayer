@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PSlider.java
 //                created: 06.12.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -83,7 +83,8 @@ public class PSlider extends JPanel {
     }
 
     /**
-	 * @return
+     * Returns the change listeners.
+	 * @return the change listeners.
 	 */
     public Vector getChangeListeners() {
         if (changeListeners == null)
@@ -101,19 +102,19 @@ public class PSlider extends JPanel {
     }
 
     /**
-	 * @return
+     * Returns the slider value.
+	 * @return the slider's value
 	 */
     private int getValue() {
         return slider.getValue();
     }
 
-    public void setValeur(int val) {
+    /**
+     * Sets the sliders value.
+     * @param val the new value.
+     */
+    public void setValue(int val) {
         slider.setValue(val);
         changeValue();
     }
-
-    /**
-	 *
-	 */
-
 }

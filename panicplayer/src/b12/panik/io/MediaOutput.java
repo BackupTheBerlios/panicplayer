@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaOutput.java
 //                created: 01.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -29,25 +29,24 @@ public class MediaOutput {
     /**
      * Writes a data source to its destination.
      *
-     * @param source
-     *            the source to write.
-     * @param destUrl
-     *            the destination URL. If the protocol is <i>RTP</i> the
-     *            output is encoded in {@linkplain FORMAT_RTP_OUTPUT}, in
-     *            order to be effectively sent over the network.
-     * @throws MediaIOException
-     *             if one of the following errors occur:
-     *             <ul>
-     *             <li>No data sink was found.</li>
-     *             <li>Problem writing to the data sink.</li>
-     *             <li>Security violation while accessing <code>destUrl</code>.
-     *             </li>
-     *             <li>No processor could be created for the data source
-     *             (RTP).</li>
-     *             <li>No connection to the data source is possible (RTP).
-     *             </li>
-     *             <li>Encoding failed (RTP).</li>
-     *             </ul>
+     * @param source the source to write.
+     * @param destUrl the destination URL. If the protocol is <i>RTP</i> the
+     *         output is encoded in {@linkplain #FORMAT_RTP_OUTPUT}, in order
+     *         to be effectively sent over the network.
+     * @throws MediaIOException if one of the following errors occur:
+     *          <ul>
+     *            <li>No data sink was found.</li>
+     *            <li>Problem writing to the data sink.</li>
+     *            <li>
+     *                Security violation while accessing <code>destUrl</code>.
+     *            </li>
+     *            <li>
+     *                No processor could be created for the data source
+     *                (RTP).
+     *            </li>
+     *            <li>No connection to the data source is possible (RTP).</li>
+     *            <li>Encoding failed (RTP).</li>
+     *          </ul>
      */
     public void write(DataSource source, URL destUrl) throws MediaIOException {
         String protocol = destUrl.getProtocol();

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationTest.java
 //                created: 26.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -36,7 +36,7 @@ public class ConfigurationTest extends TestCase {
     public final void testParsedObject()  {
         Configuration conf = null;
         Random r = new Random();
-        File f = new File("output-"+r.nextInt()+".xml");
+        File f = new File("output-"+r.nextInt(100)+".xml");
         try {
             conf = new Configuration(FILENAME2);
             conf.writeTo(f);

@@ -2,7 +2,7 @@
 <!--
      [b12] Ant Build File: javadoc.xml
                   created: 27.10.2003
-                $Revision: 1.5 $
+                $Revision: 1.6 $
 -->
 <project name="Panic Player - Javadoc" default="javadoc">
     <property name="doc" value="doc"/>
@@ -30,7 +30,7 @@
             <arg value="/C"/>
             <arg value="index.html"/>
         </exec>
-        <exec executable="cmd" os="Windows 2000" spawn="true">
+        <exec executable="cmd" os="Windows 2000" dir="${doc.api}" spawn="true">
             <arg value="/C"/>
             <arg value="index.html"/>
         </exec>

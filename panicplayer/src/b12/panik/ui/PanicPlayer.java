@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.24 $
+//              $Revision: 1.25 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -112,7 +112,7 @@ public class PanicPlayer extends JFrame {
                 if (name.equals(MenuFile.PROP_FILE_EXIT)) {
                     exitApplication();
                 } else if (name.equals(MenuFile.PROP_FILE_OPEN)) {
-                    loadSoundFile((File) evt.getNewValue());
+                    loadMainTrack((File) evt.getNewValue());
                 }
             }
         });
@@ -268,11 +268,11 @@ public class PanicPlayer extends JFrame {
          */
     }
 
-    void loadSoundFile(File f) {
+    void loadMainTrack(File f) {
         try {
-            conf.loadSoundFile(f);
+            conf.loadMainSoundFile(f);
         } catch (MediaIOException e) {
-            String errorCause = "Problem while trying to play sound file."; //$NON-NLS-1$
+            String errorCause = "Problem while trying to load sound file."; //$NON-NLS-1$
             Logging.info(errorCause);
             UIUtils.openExceptionDialog(this, e, errorCause);
         } catch (Throwable t) {

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -112,7 +112,9 @@ public class Configuration {
      */
     public void writeTo(File f) throws IOException {
         try {
-            XmlParser.writeParsedObject(getParsedObject(), new FileWriter(f), true);
+            FileWriter writer = new FileWriter(f);
+            XmlParser.writeParsedObject(getParsedObject(), writer, true);
+            writer.close();
         } catch (ParserConfigurationException e) {
             throw new IOException(Resources.getString("Configuration.xmlerror")
                     + e.getMessage()); //$NON-NLS-1$
@@ -204,10 +206,10 @@ public class Configuration {
      * Loads a sound file.
      * @param f the file to be loaded.
      * @throws MediaIOException if an error occured while loading the sound
-     *          file. See {@linkplain PanicAudioPlayer#loadSoundFile(File)} for
+     *          file. See {@linkplain #loadMainTrack(URL)} for
      *          more information.
      */
-    public void loadSoundFile(File f) throws MediaIOException {
+    public void loadMainSoundFile(File f) throws MediaIOException {
         URL url;
         try {
             url = f.toURL();
