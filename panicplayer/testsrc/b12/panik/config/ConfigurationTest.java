@@ -1,12 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationTest.java
 //                created: 26.10.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 
 import junit.framework.TestCase;
 
@@ -34,14 +35,16 @@ public class ConfigurationTest extends TestCase {
     /** Test for configuration writing */
     public final void testParsedObject()  {
         Configuration conf = null;
+        Random r = new Random();
+        File f = new File("output-"+r.nextInt()+".xml");
         try {
             conf = new Configuration(FILENAME2);
-            File f = new File("output.xml");
             conf.writeTo(f);
         } catch (ConfigurationException e) {
             fail(e.toString());
         } catch (IOException e) {
             fail(e.toString());
         }
+        f.deleteOnExit();
     }
 }

@@ -2,7 +2,7 @@
 <!--
      [b12] Ant Build File: build.xml
                   created: 01.11.2003
-                $Revision: 1.4 $
+                $Revision: 1.5 $
 -->
 <project name="Panic Player" default="run" basedir=".">
 
@@ -97,9 +97,8 @@
     <target name="source-distro"
             description="Creates a source distribution in directory ${dir.sources}"
             depends="test, javadoc">
-        <mkdir dir="${dir.sources}"/>
         <!-- create tar gzip bzip2 and zip files -->
-        <property name="name" value="${tar.sources}-${DSTAMP}"/>
+        <property name="name" value="${file.sources}-${DSTAMP}"/>
         <tar destfile="${name}.tar">
             <tarfileset dir="${src}" prefix="/src"/>
             <tarfileset dir="${testsrc}" prefix="/testsrc"/>
@@ -110,6 +109,7 @@
             <tarfileset dir="sounds" prefix="/sounds"/>
             <tarfileset dir=".">
                 <include name="*ant*"/>
+                <include name="*.properties"/>
                 <include name="build.xml"/>
                 <include name="javadoc.xml"/>
                 <include name="README*"/>
@@ -127,6 +127,7 @@
             <zipfileset dir="sounds" prefix="sounds"/>
             <zipfileset dir=".">
                 <include name="*ant*"/>
+                <include name="*.properties"/>
                 <include name="build.xml"/>
                 <include name="javadoc.xml"/>
                 <include name="README*"/>
@@ -136,9 +137,8 @@
     <target name="binary-distro"
             description="Creates a binary distribution in directory ${dir.binaries}"
             depends="test">
-        <mkdir dir="${dir.binaries}"/>
         <jar basedir="${dir.build}"
-                jarfile="${jar.binaries}-${DSTAMP}.jar"
+                jarfile="${file.binaries}-${DSTAMP}.jar"
                 manifest="${conf}/MANIFEST.MF"
                 index="true"/>
     </target>
@@ -147,7 +147,7 @@
         <java fork="true" classname="b12.panik.Massenpanik">
             <classpath>
                 <path refid="project.classpath"/>
-                <pathelement location="${jar.binaries}-${DSTAMP}.jar"/>
+                <pathelement location="${file.binaries}-${DSTAMP}.jar"/>
             </classpath>
         </java>
     </target>

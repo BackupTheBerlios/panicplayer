@@ -1,5 +1,5 @@
-[b12] README file - $Revision: 1.2 $
-      last change: $Author: kariem $ — $Date: 2004/01/15 18:16:32 $
+[b12] README file - $Revision: 1.3 $
+      last change: $Author: kariem $ - $Date: 2004/01/15 18:42:20 $
 
 This source package contains everything needed to compile, test and run
 the current version of PanicPlayer.
