@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -50,8 +50,10 @@ public class MixEffect implements Codec {
 	);
 
     // the arrays for input and output formats
-    private AudioFormat[] inputFormats = new AudioFormat[]{inputFormat};
-    private AudioFormat[] outputFormats = new AudioFormat[]{outputFormat};
+    /** input formats */
+    public static AudioFormat[] FORMATS_INPUT = new AudioFormat[]{inputFormat};
+    /** output formats */
+    public static AudioFormat[] FORMATS_OUTPUT = new AudioFormat[]{outputFormat};
     
     private String effectName="PanicPlayerEffect";
 
@@ -94,12 +96,12 @@ public class MixEffect implements Codec {
     //
     /** @see Codec#getSupportedInputFormats() */
     public Format[] getSupportedInputFormats() {
-        return inputFormats;
+        return FORMATS_INPUT;
     }
 
     /** @see Codec#getSupportedOutputFormats(Format) */
     public Format[] getSupportedOutputFormats(Format input) {
-        return outputFormats;
+        return FORMATS_OUTPUT;
     }
 
     /** @see Codec#setInputFormat(Format) */
@@ -122,7 +124,11 @@ public class MixEffect implements Codec {
         // use input.getTimeStamp() to obtain the buffers position
         // add information from the tracks at this position up to the duration
         // input.getLength().
-        return 0;
+        System.out.println("performing process");
+        // ---- begin default implementation
+        output = (Buffer) input.clone();
+        // ---- end default implementation
+        return BUFFER_PROCESSED_OK;
     }
 
     /** @see PlugIn#getName() */

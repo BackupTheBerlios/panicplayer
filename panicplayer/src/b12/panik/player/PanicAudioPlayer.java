@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.media.Codec;
 import javax.media.Player;
 import javax.media.Track;
 import javax.swing.JComponent;
@@ -52,6 +53,9 @@ public class PanicAudioPlayer {
     MediaInput input = new MediaInput();
     private PlayerControlPanel mainComponent;
 
+    // TODO use mixeffect
+    private Codec mixEffect = new MixEffect();
+    
     /**
      * Initializes a new <code>PanicAudioPlayer</code>. This player is then
      * filled with tracks which are played at their specified positions.

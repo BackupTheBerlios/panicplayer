@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -251,6 +251,9 @@ public class Configuration {
     /**
      * Loads a sound file.
      * @param f the file to be loaded.
+     * @throws MediaIOException if an error occured while loading the sound
+     *          file. See {@linkplain PanicAudioPlayer#loadSoundFile(File)} for
+     *          more information.
      */
     public void loadSoundFile(File f) throws MediaIOException {
         setInputProperty(new InputProperty(f, 0));

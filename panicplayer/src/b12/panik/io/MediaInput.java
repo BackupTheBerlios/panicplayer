@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -11,7 +11,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.*;
+import javax.media.control.TrackControl;
 
+import b12.panik.player.MixEffect;
 import b12.panik.util.Logging;
 
 /**
@@ -19,6 +21,20 @@ import b12.panik.util.Logging;
  * @author kariem
  */
 public class MediaInput implements ControllerListener {
+
+    // register effect plugin
+    static {
+        // Name of the new plugin
+        String MixEffectPlugin = MixEffect.class.getName();
+        // Add the new plug-in to the plug-in registry
+        PlugInManager.addPlugIn(MixEffectPlugin, MixEffect.FORMATS_INPUT, MixEffect.FORMATS_OUTPUT, PlugInManager.CODEC);
+        try {
+            // Save the changes to the plug-in registry
+            PlugInManager.commit();
+        } catch (IOException e) {
+            Logging.warning("Effect plugin could not be registered with plugin manager.", e);
+        }
+    }
 
     /**
 	 * Creates a new instance of <code>MediaInput</code>.
@@ -44,8 +60,8 @@ public class MediaInput implements ControllerListener {
         
         // Create a player for this rtp session
         try {
-            Player p = Manager.createPlayer(locator);
-            // p.addControllerListener(this);
+            Processor p = Manager.createProcessor(locator);
+            p.addControllerListener(this);
             return p;
         } catch (NoPlayerException e) {
             throw new MediaIOException("No player can be found.", e);
@@ -74,5 +90,16 @@ public class MediaInput implements ControllerListener {
         // - payload change should result in a new player to be generated
         //   => inform receiver of created player of a payload change
         // - (optional) handle new receive stream
+        
+        // in configured state add mixeffect codec for processing
+        if (event instanceof ConfigureCompleteEvent) {
+            Processor p = (Processor) event.getSource();
+            
+            TrackControl[] trackControls = p.getTrackControls();
+            for (int i = 0; i < trackControls.length; i++) {
+                // TODO set codec mixeffect
+                // trackControls[i].setCodecChain(codecs)
+            }
+        }
     }
 }
