@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Logger.java
 //                created: 26.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -85,6 +85,16 @@ public class Logging {
      */
     public static void fine(String msg) {
         logger.fine(msg);
+    }
+    /**
+     * Write debug message to the logger with additional information.
+     * 
+     * @param sourceClass the source class of the logging message.
+     * @param sourceMethod the source method of the logging message.
+     * @param msg the message to be logged.
+     */
+    public static void fine(String sourceClass, String sourceMethod, String msg) {
+        logger.logp(getLevel(LVL_FINE), sourceClass, sourceMethod, msg);
     }
     /**
      * Write config message to the logger.

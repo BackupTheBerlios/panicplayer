@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanel.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -23,6 +23,7 @@ public class TracksPanel extends JPanel {
      * Creates a new instance of <code>TracksPanel</code>.
      */
     public TracksPanel() {
+        // TODO initialize with default information
     }
     
     /**
