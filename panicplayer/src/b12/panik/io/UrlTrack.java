@@ -1,11 +1,12 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UrlTrack.java
 //                created: 10.01.2004
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.Serializable;
 import java.net.URI;
 
@@ -104,6 +105,16 @@ public class UrlTrack implements Track, Serializable {
      * @return the duration.
      */
     public Time getDuration() {
+        if (duration.getSeconds() == 0) {
+            try {
+                // create track that corresponds to this track
+                UrlTrack t = IOUtils.createTrack(getUri());
+                duration = t.getDuration();
+            } catch (Exception e) {
+                // ignore this
+                return duration;
+            }
+        }
         return duration;
     }
 
@@ -145,7 +156,7 @@ public class UrlTrack implements Track, Serializable {
      */
     public void setStartTime(double seconds) {
         if (seconds >= 0) {
-            startTime = (long) seconds * 1000;
+            startTime = (long) (seconds * 1000);
             start = new Time(seconds);
         }
     }
@@ -162,10 +173,13 @@ public class UrlTrack implements Track, Serializable {
      */
 
     /**
-     * Returns nothing.
+     * Returns the start time.
      * @return nothing.
      */
     public Time getStartTime() {
+        if (start.getSeconds() < 0) {
+            start = new Time(0);
+        }
         return start;
     }
 
@@ -185,5 +199,19 @@ public class UrlTrack implements Track, Serializable {
         // TODO implement if needed.
         return null;
     }
+    
+    /** @see java.lang.Object#equals(java.lang.Object) */
+    public boolean equals(Object obj) {
+        return equals((UrlTrack) obj);
+    }
 
+    /**
+     * Returns whether this object is equal to the given.
+     * @param other the other object.
+     * @return <code>true</code> if both objects are equal; <code>false</code>
+     *          otherwise.
+     */
+    public boolean equals(UrlTrack other) {
+        return this.uri.equals(other.uri);
+    }
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: EffectConfiguration.java
 //                created: 11.01.2004
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -9,16 +9,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.*;
 
-import javax.media.Track;
-
-import b12.panik.io.TrackPropertyAdapter;
+import b12.panik.io.UrlTrack;
 import b12.panik.util.Logging;
 
 /**
  * The properties for the effect.
  * @author kariem
  */
-public class EffectConfiguration extends TrackPropertyAdapter {
+public class EffectConfiguration {
 
     private static final String TAG_VOICE = "voice"; //$NON-NLS-1$
 
@@ -36,8 +34,8 @@ public class EffectConfiguration extends TrackPropertyAdapter {
         if (effectTracks != null) {
             effectTracks.clear();
         }
-    }        
-    
+    }
+
     void load(ParsedObject po) {
         effectProps.putAll(po.getAttributes());
         if (po.hasChildren()) {
@@ -49,8 +47,31 @@ public class EffectConfiguration extends TrackPropertyAdapter {
                         add(InputProperty.parseInputProperty(child));
                     }
                 } catch (MalformedURLException e) {
-                    Logging.warning(Resources.getString("Configuration.error") + e.toString()); //$NON-NLS-1$
+                    Logging.warning(Resources.getString("Configuration.error") + e.toString(), //$NON-NLS-1$
+                            e);
                 }
+            }
+        }
+    }
+
+    /** Clears all currently loaded tracks from this configuration. Urls remain. */
+    public void clearTracks() {
+        if (effectTracks != null) {
+            for (Iterator i = effectTracks.values().iterator(); i.hasNext(); ) {
+                InputProperty ip = (InputProperty) i.next();
+                ip.removeTracks();
+            }
+        }
+    }
+
+    /**
+     * Loads the configuration from a collection of <code>UrlTrack</code>s.
+     * @param tracks a collection of tracks.
+     */
+    public void load(Collection tracks) {
+        if (tracks != null) {
+            for (Iterator i = tracks.iterator(); i.hasNext(); ) {
+                add((UrlTrack) i.next());
             }
         }
     }
@@ -82,32 +103,66 @@ public class EffectConfiguration extends TrackPropertyAdapter {
         effectTracks.put(prop.getAddress(), prop);
     }
 
-    void addTrack(URI uri, long trackStart) {
-        InputProperty ip = null;
-        if (effectTracks != null) {
-            ip = (InputProperty) effectTracks.get(uri);
-            if (ip == null) {
-                ip = new InputProperty(uri, trackStart);
-            }
-            ip.addTrack(true, trackStart);
-        } else {
-            effectTracks = new HashMap();
-            ip = new InputProperty(uri, trackStart);
-            effectTracks.put(uri, ip);
-        }
+    /**
+     * Adds a track to this effect configuration.
+     * @param track the track to add.
+     */
+    void add(UrlTrack track) {
+        addTrack(track.getUri(), track.isEnabled(), track.getBegin());
     }
 
     /**
-     * Returns the available tracks (for drag panel) as a collection.
-     * @return the available tracks.
+     * Adds a single track to the configuration.
+     * @param uri the uri for the track.
+     * @return the newly created InputProperty or an InputProperty that was
+     *          associated to this uri prior to the call.
      */
-    public Collection getAvailableTracks() {
-        return effectTracks.keySet();
+    InputProperty addUri(URI uri) {
+        if (effectTracks == null) {
+            effectTracks = new HashMap();
+        }
+        InputProperty ip = (InputProperty) effectTracks.get(uri);
+        if (ip == null) {
+            ip = new InputProperty(uri, 0);
+            effectTracks.put(uri, ip);
+        }
+        return ip;
+    }
+    
+    void addTrack(URI uri, boolean enabled, long trackStart) {
+        InputProperty ip = addUri(uri);
+        ip.addTrack(enabled, trackStart);
     }
 
-    /** @see TrackPropertyAdapter#propertyChanged(Track, String, Object, Object) */
-    public void propertyChanged(Track t, String propertyId, Object oldVal, Object newVal) {
-        // TODO implement this to receive track updates.
-        super.propertyChanged(t, propertyId, oldVal, newVal);
+    /**
+     * Returns the available URIs (for drag panel) as a collection.
+     * @return the available URIs.
+     */
+    public Collection getURIs() {
+        if (effectTracks == null) {
+            return null;
+        }
+        return effectTracks.keySet();
+    }
+    
+    /**
+     * Returns the tracks (for drop panel).
+     * @return the tracks.
+     */
+    public Collection getTracks() {
+        if (effectTracks == null) {
+            return null;
+        }
+        List tracks = new ArrayList();
+        for (Iterator i = effectTracks.values().iterator(); i.hasNext(); ) {
+            InputProperty ip = (InputProperty) i.next();
+            if (ip.hasTracks()) {
+                final UrlTrack[] urlTracks = ip.getUrlTracks();
+                for (int j = 0; j < urlTracks.length; j++) {
+                    tracks.add(urlTracks[j]);
+                }
+            }
+        }
+        return tracks;
     }
 }

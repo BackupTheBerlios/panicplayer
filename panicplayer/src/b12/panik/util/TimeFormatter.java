@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TimeFormatter.java
 //                created: 30.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -34,7 +34,12 @@ public class TimeFormatter {
      * @throws ParseException if <code>s</code> cannot be parsed.
      */
     public static long parse(String s) throws ParseException {
-        return format.parse(s).getTime();
+        long time = format.parse(s).getTime();
+        if (time < 0) {
+            // add one hour
+            time += 3600000;
+        }
+        return time;
     }
 
     /**
@@ -45,7 +50,7 @@ public class TimeFormatter {
      */
     public static long parseFast(String s) {
         try {
-            return format.parse(s).getTime();
+            return parse(s);
         } catch (ParseException e) {
             return 0;
         }

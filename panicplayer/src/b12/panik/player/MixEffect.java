@@ -1,11 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.23 $
+//              $Revision: 1.24 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.*;
 
@@ -17,7 +19,9 @@ import javax.swing.JComponent;
 import b12.panik.io.IOUtils;
 import b12.panik.io.UrlTrack;
 import b12.panik.ui.TracksPanel;
-import b12.panik.util.*;
+import b12.panik.util.Logging;
+import b12.panik.util.OffsetedArrayComparator;
+import b12.panik.util.TrackComparator;
 
 /**
  * This is the mixing effect. This class is used to mix different tracks. The
@@ -58,10 +62,8 @@ public class MixEffect implements Codec, TrackManager {
      */
     public MixEffect() {
         urlTracks = new TreeSet(new TrackComparator());
-        // initialize component
         tracksPanel = new TracksPanel();
         tracksPanel.setTrackManager(this);
-        //setTimePer1000Byte();
     }
 
     /**
@@ -73,16 +75,24 @@ public class MixEffect implements Codec, TrackManager {
         tracksPanel.addTrack(track);
     }
 
+    void addTrackForInit(UrlTrack track) {
+        addTrack(track);
+        tracksPanel.addTrackForInit(track);
+    }
+    
     /**
      * Adds a track to this effect, which will be managed by the effect, if the
      * track is enabled.
      * @param track the track to be added.
-     * @throws ConstraintsException
      */
-    public void addTrack(UrlTrack track) throws ConstraintsException {
+    public void addTrack(UrlTrack track) {
         urlTracks.add(track);
-        System.out.println("track added");
         initialisationRealized = false;
+    }
+    
+    /** @see b12.panik.player.TrackManager#getTracks() */
+    public Collection getTracks() {
+        return new ArrayList(urlTracks);
     }
 
     //
@@ -266,15 +276,16 @@ public class MixEffect implements Codec, TrackManager {
      * Sets the main track for this effect. This method is important for the
      * rendering component in order to scale its contents correctlz. The
      * track's data is processed in the process method.
-     * @param url the url.
+     * @param urlString the url as string.
      */
-    public void setMainTrack(final URL url) {
+    public void updateLength(final String urlString) {
         // return immediately after call to this method. Thread does the rest.
         Thread lengthUpdater = new Thread("Length Updater") {
             /** @see java.lang.Thread#run() */
             public void run() {
                 if (this == Thread.currentThread()) {
                     try {
+                        URL url = new URI(urlString).toURL();
                         double seconds = IOUtils.getTrackLength(url);
                         tracksPanel.setLength(seconds);
                         setTimePer1000Byte(IOUtils.getTimePer1000Byte(url));
@@ -282,6 +293,8 @@ public class MixEffect implements Codec, TrackManager {
                         Logging.warning("Format not supported by audio system.", e);
                     } catch (IOException e) {
                         Logging.warning("Audio file could not be found.", e);
+                    } catch (URISyntaxException e) {
+                        Logging.warning("Error while trying to parse URL.", e);
                     }
                 }
             }

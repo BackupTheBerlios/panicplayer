@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.18 $
+//              $Revision: 1.19 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -11,9 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Collection;
 
 import javax.media.*;
@@ -22,7 +20,6 @@ import javax.swing.JComponent;
 
 import b12.panik.io.*;
 import b12.panik.ui.PlayerControlPanel;
-import b12.panik.util.ConstraintsException;
 import b12.panik.util.Logging;
 
 /**
@@ -51,6 +48,8 @@ public class PanicAudioPlayer implements ControllerListener {
 
     // TODO use mixeffect
     private final MixEffect mixEffect = new MixEffect();
+    
+    private String mainTrack;
 
     /**
      * Initializes a new <code>PanicAudioPlayer</code>. This player is then
@@ -88,20 +87,26 @@ public class PanicAudioPlayer implements ControllerListener {
     }
 
     /**
-     * Adds a <code>Track</code> to this player's tracks.
+     * Adds a <code>Track</code> to this player's available tracks.
      *
      * @param uri the url of the track to be loaded.
      * @return the resulting UrlTrack.
      *
      * @throws IOException if the track could not be found.
-     * @throws ConstraintsException if the loaded track's properties conflict
-     *          with previously entered information (e.g. the new track is
-     *          longer than the background track).
      */
-    public UrlTrack addTrack(URI uri) throws IOException, ConstraintsException {
+    public UrlTrack addInputTrack(URI uri) throws IOException {
         UrlTrack track = IOUtils.createTrack(uri);
         mixEffect.addInputUrlTrack(track);
         return track;
+    }
+
+    /**
+     * Adds a <code>Track</code> to this player's tracks.
+     *
+     * @param track adds a track to the playlist.
+     */
+    public void addTrackForInit(UrlTrack track) {
+        mixEffect.addTrackForInit(track);
     }
 
     /**
@@ -196,6 +201,24 @@ public class PanicAudioPlayer implements ControllerListener {
         return null;
     }
 
+
+    /**
+     * Loads the main sound file for this player.
+     * @param urlString the url to be loaded.
+     * @param update whether to update the display.
+     * @throws MediaIOException thrown if the player cannot be instantiated
+     *          or playing is not possible.
+     */
+    public void setMainTrack(String urlString, boolean update) throws MediaIOException {
+        final Processor processor = input.readProcessor(urlString, this);
+        Logging.fine("Sound file " + urlString + " opened, loading processor");
+        this.mainTrack = urlString;
+        if (update) {
+            mixEffect.updateLength(urlString);
+        }
+        mainComponent.setPlayer(processor);
+    }
+    
     /**
      * Loads the sound file for this player.
      * @param urlString the url to be loaded.
@@ -203,18 +226,17 @@ public class PanicAudioPlayer implements ControllerListener {
      *          or playing is not possible.
      */
     public void setMainTrack(String urlString) throws MediaIOException {
-        final Processor processor = input.readProcessor(urlString, this);
-        Logging.fine("Sound file " + urlString + " opened, loading processor");
-        try {
-            mixEffect.setMainTrack(new URI(urlString).toURL());
-            mainComponent.setPlayer(processor);
-        } catch (MalformedURLException e) {
-            Logging.warning("Cannot set track correctly, url not valid.", e);
-        } catch (URISyntaxException e) {
-            Logging.warning("Cannot set track correctly, uri not parseable.", e);
+        setMainTrack(urlString, true);
+    }
+    
+    /** May be used to update the players display. */
+    public void update() {
+        if (mainTrack != null) {
+            // try updating mix effect
+            mixEffect.updateLength(mainTrack);
         }
     }
-
+    
     /** @see ControllerListener#controllerUpdate(ControllerEvent) */
     public void controllerUpdate(ControllerEvent event) {
         // TODO handle controller events

@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import b12.panik.io.UrlTrack;
 import b12.panik.util.TimeFormatter;
@@ -119,6 +117,18 @@ public class InputProperty {
         long time = getTime(po.getAttribute(ATTR_START));
         int multiply = po.getAttributeInt(ATTR_MULTIPLY, 1);
         InputProperty ip = new InputProperty(uri, f, time, multiply);
+        if (po.hasChildren()) {
+            final List children = po.getChildren();
+            final ArrayList tracks = new ArrayList(children.size());
+            for (Iterator i = children.iterator(); i.hasNext(); ) {
+                ParsedObject poTrack = (ParsedObject) i.next();
+                if (poTrack.getName().equals(TAG_TRACK)) {
+                    tracks.add(SimpleTrack.parseSimpleTrack(poTrack));
+                }
+            }
+            // set tracks to final tracks
+            ip.tracks = tracks;
+        }
         return ip;
 
     }
@@ -180,7 +190,7 @@ public class InputProperty {
             po.addAttribute(ATTR_URI, address.toString());
         }
         if (start != 0) {
-            po.addAttribute(ATTR_START, Long.toString(start));
+            po.addAttribute(ATTR_START, timeToString(start));
         } else {
             // different tracks are to be added
             if (tracks != null && !tracks.isEmpty()) {
@@ -202,25 +212,24 @@ public class InputProperty {
      * @param trackStart the offset start of the track in milliseconds.
      */
     void addTrack(boolean enabled, long trackStart) {
-        addTrack(new SimpleTrack(trackStart, enabled));
+        initTrackList();
+        tracks.add(new SimpleTrack(trackStart, enabled));
     }
 
-    private void addTrack(SimpleTrack track) {
-        initTrackList();
-        if (start > 0) {
-            // two separate tracks are now necessary ... add the first track
-            SimpleTrack main = new SimpleTrack(start, true);
-            tracks.add(main);
-            // set start to 0 to indicate that there are internal tracks
-            start = 0;
+    /** Removes all internal tracks. */
+    void removeTracks() {
+        if (hasTracks()) {
+            tracks.clear();
         }
-        // add the track intended to be added
-        tracks.add(track);
+    }
+    
+    boolean hasTracks() {
+        return tracks != null && !tracks.isEmpty();
     }
 
     private void initTrackList() {
         if (tracks == null) {
-            tracks = new ArrayList(4);
+            tracks = new ArrayList(3);
         }
     }
 
@@ -230,17 +239,16 @@ public class InputProperty {
      */
     UrlTrack[] getUrlTracks() {
         UrlTrack[] urlTracks;
-        if (tracks != null && !tracks.isEmpty()) {
+        if (hasTracks()) {
             urlTracks = new UrlTrack[tracks.size()];
             int pos = 0;
             for (Iterator i = tracks.iterator(); i.hasNext(); ) {
                 SimpleTrack st = (SimpleTrack) i.next();
                 urlTracks[pos++] = st.createUrlTrack(address);
             }
-        } else {
-            urlTracks = new UrlTrack[]{new UrlTrack(address, start)};
+            return urlTracks;
         }
-        return urlTracks;
+        return null;
     }
 
     /*
@@ -260,7 +268,7 @@ public class InputProperty {
         }
         return address;
     }
-    
+
     /**
      * Sets the address.
      * @param address The address.
@@ -316,7 +324,7 @@ public class InputProperty {
     public void setFile(File file) {
         this.file = file;
     }
-    
+
     private static class SimpleTrack {
         private static final String ATTR_ENABLED = "enabled";
 

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.29 $
+//              $Revision: 1.30 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -318,7 +318,7 @@ public class PanicPlayer extends JFrame {
         int ret = JOptionPane.showConfirmDialog(this, Messages
                 .getString("PanicPlayer.exit.text"), Messages
                 .getString("PanicPlayer.exit.title"), //$NON-NLS-1$ //$NON-NLS-2$
-                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
         if (ret == JOptionPane.YES_OPTION) {
             if (panicAudioPlayer != null) {
                 panicAudioPlayer.stop();
@@ -346,5 +346,7 @@ public class PanicPlayer extends JFrame {
         pack();
         UIUtils.center(this);
         show();
+        // update panicplayer
+        panicAudioPlayer.update();
     }
 }

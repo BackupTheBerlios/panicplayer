@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.13 $
+//              $Revision: 1.14 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -9,6 +9,7 @@ import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -17,7 +18,6 @@ import javax.xml.parsers.ParserConfigurationException;
 import b12.panik.io.MediaIOException;
 import b12.panik.io.UrlTrack;
 import b12.panik.player.PanicAudioPlayer;
-import b12.panik.util.ConstraintsException;
 import b12.panik.util.Logging;
 
 /**
@@ -82,9 +82,6 @@ public class Configuration {
     public static Configuration getConfiguration(PanicAudioPlayer p) {
         if (instance == null) {
             instance = new Configuration();
-            if (p != null) {
-                instance.setPlayer(p);
-            }
             File f = new File(DEFAULT_CONF_FILE);
 
             String uri = f.exists() ? f.toString() : null;
@@ -94,6 +91,15 @@ public class Configuration {
                 } catch (ConfigurationException e) {
                     Logging.severe("Configuration could not be loaded, "
                             + "switching to empty configuration.", e);
+                }
+            }
+            if (p != null) {
+                try {
+                    instance.setPlayer(p);
+                } catch (MediaIOException e) {
+                    Logging.severe("MediaIOException - Player properties could not be set.", e);
+                } catch (IOException e) {
+                    Logging.severe("IOException - Player properties could not be set.", e);
                 }
             }
         }
@@ -213,6 +219,8 @@ public class Configuration {
 
         // fill effect
         ParsedObject poEffect = root.getEmptyChild(TAG_EFFECT);
+        effectConfig.clearTracks();
+        effectConfig.load(player.getEffect().getTracks());
         effectConfig.saveTo(poEffect);
 
         return root;
@@ -331,12 +339,10 @@ public class Configuration {
      */
     public UrlTrack addTrack(URI uri) throws MediaIOException {
         try {
-            UrlTrack track = player.addTrack(uri);
-            effectConfig.addTrack(uri, 0);
+            UrlTrack track = player.addInputTrack(uri);
+            effectConfig.addUri(uri);
             return track;
         } catch (IOException e) {
-            throw new MediaIOException(e);
-        } catch (ConstraintsException e) {
             throw new MediaIOException(e);
         }
     }
@@ -344,8 +350,32 @@ public class Configuration {
     /**
      * Sets the player for this configuration.
      * @param player the player.
+     * @throws MediaIOException if an error occured while trying to load 
+     *          config properties into player.
+     * @throws IOException if an error occured while trying to load an input
+     *          track.
      */
-    public void setPlayer(PanicAudioPlayer player) {
+    public void setPlayer(PanicAudioPlayer player) throws MediaIOException, IOException {
         this.player = player;
+        // load effect configuration into player
+        if (inputProperty != null) {
+            player.setMainTrack(inputProperty.getAddress().toString(), false);
+        }
+
+        // add available uris (drag panel)
+        final Collection uris = effectConfig.getURIs();
+        if (uris != null && !uris.isEmpty()) {
+            for (Iterator i = uris.iterator(); i.hasNext(); ) {
+                player.addInputTrack((URI) i.next());
+            }
+        }
+
+        // add track playlist (drop panel)
+        final Collection tracks = effectConfig.getTracks();
+        if (tracks != null && !tracks.isEmpty()) {
+            for (Iterator i = tracks.iterator(); i.hasNext(); ) {
+                player.addTrackForInit((UrlTrack) i.next());
+            }
+        }
     }
 }

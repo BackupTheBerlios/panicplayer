@@ -1,11 +1,12 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: DynamicTrackLabel.java
 //                created: 12.01.2004
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.*;
 
 import javax.swing.JCheckBoxMenuItem;
@@ -53,9 +54,15 @@ public class DynamicTrackLabel extends TrackLabel {
             track.setStartTime(0);
         } else {
             track.setStartTime(x / (float) pixelsPerSecond);
-
         }
         updateToolTip();
+    }
+
+    /** Updates this label's location according to its current start time. */
+    public void updateLocation() {
+        Point l = getLocation();
+        l.x = (int) (track.getStartTime().getSeconds() * pixelsPerSecond);
+        setLocation(l);
     }
 
     /** @see javax.swing.JComponent#getPreferredSize() */
