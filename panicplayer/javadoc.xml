@@ -1,18 +1,38 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<project name="MM1 - Massenpanik" default="javadoc">
-	
-	<property name="doc" value="docs"/>
-	
+<!--
+     [b12] Ant Build File: javadoc.xml
+                  created: 27.10.2003
+                $Revision: 1.5 $
+-->
+<project name="Panic Player - Javadoc" default="javadoc">
+    <property name="doc" value="doc"/>
+    <!-- target of API documentation -->
+    <property name="doc.api" value="${doc}/api"/>
+
+    <property environment="env"/>
+
+
     <target name="javadoc">
-        <javadoc verbose="off" destdir="${doc}/api" access="protected" source="1.4"
-            use="false" notree="true" nonavbar="false" noindex="true"
-            splitindex="false" author="false" version="false"
-            nodeprecatedlist="true" nodeprecated="true"
-            classpath="bin;lib\xercesImpl.jar;lib\xml-apis.jar;lib\junit.jar"
-            doctitle="[b12] Massenpanik API Documentation">
+        <javadoc verbose="off" destdir="${doc.api}" access="protected" source="1.4"
+                use="false" notree="true" nonavbar="false" noindex="true"
+                splitindex="false" author="false" version="false"
+                nodeprecatedlist="true" nodeprecated="true"
+                classpath="bin;lib\xercesImpl.jar;lib\xml-apis.jar;lib\junit.jar"
+                doctitle="[b12] Panic Player API Documentation">
             <packageset dir="src" defaultexcludes="yes">
-                <include name="b12/**/*" />
+                <include name="b12/**/*"/>
             </packageset>
         </javadoc>
+    </target>
+
+    <target name="view">
+        <exec executable="cmd" os="Windows XP" dir="${doc.api}" spawn="true">
+            <arg value="/C"/>
+            <arg value="index.html"/>
+        </exec>
+        <exec executable="cmd" os="Windows 2000" spawn="true">
+            <arg value="/C"/>
+            <arg value="index.html"/>
+        </exec>
     </target>
 </project>
