@@ -1,17 +1,39 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.16 $
+//              $Revision: 1.17 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JComponent;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 import javax.swing.border.LineBorder;
 
 import b12.panik.config.Configuration;
@@ -90,6 +112,7 @@ public class PanicPlayer extends JFrame {
         // file menu
         JMenu fileMenu = new FileMenu();
         menuBar.add(fileMenu);
+		fileMenu.setMnemonic(KeyEvent.VK_F);
         fileMenu.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
                 final String name = evt.getPropertyName();
