@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -20,12 +20,12 @@ import javax.swing.SwingConstants;
 public class PlayerControlPanel extends JPanel {
 
     static final String PLAYER_REALIZED = "player_realized";
-    
+
     private JLabel infoLabel;
     JLabel visLabel;
-    
+
     Player player;
-    
+
     Component centerComponent;
     Component lowerComponent;
 
@@ -50,6 +50,7 @@ public class PlayerControlPanel extends JPanel {
     public Player getPlayer() {
         return player;
     }
+
     /**
      * Sets the player.
      * @param p The player.
@@ -61,7 +62,7 @@ public class PlayerControlPanel extends JPanel {
             this.player.deallocate();
         }
         this.player = p;
-        
+
         if (player == null) {
             removePlayerComponents();
             return; // nothing more to do
@@ -79,7 +80,7 @@ public class PlayerControlPanel extends JPanel {
                 } else {
                     // no vis component, replace with label
                     //visLabel.setText("No visual component for player.");
-				PSlider volSlider = new PSlider(-50,50,0,"Vol");
+                    PSlider volSlider = new PSlider(-50, 50, 0, "Vol");
                     //visLabel.add(volSlider);
                     centerComponent = volSlider;
                 }
@@ -97,13 +98,12 @@ public class PlayerControlPanel extends JPanel {
         player.realize();
     }
 
-    
     void removeCenterComponent() {
         if (centerComponent != null) {
             remove(centerComponent);
         }
     }
-        
+
     void removeLowerComponent() {
         if (lowerComponent != null) {
             remove(lowerComponent);
@@ -113,8 +113,8 @@ public class PlayerControlPanel extends JPanel {
     void throwProperty(String prop) {
         firePropertyChange(prop, null, null);
     }
-    
-    /** Removes the components from the panel that were created by the player */ 
+
+    /** Removes the components from the panel that were created by the player */
     private void removePlayerComponents() {
         removeCenterComponent();
         removeLowerComponent();
