@@ -1,168 +1,1 @@
-// ----------------------------------------------------------------------------
-// [b12] Java Source File: Resizer.java
-//                created: 24.12.2003
-//              $Revision: 1.3 $
-// ----------------------------------------------------------------------------
-package b12.panik.ui.util;
-
-import java.awt.*;
-import java.awt.event.*;
-
-import javax.swing.JPanel;
-
-/**
- * A component that resizes a frame.
- * @author kariem
- */
-public class Resizer extends MouseAdapter implements MouseMotionListener {
-
-    private static final byte THRESHOLD = 4;
-
-    private static final byte BOTTOM = 1 << 1;
-    private static final byte LEFT = 1 << 2;
-    private static final byte RIGHT = 1 << 3;
-    private byte edge;
-
-    private Component component;
-    private JPanel panel;
-    Rectangle panelBounds;
-
-    boolean resizing;
-
-    private Point pressPoint;
-
-    Resizer(final JPanel panel, final Component component) {
-        this.panel = panel;
-        this.component = component;
-        this.panelBounds = panel.getBounds();
-
-        panel.addMouseMotionListener(this);
-        panel.addMouseListener(this);
-        panel.addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                panelBounds = panel.getBounds();
-            }
-        });
-    }
-
-    /**
-     * Creates a new resizer for the panel and the frame.
-     * @param pane the panel.
-     * @param c the component that will be resized.
-     * @return a newly created resizer.
-     */
-    public static Resizer createResizer(JPanel pane, Component c) {
-        return new Resizer(pane, c);
-    }
-
-    /** @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent) */
-    public void mouseDragged(MouseEvent e) {
-        if (resizing) {
-            Point resizePoint = e.getPoint();
-
-            // change location only if drag moves the frame significantly
-            final int difX = resizePoint.x - pressPoint.x;
-            final int difY = resizePoint.y - pressPoint.y;
-
-
-            if (Math.abs(difX) > 2 || Math.abs(difY) > 2) {
-                Rectangle compBounds = component.getBounds();
-
-                int oldX = compBounds.x;
-                int oldY = compBounds.y;
-
-                if ((edge & BOTTOM) != 0) {
-                    compBounds.height += difY;
-                    if ((edge & LEFT) != 0) {
-                        compBounds.x += difX;
-                        compBounds.width -= difX;
-                    } else if ((edge & RIGHT) != 0) {
-                        compBounds.width += difX;
-                    }
-                } else if ((edge & LEFT) != 0) {
-                    compBounds.x += difX;
-                    compBounds.width -= difX;
-                } else if ((edge & RIGHT) != 0) {
-                    compBounds.width += difX;
-                }
-                setBounds(compBounds);
-
-                Point frameLoc = component.getLocation();
-                pressPoint.x = resizePoint.x - (frameLoc.x - oldX);
-                pressPoint.y = resizePoint.y - (frameLoc.y - oldY);
-
-                component.validate();
-            }
-        }
-    }
-
-    /** Sets the bounds for the frame, respecting its minimum size. */
-    private void setBounds(Rectangle r) {
-        Dimension minBounds = component.getMinimumSize();
-        if (r.width > minBounds.width && r.height > minBounds.height) {
-            component.setBounds(r);
-        }
-    }
-
-    /** @see java.awt.event.MouseMotionListener#mouseMoved(java.awt.event.MouseEvent) */
-    public void mouseMoved(MouseEvent e) {
-        Point p = e.getPoint();
-
-        // see if mouse lies within 4px of edge
-        if (isBottom(panelBounds, p)) {
-            if (isLeft(panelBounds, p)) {
-                setCursor(BOTTOM | LEFT);
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.SW_RESIZE_CURSOR));
-            } else if (isRight(panelBounds, p)) {
-                setCursor(BOTTOM | RIGHT);
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.SE_RESIZE_CURSOR));
-            } else {
-                setCursor(BOTTOM);
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.S_RESIZE_CURSOR));
-            }
-        } else {
-            if (isLeft(panelBounds, p)) {
-                setCursor(LEFT);
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.W_RESIZE_CURSOR));
-            } else if (isRight(panelBounds, p)) {
-                setCursor(RIGHT);
-                panel.setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
-            } else {
-                resetCursor();
-            }
-        }
-    }
-
-    /** @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent) */
-    public void mousePressed(MouseEvent e) {
-        pressPoint = e.getPoint();
-    }
-
-    /** @see java.awt.event.MouseAdapter#mouseReleased(java.awt.event.MouseEvent) */
-    public void mouseReleased(MouseEvent e) {
-        pressPoint = null;
-    }
-
-    private void setCursor(int i) {
-        edge = (byte) i;
-        resizing = true;
-    }
-
-    private void resetCursor() {
-        panel.setCursor(Cursor.getDefaultCursor());
-        edge = 0;
-        resizing = false;
-    }
-
-    private boolean isLeft(Rectangle r, Point p) {
-        return p.x <= r.x + THRESHOLD;
-    }
-
-    private boolean isRight(Rectangle r, Point p) {
-        return p.x >= r.x + r.width - THRESHOLD;
-    }
-
-    private boolean isBottom(Rectangle r, Point p) {
-        return p.y >= r.height - THRESHOLD;
-    }
-}
+// ----------------------------------------------------------------------------// [b12] Java Source File: RoundBorder.java//                created: 22.12.2003//              $Revision: 1.4 $// ----------------------------------------------------------------------------package b12.panik.ui.util;import java.awt.*;import javax.swing.border.LineBorder;/** * A border with rounded corners. *  * @author kariem */public class RoundBorder extends LineBorder {    private static final int ARC_WIDTH_HEIGHT = 20;    private static final int STROKE_WIDTH = 2;    private static final int STROKE_HALF = STROKE_WIDTH / 2;    private static final BasicStroke STROKE = new BasicStroke(STROKE_WIDTH);    private static final int FONT_SIZE = 12;    private static final Font FONT = new Font("SansSerif", Font.BOLD, FONT_SIZE);    private static float baseline;    private String title;    private Insets insets;    /**     * Creates a new instance of <code>RoundBorder</code>.     *      * @param title     *            the title     */    public RoundBorder(String title) {        this(title, null);        this.title = title;    }    /**     * Creates a new instance of <code>RoundBorder</code>.     *      * @param title the title.     * @param insets the insets.     */    public RoundBorder(String title, Insets insets) {        super(Color.BLACK, 1);        this.title = title;        this.insets = insets;    }    /**     * Paints the border for the specified component with the      * specified position and size. Additionally, if insets were set in the     * constructor, their values adjust the border.     *      * @param c the component for which this border is being painted     * @param g the paint graphics     * @param x the x position of the painted border     * @param y the y position of the painted border     * @param width the width of the painted border     * @param height the height of the painted border     */    public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {        Graphics2D g2d = (Graphics2D) g.create();        if (insets != null) {            // adjust border to insets            x += insets.left;            y += insets.top;            width -= insets.left + insets.right;            height -= insets.top + insets.bottom;        }        // only set baseline once        if (baseline == 0) {            baseline = FONT.getLineMetrics(title, g2d.getFontRenderContext()).getAscent();        }        g2d.setColor(lineColor);        g2d.setStroke(STROKE);        g2d.setFont(FONT);        // draw border        g2d.drawRoundRect(x + STROKE_HALF, y + STROKE_HALF, width - STROKE_WIDTH, height                - STROKE_WIDTH, ARC_WIDTH_HEIGHT, ARC_WIDTH_HEIGHT);        // draw title        g2d.drawString(title, x + STROKE_WIDTH + ARC_WIDTH_HEIGHT / 4, y + STROKE_WIDTH + baseline + ARC_WIDTH_HEIGHT / 4);        // dispose graphics        g2d.dispose();    }    /**     * Paints the interior of this border.     * @param g the paint graphics     * @param x the x position of the painted border     * @param y the y position of the painted border     * @param width the width of the painted border     * @param height the height of the painted border     */    public void paintInterior(Graphics g, int x, int y, int width, int height) {        if (insets != null) {            // adjust border to insets            x += insets.left;            y += insets.top;            width -= insets.left + insets.right;            height -= insets.top + insets.bottom;        }        // draw interior of border border        g.fillRoundRect(x + STROKE_WIDTH - 1, y + STROKE_WIDTH - 1,                width - STROKE_WIDTH, height - STROKE_WIDTH,                ARC_WIDTH_HEIGHT, ARC_WIDTH_HEIGHT + 2);    }}
