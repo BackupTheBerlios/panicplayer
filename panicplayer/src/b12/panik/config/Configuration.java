@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -35,14 +35,14 @@ public class Configuration {
     private static final String TAG_INPUT = "input"; //$NON-NLS-1$
     private static final String TAG_OUTPUT = "output"; //$NON-NLS-1$
     private static final String TAG_EFFECT = "effect"; //$NON-NLS-1$
-    private static final String TAG_VOICE = "voice"; //$NON-NLS-1$
 
     InputProperty inputProperty;
-    Properties effectProps;
-    List effectInput;
     Properties outputProps;
     private PanicAudioPlayer player;
 
+    private boolean mainTrackLoaded;
+    private final EffectConfiguration effectConfig;
+    
     /**
      * Creates a new instance of <code>Configuration</code>.
      *
@@ -50,8 +50,7 @@ public class Configuration {
      * @throws ConfigurationException if an error occured in the configuration.
      */
     public Configuration(String uri) throws ConfigurationException {
-        effectInput = new ArrayList();
-        effectProps = new Properties();
+        effectConfig = new EffectConfiguration();
         if (uri == null) {
             // read from default configuration
             File f = new File(DEFAULT_CONF_FILE);
@@ -75,7 +74,7 @@ public class Configuration {
                 } else if (name.equals(TAG_OUTPUT)) {
                     outputProps = parseOutput(child);
                 } else if (name.equals(TAG_EFFECT)) {
-                    parseEffect(child);
+                    effectConfig.load(child);
                 }
             }
         }
@@ -87,24 +86,6 @@ public class Configuration {
             inputProperty = new InputProperty(po);
         } catch (MalformedURLException e) {
             Logging.warning(Resources.getString("Configuration.error") + e.toString()); //$NON-NLS-1$
-        }
-    }
-
-    /** Parses the effect properties */
-    private void parseEffect(ParsedObject po) {
-        effectProps.putAll(po.getAttributes());
-        if (po.hasChildren()) {
-            final List children = po.getChildren();
-            for (Iterator i = children.iterator(); i.hasNext(); ) {
-                try {
-                    final ParsedObject child = (ParsedObject) i.next();
-                    if (child.getName().equals(TAG_VOICE)) {
-                        effectInput.add(new InputProperty(child));
-                    }
-                } catch (MalformedURLException e) {
-                    Logging.warning(Resources.getString("Configuration.error") + e.toString()); //$NON-NLS-1$
-                }
-            }
         }
     }
 
@@ -155,17 +136,9 @@ public class Configuration {
         // TODO output
 
         // fill effect
-        // copy properties
         ParsedObject poEffect = root.getEmptyChild(TAG_EFFECT);
-        for (Iterator i = effectProps.entrySet().iterator(); i.hasNext(); ) {
-            Map.Entry entry = (Map.Entry) i.next();
-            poEffect.addAttribute((String) entry.getKey(), (String) entry.getValue());
-        }
-        // add voices
-        for (Iterator i = effectInput.iterator(); i.hasNext(); ) {
-            InputProperty ip = (InputProperty) i.next();
-            ip.fillParsedObject(poEffect.getEmptyChild(TAG_VOICE));
-        }
+        effectConfig.saveTo(poEffect);
+
         return root;
     }
 
@@ -174,31 +147,21 @@ public class Configuration {
      */
 
     /**
-     * Returns the effect properties.
+     * Returns the effect configuration.
      *
      * @return the effect properties.
      */
-    public Properties getEffectProps() {
-        return effectProps;
+    public EffectConfiguration getEffectConf() {
+        return effectConfig;
     }
 
     /**
-     * Sets the effect's properties.
-     *
-     * @param effectProps
-     *            The effect's properties.
-     */
-    public void setEffectProps(Properties effectProps) {
-        this.effectProps = effectProps;
-    }
-
-    /**
-     * Adds an effect property to the input.
+     * Adds an input property directly to the effect configuration.
      *
      * @param ip the new input property.
      */
     public void addEffectProperty(InputProperty ip) {
-        effectInput.add(ip);
+        effectConfig.add(ip);
     }
 
     /**
@@ -255,6 +218,15 @@ public class Configuration {
     }
 
     /**
+     * Returns whether the main track is already available.
+     * @return <code>true</code> if a main track is available,
+     *          <code>false</code> otherwise.
+     */
+    public boolean isMainTrackLoaded() {
+        return mainTrackLoaded;
+    }
+    
+    /**
      * Loads the sound with the given URL into the configuration.
      * @param url the url.
      * @throws MediaIOException if an error occurred while creating the
@@ -263,6 +235,7 @@ public class Configuration {
     public void loadMainTrack(URL url) throws MediaIOException {
         setInputProperty(new InputProperty(new File(url.toString()), 0));
         player.setMainTrack(url);
+        mainTrackLoaded = true;
     }
 
     /**

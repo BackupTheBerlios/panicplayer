@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.23 $
+//              $Revision: 1.24 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -35,8 +35,8 @@ public class PanicPlayer extends JFrame {
 
     private PanicAudioPlayer panicAudioPlayer;
     private JComponent playerControl;
+    private JComponent effectControl;
     Configuration conf;
-    TracksPanel pnlTracks;
 
     /** Creates a new PanicPlayer. */
     public PanicPlayer() {
@@ -212,6 +212,8 @@ public class PanicPlayer extends JFrame {
         //pnlFops.setLayout(new BoxLayout(pnlFops, BoxLayout.Y_AXIS));
         pnlFops.setLayout(new GridLayout(0, 1));
         final JButton btnAddTrack = new JButton("Add Track");
+        btnAddTrack.setFocusPainted(false);
+        btnAddTrack.setDefaultCapable(false);
         btnAddTrack.addActionListener(new ActionListener() {
             /** @see ActionListener#actionPerformed(ActionEvent) */
             public void actionPerformed(ActionEvent e) {
@@ -222,7 +224,6 @@ public class PanicPlayer extends JFrame {
                     try {
                         URL url = fd.getSelectedFile().toURL();
                         UrlTrack track = conf.addTrack(url);
-                        pnlTracks.addTrack(track); 
                     } catch (Exception ex) {
                         Logging.info(ex.getMessage());
                     }
@@ -231,29 +232,31 @@ public class PanicPlayer extends JFrame {
             }
         });
         pnlFops.add(btnAddTrack);
-        pnlFops.add(new JButton("Load Config"));
+        final JButton btnLoadConfig = new JButton("Load Config");
+        pnlFops.add(btnLoadConfig);
+        btnLoadConfig.setFocusPainted(false);
         // TODO add listeners that load sound/config on button click
         gbc.gridx = 0;
         gbc.gridy = 1;
+        gbc.gridheight = 2;
+        gbc.fill = GridBagConstraints.VERTICAL;
         centerPane.add(pnlFops, gbc);
 
-        // Player Controls
+        // player & player controls
         playerControl = panicAudioPlayer.getComponent(this);
         gbc.gridx = 1;
-        gbc.gridy = 1;
         gbc.gridwidth = 3;
+        gbc.gridheight = 1;
         gbc.ipady = 50;
         gbc.fill = GridBagConstraints.BOTH;
         centerPane.add(playerControl, gbc);
 
-        // tracks panel
-        pnlTracks = new TracksPanel();
-        gbc.gridx = 0;
-        gbc.gridwidth = 4;
+        // Effect controls - tracks panel
+        effectControl = panicAudioPlayer.getEffect().getComponent();
         gbc.gridy = 2;
         gbc.weightx = 1;
         gbc.weighty = 1;
-        centerPane.add(pnlTracks, gbc);
+        centerPane.add(effectControl, gbc);
 
         /*
          PSlider volSlider = new PSlider(-50, 50, 0, "Vol");

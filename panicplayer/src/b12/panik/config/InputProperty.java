@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -87,6 +87,15 @@ public class InputProperty {
         this(file, offset, 1);
     }
 
+    /**
+     * Creates a new instance of <code>InputProperty</code>.
+     * @param uri the uri.
+     * @param offset the offset.
+     */
+    public InputProperty(URI uri, long offset) {
+        this(uri, offset, 1);
+    }
+    
     private static File getFile(ParsedObject po) {
         String filename = po.getAttribute(ATTR_FILE);
         if (filename == null) {

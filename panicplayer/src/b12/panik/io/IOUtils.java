@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: IOUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -12,9 +12,6 @@ import javax.media.Manager;
 import javax.media.NoPlayerException;
 import javax.media.Player;
 import javax.sound.sampled.*;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.UnsupportedAudioFileException;
 
 /**
  * This class provides several methods for calls to the IO. Methods to open
@@ -69,5 +66,21 @@ public class IOUtils {
         } catch (UnsupportedAudioFileException e) {
             throw new IOException(e.getMessage());
         }
+    }
+ 
+    /**
+     * Returns the length of a track at the given address.
+     * @param trackAddress the address where the audio file is located.
+     * @return the time in seconds.
+     * 
+     * @throws UnsupportedAudioFileException if the audio file is not
+     *          supported.
+     * @throws IOException if the file could not be found or an error occured
+     *          while loading the file.
+     */
+    public static double getTrackLength(URL trackAddress) throws UnsupportedAudioFileException, IOException {
+        AudioInputStream stream = AudioSystem.getAudioInputStream(trackAddress);
+        AudioFormat f = stream.getFormat();
+        return stream.getFrameLength() / f.getFrameRate();
     }
 }

@@ -1,16 +1,22 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.14 $
+//              $Revision: 1.15 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.*;
 
 import javax.media.*;
 import javax.media.format.AudioFormat;
+import javax.sound.sampled.UnsupportedAudioFileException;
+import javax.swing.JComponent;
 
+import b12.panik.io.IOUtils;
 import b12.panik.io.UrlTrack;
+import b12.panik.ui.TracksPanel;
 import b12.panik.util.*;
 
 /**
@@ -61,11 +67,15 @@ public class MixEffect implements Codec {
 
     private byte[] currentData;
 
+    private TracksPanel tracksPanel;
+
     /**
      * Creates a new instance of <code>MixEffect</code>.
      */
     public MixEffect() {
         urlTracks = new TreeSet(new TrackComparator());
+        // initialize component
+        tracksPanel = new TracksPanel();
     }
 
     /**
@@ -88,8 +98,9 @@ public class MixEffect implements Codec {
      * Adds a single input <code>UrlTrack</code> to the effect.
      * @param urlTrack the UrlTrack to be added.
      */
-    void addInputurlTrack(UrlTrack urlTrack) throws ConstraintsException {
+    void addInputUrlTrack(UrlTrack urlTrack) throws ConstraintsException {
         urlTracks.add(urlTrack);
+        tracksPanel.addTrack(urlTrack);
     }
 
     //
@@ -291,6 +302,38 @@ public class MixEffect implements Codec {
         return new Control[0];
     }
 
+    /**
+     * Returns the interface component for this effect.
+     * @return the component for user interaction.
+     */
+    public JComponent getComponent() {
+        return tracksPanel;
+    }
+
+    /**
+     * Sets the main track for this effect. This method is important for the
+     * rendering component in order to scale its contents correctlz.
+     * @param url the url.
+     */
+    public void setMainTrack(final URL url) {
+        Thread lengthUpdater = new Thread("Length Updater") {
+            /** @see java.lang.Thread#run() */
+            public void run() {
+                if (this == Thread.currentThread()) {
+                    try {
+                        double seconds = IOUtils.getTrackLength(url);
+                        tracksPanel.setLength(seconds);
+                    } catch (UnsupportedAudioFileException e) {
+                        Logging.severe("Format not supported by audio system.", e);
+                    } catch (IOException e) {
+                        Logging.severe("Audio file could not be found.", e);
+                    }
+                }
+            }
+        };
+        lengthUpdater.start();
+    }
+
     /** @see Controls#getControl(String) */
     public Object getControl(String controlType) {
         // TODO Implement method
@@ -324,4 +367,5 @@ public class MixEffect implements Codec {
                     maxConcurrentTracks));
         }
     }
+
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationDialog.java
 //                created: 25.12.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -10,6 +10,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
 import java.util.Vector;
 
 import javax.media.PlugInManager;
@@ -92,6 +93,7 @@ public class ConfigurationViewer extends JDialog {
                 second.setEnabled(false);
                 third = null;
             } else {
+                Collections.sort(list);
                 second = new JComboBox(list);
                 third = new JLabel(new String("  (" + list.size() + ")"));
             }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.11 $
+//              $Revision: 1.12 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -82,7 +82,8 @@ public class PanicAudioPlayer implements ControllerListener {
     /**
      * Adds a <code>Track</code> to this player's tracks.
      *
-     * @param track the track to be loaded.
+     * @param url the url of the track to be loaded.
+     * @return the resulting UrlTrack.
      *
      * @throws IOException if the track could not be found.
      * @throws ConstraintsException if the loaded track's properties conflict
@@ -91,7 +92,7 @@ public class PanicAudioPlayer implements ControllerListener {
      */
     public UrlTrack addTrack(URL url) throws IOException, ConstraintsException {
         UrlTrack track = IOUtils.createTrack(url);
-        mixEffect.addInputurlTrack(track);
+        mixEffect.addInputUrlTrack(track);
         return track;
     }
 
@@ -146,6 +147,14 @@ public class PanicAudioPlayer implements ControllerListener {
     }
 
     /**
+     * Returns the effect that is used by the player.
+     * @return the player's effect.
+     */
+    public MixEffect getEffect() {
+        return mixEffect;
+    }
+
+    /**
      * Returns the main component of this audio player, which is used to control
      * the player itself.
      *
@@ -188,6 +197,7 @@ public class PanicAudioPlayer implements ControllerListener {
     public void setMainTrack(URL url) throws MediaIOException {
         final Processor processor = input.readProcessor(url, this);
         Logging.fine("Sound file " + url + " opened, loading processor");
+        mixEffect.setMainTrack(url);
         mainComponent.setPlayer(processor);
     }
 

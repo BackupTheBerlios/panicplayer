@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationTest.java
 //                created: 26.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -26,7 +26,7 @@ public class ConfigurationTest extends TestCase {
         } catch (ConfigurationException e) {
             fail(e.toString());
         }
-        assertNotNull(conf.getEffectProps());
+        assertNotNull(conf.getEffectConf());
         assertNotNull(conf.getOutputProps());
         assertNotNull(conf.getInputProperty());
     }

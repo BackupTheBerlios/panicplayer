@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UrlTrack.java
 //                created: 10.01.2004
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -95,9 +95,9 @@ public class UrlTrack implements Track, Serializable {
     }
 
     /** @see javax.media.Track#setEnabled(boolean) */
-    public void setEnabled(boolean t) {
-        if (t != this.enabled) {
-            this.enabled = t;
+    public void setEnabled(boolean enabled) {
+        if (enabled != this.enabled) {
+            this.enabled = enabled;
             if (listener != null) {
                 listener.stateHasChanged(this);
             }
