@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.19 $
+//              $Revision: 1.20 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -30,10 +30,10 @@ import b12.panik.util.Logging;
  * 
  * <p>After initialization the player may be filled with the main track and the
  * additional tracks to mix in. For this purpose the methods
- * {@linkplain #setMainTrack(String)}and {@linkplain #addTrack(URI)}are used.
- * The <code>Track</code> objects returned by these methods may be altered to
- * correctly set the start time or other properties, according to the
- * configuration or user input.</p>
+ * {@linkplain #setMainTrack(String)}and {@linkplain #addInputTrack(URI)}are
+ * used. The <code>Track</code> objects returned by these methods may be
+ * altered to correctly set the start time or other properties, according to
+ * the configuration or user input.</p>
  */
 public class PanicAudioPlayer implements ControllerListener {
 
@@ -48,7 +48,7 @@ public class PanicAudioPlayer implements ControllerListener {
 
     // TODO use mixeffect
     private final MixEffect mixEffect = new MixEffect();
-    
+
     private String mainTrack;
 
     /**
@@ -160,13 +160,27 @@ public class PanicAudioPlayer implements ControllerListener {
     }
 
     /**
-     * Returns the effect that is used by the player.
-     * @return the player's effect.
+     * Returns the tracks of the effect.
+     * @return the effect tracks.
      */
-    public MixEffect getEffect() {
-        return mixEffect;
+    public Collection getEffectTracks() {
+        if (mixEffect != null) {
+            return mixEffect.getTracks();
+        }
+        return null;
     }
 
+    /**
+     * Returns the visual component to configure the effect.
+     * @return the effect component.
+     */
+    public Component getEffectComponent() {
+        if (mixEffect != null) {
+            return mixEffect.getComponent();
+        }
+        return null;
+    }
+    
     /**
      * Returns the main component of this audio player, which is used to control
      * the player itself.
@@ -201,7 +215,6 @@ public class PanicAudioPlayer implements ControllerListener {
         return null;
     }
 
-
     /**
      * Loads the main sound file for this player.
      * @param urlString the url to be loaded.
@@ -218,7 +231,7 @@ public class PanicAudioPlayer implements ControllerListener {
         }
         mainComponent.setPlayer(processor);
     }
-    
+
     /**
      * Loads the sound file for this player.
      * @param urlString the url to be loaded.
@@ -228,7 +241,7 @@ public class PanicAudioPlayer implements ControllerListener {
     public void setMainTrack(String urlString) throws MediaIOException {
         setMainTrack(urlString, true);
     }
-    
+
     /** May be used to update the players display. */
     public void update() {
         if (mainTrack != null) {
@@ -236,7 +249,7 @@ public class PanicAudioPlayer implements ControllerListener {
             mixEffect.updateLength(mainTrack);
         }
     }
-    
+
     /** @see ControllerListener#controllerUpdate(ControllerEvent) */
     public void controllerUpdate(ControllerEvent event) {
         // TODO handle controller events
@@ -256,7 +269,7 @@ public class PanicAudioPlayer implements ControllerListener {
             final Codec[] codecChain = new Codec[]{mixEffect};
             for (int i = 0; i < trackControls.length; i++) {
                 try {
-                    Logging.info("Original input format: " + trackControls[i].getFormat());
+                    Logging.fine("Original input format: " + trackControls[i].getFormat());
                     trackControls[i].setCodecChain(codecChain);
                 } catch (UnsupportedPlugInException e) {
                     Logging.warning("Unsupported plugin", e);

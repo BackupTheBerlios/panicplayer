@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.30 $
+//              $Revision: 1.31 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -32,8 +32,8 @@ public class PanicPlayer extends JFrame {
     static final Color COLOR_BORDER = new Color(110, 110, 255);
 
     private PanicAudioPlayer panicAudioPlayer;
-    private JComponent playerControl;
-    private JComponent effectControl;
+    private Component playerControl;
+    private Component effectControl;
     Configuration conf;
 
     /** Creates a new PanicPlayer. */
@@ -268,7 +268,7 @@ public class PanicPlayer extends JFrame {
         centerPane.add(playerControl, gbc);
 
         // Effect controls - tracks panel
-        effectControl = panicAudioPlayer.getEffect().getComponent();
+        effectControl = panicAudioPlayer.getEffectComponent();
         gbc.gridy = 2;
         gbc.weightx = 1;
         gbc.weighty = 1;

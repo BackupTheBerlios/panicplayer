@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -51,6 +51,16 @@ public class InputProperty {
         this.start = start;
         this.multiply = multiply;
         this.file = file;
+
+        if (file == null) {
+            // try to convert
+            String s = address.toString();
+            String fileName = getFileNameFromString(s);
+            File f = new File(fileName);
+            if (f.exists() && f.canRead()) {
+                this.file = f;
+            }
+        }
     }
 
     /**
@@ -175,16 +185,13 @@ public class InputProperty {
      * @param po the object.
      */
     void fillParsedObject(ParsedObject po) {
+        String addressString = address.toString();
+        int indexColon = addressString.indexOf(':');
+        if (addressString.substring(0, indexColon).equals("file")) {
+            file = new File(address);
+        }
         if (file != null) {
-            // reduce to current directory;
-            String dirString = new File(".").getAbsolutePath();
-            // without "."
-            dirString = dirString.substring(0, dirString.length() - 1);
-            String saveFile = file.toString();
-            if (saveFile.startsWith(dirString)) {
-                // remove current directory to avoid absolute paths in file name
-                saveFile = saveFile.substring(dirString.length());
-            }
+            String saveFile = getFileNameFromString(file.toString());
             po.addAttribute(ATTR_FILE, saveFile);
         } else {
             po.addAttribute(ATTR_URI, address.toString());
@@ -206,6 +213,19 @@ public class InputProperty {
         }
     }
 
+    private static String getFileNameFromString(final String s) {
+        // reduce to current directory;
+        String dirString = new File(".").getAbsolutePath();
+        // without "."
+        dirString = dirString.substring(0, dirString.length() - 1);
+        String saveFile = s.toString();
+        if (saveFile.startsWith(dirString)) {
+            // remove current directory to avoid absolute paths in file name
+            saveFile = saveFile.substring(dirString.length());
+        }
+        return saveFile;
+    }
+
     /**
      * Adds a track to this input property.
      * @param enabled whether the track is enabled.
@@ -222,7 +242,7 @@ public class InputProperty {
             tracks.clear();
         }
     }
-    
+
     boolean hasTracks() {
         return tracks != null && !tracks.isEmpty();
     }

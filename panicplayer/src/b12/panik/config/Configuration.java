@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.14 $
+//              $Revision: 1.15 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -31,6 +31,7 @@ public class Configuration {
 
     private static final String DEFAULT_CONF_FILE = Resources
             .getString("Configuration.default.file");
+    private static String currentConfFile;
 
     private static final String TAG_ROOT = "panicplayer-conf"; //$NON-NLS-1$
     private static final String TAG_INPUT = "input"; //$NON-NLS-1$
@@ -48,6 +49,22 @@ public class Configuration {
 
     private Configuration() {
         effectConfig = new EffectConfiguration();
+    }
+
+    /**
+     * Returns the configuration file.
+     * @return Returns the current configuration file.
+     */
+    public static String getCurrentConfFile() {
+        return currentConfFile;
+    }
+
+    /**
+     * Sets the current configuration file.
+     * @param currentConfFile The current configuration file to set.
+     */
+    public static void setCurrentConfFile(String currentConfFile) {
+        Configuration.currentConfFile = currentConfFile;
     }
 
     /**
@@ -82,17 +99,13 @@ public class Configuration {
     public static Configuration getConfiguration(PanicAudioPlayer p) {
         if (instance == null) {
             instance = new Configuration();
-            File f = new File(DEFAULT_CONF_FILE);
-
-            String uri = f.exists() ? f.toString() : null;
-            if (uri != null) {
-                try {
-                    instance.loadConfig(uri);
-                } catch (ConfigurationException e) {
-                    Logging.severe("Configuration could not be loaded, "
-                            + "switching to empty configuration.", e);
-                }
+            try {
+                instance.loadConfig(getConfFile());
+            } catch (ConfigurationException e) {
+                Logging.warning("Configuration could not be loaded, "
+                        + "switching to empty configuration.");
             }
+
             if (p != null) {
                 try {
                     instance.setPlayer(p);
@@ -115,12 +128,48 @@ public class Configuration {
     }
 
     /**
+     * Returns the current configuration file.
+     * @return the current configuration file or <code>null</code>, if no such
+     *          file exists and the default configuration file is not existant.
+     */
+    private static File getConfFile() {
+        File confFile;
+        if (currentConfFile != null) {
+            confFile = new File(currentConfFile);
+            if (!confFile.exists()) {
+                confFile = new File(DEFAULT_CONF_FILE);
+            }
+        } else {
+            confFile = new File(DEFAULT_CONF_FILE);
+        }
+        if (confFile.exists()) {
+            return confFile;
+        }
+        return null;
+    }
+
+    private void loadConfig(File f) throws ConfigurationException {
+        if (f == null || !f.exists()) {
+            throw new ConfigurationException("No configuration found at " + f);
+        }
+
+        String uri = f.toURI().toString();
+        try {
+            instance.loadConfig(uri);
+        } catch (ConfigurationException e) {
+            throw new ConfigurationException("Configuration at " + uri
+                    + " could not be loaded.", e);
+        }
+    }
+
+    /**
      * Loads the configuration with the information found in the given uri.
      * @param uri the location of the new information.
      * @throws ConfigurationException if an error occurred while trying to
      *          read the target.
      */
     public void loadConfig(String uri) throws ConfigurationException {
+        Logging.info("Loading configuration from " + uri);
         ParsedObject po = null;
         try {
             po = ParsedObject.loadFromURI(uri);
@@ -183,6 +232,7 @@ public class Configuration {
      */
     public void writeTo(File f) throws IOException {
         FileWriter writer = new FileWriter(f);
+        Logging.info("Writing configuration to " + f);
         writeTo(writer);
     }
 
@@ -220,7 +270,9 @@ public class Configuration {
         // fill effect
         ParsedObject poEffect = root.getEmptyChild(TAG_EFFECT);
         effectConfig.clearTracks();
-        effectConfig.load(player.getEffect().getTracks());
+        if (player != null) {
+            effectConfig.load(player.getEffectTracks());
+        }
         effectConfig.saveTo(poEffect);
 
         return root;

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: EffectConfiguration.java
 //                created: 11.01.2004
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -54,6 +54,13 @@ public class EffectConfiguration {
         }
     }
 
+    private void add(InputProperty prop) {
+        if (effectTracks == null) {
+            effectTracks = new HashMap();
+        }
+        effectTracks.put(prop.getAddress(), prop);
+    }
+
     /** Clears all currently loaded tracks from this configuration. Urls remain. */
     public void clearTracks() {
         if (effectTracks != null) {
@@ -94,13 +101,6 @@ public class EffectConfiguration {
                 ip.fillParsedObject(po.getEmptyChild(TAG_VOICE));
             }
         }
-    }
-
-    private void add(InputProperty prop) {
-        if (effectTracks == null) {
-            effectTracks = new HashMap();
-        }
-        effectTracks.put(prop.getAddress(), prop);
     }
 
     /**

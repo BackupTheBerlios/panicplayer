@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.10 $
+//              $Revision: 1.11 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -179,10 +179,6 @@ public class OffsetedArray {
         OffsetedArray result = new OffsetedArray();
         OffsetedArray longerArray, shorterArray;
         int begin, end, length;
-        byte[] resultContent;
-        byte resultByte;
-        boolean isInLonger;
-        boolean isInShorter;
 
         if (array1 == null) {
             System.out.println("Array1 is null");
@@ -193,6 +189,7 @@ public class OffsetedArray {
             return array1;
         }
 
+        /*
         if (array1.getDurationIndex() > array2.getDurationIndex()) {
             longerArray = new OffsetedArray(array1);
             shorterArray = new OffsetedArray(array2);
@@ -200,6 +197,7 @@ public class OffsetedArray {
             longerArray = new OffsetedArray(array2);
             shorterArray = new OffsetedArray(array1);
         }
+        
 
         final int firstStart = (int) longerArray.getStartIndex();
         final int firstDur = (int) longerArray.getDurationIndex();
@@ -208,21 +206,31 @@ public class OffsetedArray {
         final int secondStart = (int) shorterArray.getStartIndex();
         final int secondDur = (int) shorterArray.getDurationIndex();
         final int secondEnd = secondStart + secondDur;
+        */
 
+        final int firstStart = (int) array1.getStartIndex();
+        final int firstDur = (int) array1.getDurationIndex();
+        final int firstEnd = firstStart + firstDur;
+
+        final int secondStart = (int) array2.getStartIndex();
+        final int secondDur = (int) array2.getDurationIndex();
+        final int secondEnd = secondStart + secondDur;
+        
         begin = Math.min(firstStart, secondStart);
         end = Math.max(firstEnd, secondEnd);
         length = end - begin;
-        resultContent = new byte[length];
+        byte[] resultContent = new byte[length];
 
         for (int i = begin; i < end; i++) {
-            isInLonger = (i >= firstStart && i < firstEnd);
-            isInShorter = (i >= secondStart && i < secondEnd);
+            boolean isInLonger = (i >= firstStart && i < firstEnd);
+            boolean isInShorter = (i >= secondStart && i < secondEnd);
 
-            resultByte = (byte) ((isInLonger ? longerArray.getByteI(i - firstStart) : 0) + (isInShorter
-                    ? shorterArray.getByteI(i - secondStart)
+            
+            byte resultByte = (byte) ((isInLonger ? array1.getByteI(i - firstStart) : 0) + (isInShorter
+                    ? array2.getByteI(i - secondStart)
                     : 0));
-
             resultContent[i - begin] = resultByte;
+            
         }
 
         result.setStartIndex(begin);

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<panicplayer-conf>
+  <input file="sounds\dialog.wav"/>
+  <effect>
+    <voice file="sounds\panics\panikO1.wav"/>
+    <voice file="sounds\panics\panicG1.wav"/>
+    <voice file="sounds\panics\panicG2.wav"/>
+    <voice file="sounds\panics\franzosiche_panik.wav"/>
+    <voice file="sounds\panics\d'oh.wav"/>
+    <voice file="sounds\panics\panikO2.wav"/>
+    <voice file="sounds\panics\panikK2.wav"/>
+    <voice file="sounds\panics\panikK1.wav"/>
+  </effect>
+</panicplayer-conf>
+
