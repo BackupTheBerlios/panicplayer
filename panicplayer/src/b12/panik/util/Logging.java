@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Logger.java
 //                created: 26.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -26,9 +26,9 @@ import java.util.logging.*;
 public class Logging {
 
     private static final Logger logger = Logger.getLogger(Logger.class.getName());
-    
+
     // in order to set the logging level, some levels are exposed
-    
+
     /** Default logging level. */
     public static final byte LVL_INFO = 0;
     /** Fine logging level. */
@@ -39,28 +39,66 @@ public class Logging {
     public static final byte LVL_WARNING = 1;
     /** Config logging level. */
     public static final byte LVL_SEVERE = 2;
-    
+
     public static void setLogFile(String filename) {
         // remove previous handlers
         Handler[] handlers = logger.getHandlers();
         for (int i = 0; i < handlers.length; i++) {
             logger.removeHandler(handlers[i]);
         }
-        
+
         addLogFile(filename);
     }
-    
-    public static void addLogFile(String filename) {
+
+    /**
+     * Adds a new file for logging.
+     * 
+     * @param filename the file name.
+     * @param level the log level.
+     */
+    public static void addLogFile(String filename, Level level) {
         try {
             FileHandler fh = new FileHandler(filename);
             fh.setFormatter(new SimpleFormatter());
+            if (level != null) {
+                fh.setLevel(level);
+                final int newIntval = level.intValue();
+                if (getLogLevel(logger).intValue() > newIntval) {
+                    logger.setLevel(level);
+                }
+            }
             logger.addHandler(fh);
             System.out.println("Logging to " + filename);
+            logger.log(Level.FINE, "Logging started");
         } catch (Exception e) {
             logger.log(Level.WARNING, "Error while trying to create default logfile.", e);
         }
     }
+
     
+    private static Level getLogLevel(Logger log) {
+        Level level = log.getLevel();
+        if (level == null) {
+            Logger parent = log.getParent();
+            if (parent != null) {
+                level = getLogLevel(parent);
+            }
+        }
+        return level;
+    }
+    
+    /**
+     * Creates a new logfile with the given file name. The level of logging
+     * will be LVL_FINE by default.
+     * 
+     * @param filename the name of the log file.
+     * 
+     * @see #addLogFile(String)
+     */
+    public static void addLogFile(String filename) {
+        addLogFile(filename, Level.FINE);
+    }
+
     /**
      * Sets the application-wide logging level. Default is INFO.
      * @param newLevel the new logging level.
@@ -69,16 +107,15 @@ public class Logging {
      */
     public static void setLevel(byte newLevel) throws SecurityException {
         logger.setLevel(getLevel(newLevel));
-        
+
         // change log level for root logger's handlers
-        
-        Handler[] handlers = Logger.getLogger( "" ).getHandlers();
-        for ( int index = 0; index < handlers.length; index++ ) {
-          handlers[index].setLevel( Level.FINE );
+
+        Handler[] handlers = Logger.getLogger("").getHandlers();
+        for (int index = 0; index < handlers.length; index++) {
+            handlers[index].setLevel(Level.FINE);
         }
-        
     }
-    
+
     /**
      * Write debug message to the logger.
      * @param msg the message.
@@ -146,11 +183,9 @@ public class Logging {
      * @param sourceMethod source method.
      * @param thrown throwable that is thrown.
      */
-    public static void throwing(String sourceClass, String sourceMethod,
-            Throwable thrown) {
+    public static void throwing(String sourceClass, String sourceMethod, Throwable thrown) {
         logger.throwing(sourceClass, sourceMethod, thrown);
     }
-    
 
     /**
      * Returns the <code>Level</code> associated with the given byte.

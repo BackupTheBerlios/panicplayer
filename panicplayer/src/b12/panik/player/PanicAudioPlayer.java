@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -118,8 +118,8 @@ public class PanicAudioPlayer {
      * 
      */
     
-    public void play() {
-        // TODO implement play
+    public void start() {
+        // TODO implement start
     }
     
     public void pause() {

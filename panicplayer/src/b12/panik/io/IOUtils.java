@@ -1,13 +1,11 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: IOUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.Manager;
@@ -23,11 +21,10 @@ import javax.media.Player;
 public class IOUtils {
 
     public static void playSimple(URL url) throws NoPlayerException, IOException {
-        Player player = Manager.createPlayer(url);
-        player.start();        
+        getSimplePlayer(url).start();
     }
     
-    public static void playSimple(File f) throws NoPlayerException, MalformedURLException, IOException {
-        playSimple(f.toURL());
+    public static Player getSimplePlayer(URL url) throws NoPlayerException, IOException {
+        return Manager.createPlayer(url);
     }
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: FileDialog.java
 //                created: 29.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -19,8 +19,7 @@ public class FileDialog extends JFileChooser {
      * Creates a new instance of <code>FileDialog</code>.
      */
     public FileDialog() {
-        super();
-        // TODO Auto-generated constructor stub
+        super(new File("."));
     }
     /**
      * Creates a new instance of <code>FileDialog</code>.
