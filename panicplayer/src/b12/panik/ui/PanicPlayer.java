@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.18 $
+//              $Revision: 1.19 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -106,6 +106,7 @@ public class PanicPlayer extends JFrame {
         // configuration menu
         JMenu mnConfig = new MenuConfig(conf);
         menuBar.add(mnConfig);
+		mnConfig.setMnemonic(KeyEvent.VK_C);
         
         // separator
         menuBar.add(Box.createHorizontalGlue());
