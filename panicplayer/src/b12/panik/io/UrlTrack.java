@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UrlTrack.java
 //                created: 10.01.2004
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -136,7 +136,7 @@ public class UrlTrack implements Track, Serializable {
      * @param seconds the new start time.
      */
     public void setStartTime(double seconds) {
-        if (seconds > 0) {
+        if (seconds >= 0) {
             startTime = (long) seconds * 1000;
             start = new Time(seconds);
         }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: DynamicTrackLabel.java
 //                created: 12.01.2004
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -48,7 +48,7 @@ public class DynamicTrackLabel extends TrackLabel {
             return;
         }
         super.setLocation(x, y);
-        System.out.println("setting location to " + x);
+
         if (x == 0) {
             track.setStartTime(0);
         } else {
@@ -91,7 +91,5 @@ public class DynamicTrackLabel extends TrackLabel {
                 createPopup().show(DynamicTrackLabel.this, e.getX(), e.getY());
             }
         }
-
     }
-
 }
