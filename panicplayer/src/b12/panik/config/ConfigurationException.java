@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationException.java
 //                created: 26.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
 /**
- * This Exceptions is used to indicate errors in the configuration. 
+ * This Exception is used to indicate errors in the configuration. 
  */
 public class ConfigurationException extends Exception {
 
