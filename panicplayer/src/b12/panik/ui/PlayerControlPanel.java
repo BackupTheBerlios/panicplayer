@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -19,7 +19,8 @@ import javax.swing.SwingConstants;
  */
 public class PlayerControlPanel extends JPanel {
 
-    static final String PLAYER_REALIZED = "player_realized";
+    /** This property indicates that the player is realized. */
+    public static final String PLAYER_REALIZED = "player_realized";
 
     private JLabel infoLabel;
     JLabel visLabel;

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -13,6 +13,8 @@ import java.util.*;
 
 import javax.xml.parsers.ParserConfigurationException;
 
+import b12.panik.io.MediaIOException;
+import b12.panik.player.PanicAudioPlayer;
 import b12.panik.util.Logging;
 
 /**
@@ -42,6 +44,8 @@ public class Configuration {
     List effectInput;
 
     Properties outputProps;
+
+    private PanicAudioPlayer player;
 
     /**
      * Creates a new instance of <code>Configuration</code>.
@@ -242,5 +246,22 @@ public class Configuration {
      */
     public void setOutputProps(Properties outputProps) {
         this.outputProps = outputProps;
+    }
+
+    /**
+     * Loads a sound file.
+     * @param f the file to be loaded.
+     */
+    public void loadSoundFile(File f) throws MediaIOException {
+        setInputProperty(new InputProperty(f, 0));
+        player.loadSoundFile(f);
+    }
+    
+    /**
+     * Sets the player for this configuration.
+     * @param player the player.
+     */
+    public void setPlayer(PanicAudioPlayer player) {
+        this.player = player;
     }
 }

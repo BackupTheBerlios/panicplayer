@@ -1,16 +1,26 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
+import java.awt.Component;
+import java.awt.Container;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
+import javax.media.Player;
 import javax.media.Track;
+import javax.swing.JComponent;
 
+import b12.panik.io.MediaIOException;
+import b12.panik.io.MediaInput;
+import b12.panik.ui.PlayerControlPanel;
 import b12.panik.util.ConstraintsException;
 import b12.panik.util.LocationException;
 
@@ -38,12 +48,16 @@ public class PanicAudioPlayer {
     /** Holds the players status, to be displayed for the user */
     String status;
     
+    private Player player;
+    MediaInput input = new MediaInput();
+    private PlayerControlPanel mainComponent;
 
     /**
      * Initializes a new <code>PanicAudioPlayer</code>. This player is then
      * filled with tracks which are played at their specified positions.
      */
     public PanicAudioPlayer() {
+        mainComponent = new PlayerControlPanel(null);
         // TODO implement initialization
     }
 
@@ -118,22 +132,23 @@ public class PanicAudioPlayer {
      * 
      */
     
+    /** starts the player */
     public void start() {
         // TODO implement start
     }
-    
+    /** pauses the player */
     public void pause() {
         // TODO implement pause
     }
-    
+    /** stops the player */
     public void stop() {
         // TODO implement stop
     }
-    
+    /** plays the player at a higher speed */
     public void fastForward() {
         // TODO implement fast forward
     }
-    
+    /** rewinds the player */
     public void rewind() {
         // TODO implement rewind
     }
@@ -144,5 +159,51 @@ public class PanicAudioPlayer {
      */
     public String getStatus() {
         return status;
+    }
+ 
+    /**
+     * Returns the main component of this audio player, which is used to control
+     * the player itself.
+     * 
+     * @param parent the parent component which will be validatet on a
+     *         component change. If <code>parent</code> is <code>null</code>
+     *         no update will be performed.
+     * @return the main component.
+     */
+    public JComponent getComponent(final Container parent) {
+        if (parent != null) {
+            // add property change listener
+            mainComponent.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    final String name = evt.getPropertyName();
+                    if (name.equals(PlayerControlPanel.PLAYER_REALIZED)) {
+                        // validate component ... to adjust its size
+                        parent.validate();
+                    }
+                }
+            });
+        }
+        return mainComponent;
+    }
+    
+    
+    /**
+     * Returns the visualisation component of this audio player. It should
+     * update automatically and visualise the currently played sound.
+     * @return the visualisation component.
+     */
+    public Component getVisualisationComponent() {
+        return null;
+    }
+
+    /**
+     * Loads the sound file for this player.
+     * @param f the file to be loaded.
+     * @throws MediaIOException thrown if the player cannot be instantiated
+     *          or playing is not possible.
+     */
+    public void loadSoundFile(File f) throws MediaIOException {
+        player = input.read(f);
+        mainComponent.setPlayer(player);
     }
 }

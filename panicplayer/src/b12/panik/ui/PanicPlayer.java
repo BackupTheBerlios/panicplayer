@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.15 $
+//              $Revision: 1.16 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -11,15 +11,12 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 
-import javax.media.Player;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
 import b12.panik.config.Configuration;
 import b12.panik.config.ConfigurationException;
-import b12.panik.config.InputProperty;
 import b12.panik.io.MediaIOException;
-import b12.panik.io.MediaInput;
 import b12.panik.player.PanicAudioPlayer;
 import b12.panik.util.Logging;
 
@@ -32,11 +29,9 @@ public class PanicPlayer extends JFrame {
     private static final Font FONT_TITLE = new Font("Arial Black", Font.BOLD, 16);
     
     private PanicAudioPlayer panicAudioPlayer;
-    private PlayerControlPanel panelPlayerControl;
+    private JComponent playerControl;
     private Configuration conf;
     
-    MediaInput input = new MediaInput();
-
     /** Creates a new PanicPlayer. */
     public PanicPlayer() {
         super("PanicPlayer");
@@ -44,6 +39,8 @@ public class PanicPlayer extends JFrame {
         // show intro window (separate thread)
 		SplashScreen intro = new SplashScreen("res/munch.gif", "The PanicPlayer");
 		intro.showFor(3000);
+        
+        panicAudioPlayer = new PanicAudioPlayer();
         
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -76,6 +73,7 @@ public class PanicPlayer extends JFrame {
         
         try {
             conf = new Configuration(null);
+            conf.setPlayer(panicAudioPlayer);
         } catch (ConfigurationException e1) {
             Logging.warning("Configuration could not be loaded", e1);
         }
@@ -169,20 +167,12 @@ public class PanicPlayer extends JFrame {
         contentPane.add(pnlFops, gbc);
         
         // Player Controls
-        panelPlayerControl = new PlayerControlPanel(null);
-        panelPlayerControl.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                final String name = evt.getPropertyName();
-                if (name.equals(PlayerControlPanel.PLAYER_REALIZED)) {
-                    // validate component ... to adjust its size
-                    PanicPlayer.this.validate();
-                }
-            }
-        });
+        
+        playerControl = panicAudioPlayer.getComponent(this);
         gbc.gridx = 3;
         gbc.gridwidth = 4;
         gbc.fill = GridBagConstraints.BOTH;
-        contentPane.add(panelPlayerControl, gbc);
+        contentPane.add(playerControl, gbc);
         
         // tracks panel
         TracksPanel pnlTracks = new TracksPanel();
@@ -194,11 +184,8 @@ public class PanicPlayer extends JFrame {
 
     
     void loadSoundFile(File f) {
-        Player player;
         try {
-            conf.setInputProperty(new InputProperty(f, 0));
-            player = input.read(f);
-            panelPlayerControl.setPlayer(player);
+            conf.loadSoundFile(f);
         } catch (MediaIOException e) {
             String errorCause = "Problem while trying to play sound file.";
             Logging.info(errorCause);

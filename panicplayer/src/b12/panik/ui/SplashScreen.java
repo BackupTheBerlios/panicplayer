@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: SplashScreen.java
 //                created: 30.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -23,6 +23,12 @@ public class SplashScreen extends JWindow {
     final SleeperThread sleeper;
     boolean closed = false;
     
+    /**
+     * Creates a new splash screen.
+     * 
+     * @param image the image.
+     * @param text the text.
+     */
     public SplashScreen(String image, String text) {
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
@@ -45,6 +51,12 @@ public class SplashScreen extends JWindow {
         });
     }
 
+    /**
+     * Shows the splash screen for <code>millis</code> milliseconds. If the
+     * window is clicked the splash screen will be disposed.
+     * 
+     * @param millis the amount of milliseconds.
+     */
     public void showFor(int millis) {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width / 3, dim.height / 3);

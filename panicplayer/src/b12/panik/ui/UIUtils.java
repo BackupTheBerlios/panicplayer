@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UIUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -29,6 +29,7 @@ public class UIUtils {
      * @param title the title.
      */
     static final void openExceptionDialog(Component parent, Throwable t, String message, String title) {
+        // TODO show throwable.
         JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
     }
 
