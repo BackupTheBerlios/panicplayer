@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -49,7 +49,7 @@ public class Configuration {
 
     /**
      * Creates a new instance of <code>Configuration</code>.
-     * 
+     *
      * @param uri
      *            the address.
      * @throws ConfigurationException
@@ -122,7 +122,7 @@ public class Configuration {
 
     /**
      * Saves the configuration to the default configuration file.
-     * 
+     *
      * @throws IOException
      *             on IO error.
      */
@@ -132,7 +132,7 @@ public class Configuration {
 
     /**
      * Writes the configuration to the given file.
-     * 
+     *
      * @param f
      *            the file.
      * @throws IOException
@@ -149,7 +149,7 @@ public class Configuration {
 
     /**
      * Creates a ParsedObject from the information in this <code>Configuration</code>
-     * 
+     *
      * @return a new <code>ParsedObject</code>.
      */
     private ParsedObject getParsedObject() throws ParserConfigurationException {
@@ -183,7 +183,7 @@ public class Configuration {
 
     /**
      * Returns the effect properties.
-     * 
+     *
      * @return the effect properties.
      */
     public Properties getEffectProps() {
@@ -192,7 +192,7 @@ public class Configuration {
 
     /**
      * Sets the effect's properties.
-     * 
+     *
      * @param effectProps
      *            The effect's properties.
      */
@@ -202,7 +202,7 @@ public class Configuration {
 
     /**
      * Adds an effect property to the input.
-     * 
+     *
      * @param ip
      *            the new input property.
      */
@@ -212,7 +212,7 @@ public class Configuration {
 
     /**
      * Returns the input properties.
-     * 
+     *
      * @return the input properties.
      */
     public InputProperty getInputProperty() {
@@ -221,7 +221,7 @@ public class Configuration {
 
     /**
      * Sets the input property.
-     * 
+     *
      * @param ip
      *            the new input property.
      */
@@ -231,7 +231,7 @@ public class Configuration {
 
     /**
      * Returns the output properties.
-     * 
+     *
      * @return the output properties.
      */
     public Properties getOutputProps() {
@@ -240,7 +240,7 @@ public class Configuration {
 
     /**
      * Sets the output properties.
-     * 
+     *
      * @param outputProps
      *            The output properties.
      */
@@ -259,7 +259,7 @@ public class Configuration {
         setInputProperty(new InputProperty(f, 0));
         player.loadSoundFile(f);
     }
-    
+
     /**
      * Sets the player for this configuration.
      * @param player the player.

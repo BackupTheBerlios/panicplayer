@@ -1,6 +1,6 @@
-/* 
+/*
  * ParsedObject.java
- * 
+ *
  * This Object is used to easily convert from XML DOM to a simple data structure
  * using Collection classes.
  *
@@ -23,10 +23,10 @@
  *     misrepresented as being the original software.
  *
  *  3. This notice may not be removed or altered from any source distribution.
- * 
- *  In case of a desired commercial use, please contact the author 
+ *
+ *  In case of a desired commercial use, please contact the author
  *  for further information.
- * 
+ *
  *****************************************************************************/
 package b12.panik.config;
 
@@ -84,7 +84,7 @@ public class ParsedObject {
      * the information conained in the XML element. An attribute with the name
      * <code>id</code> will not be added to the list of attributes. Instead the
      * field id will be set with the adequate information.
-     * 
+     *
      * @param parentObject sets a parent that may differ from the DOM Element's
      *         parent
      * @param element the element that holds the data for this ParsedObject
@@ -139,7 +139,7 @@ public class ParsedObject {
     /**
      * Builds a new <code>ParsedObject</code> from an DOM Element. The parent is
      * set to <code>null</code>.
-     * 
+     *
      * @param element the element that holds the data for this ParsedObject
      */
     public ParsedObject(Element element) {
@@ -149,9 +149,9 @@ public class ParsedObject {
     /**
      * Builds a new <code>ParsedObject</code> with the given name. No new
      * document is being created for this instance, which saves some resources.
-     * 
+     *
      * @param theName The name of the new <code>ParsedObject</code>.
-     * 
+     *
      * @throws ParserConfigurationException If there is a problem in the XML
      *          configuration
      * @see ParsedObject#ParsedObject(String, boolean)
@@ -162,11 +162,11 @@ public class ParsedObject {
 
     /**
      * Builds a new <code>ParsedObject</code> with the given name.
-     * 
+     *
      * @param theName The name of the new <code>ParsedObject</code>.
      * @param reuseOldDocument Indicates if a new <code>Document</code> should
      *         be created or not.
-     * 
+     *
      * @throws ParserConfigurationException If there is a problem in the XML
      *          configuration
      */
@@ -184,7 +184,7 @@ public class ParsedObject {
 
     /**
      * May be used to detect empty children lists.
-     * 
+     *
      * @return <code>false</code> if the children list is <code>null</code> or
      *          empty, otherwise <code>true</code>.
      */
@@ -194,7 +194,7 @@ public class ParsedObject {
 
     /**
      * Shows the existence of attributes.
-     * 
+     *
      * @return <code>false</code>, if the attribute map is <code>null</code> or
      *          empty, otherwise <code>true</code>.
      */
@@ -205,10 +205,10 @@ public class ParsedObject {
     /**
      * Indicates if this instance has the attribute identified by
      * <code>attrName</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
-     * 
-     * @return <code>true</code>, if this instance has this attribute, 
+     *
+     * @return <code>true</code>, if this instance has this attribute,
      *          <code>false</code> otherwise.
      */
     public boolean hasAttribute(String attrName) {
@@ -221,7 +221,7 @@ public class ParsedObject {
      * map to them accordingly.</p>
      * <em>Note:</em> The attribute <code>id</code> is not included in this
      * <code>Map</code>. It may be accessed via the method {@link #getId()}.
-     * 
+     *
      * @return the attributes of this Object, or <code>null</code> if the
      *          object does not have any attributes defined yet.
      */
@@ -232,9 +232,9 @@ public class ParsedObject {
 
     /**
      * Returns the value of an attribute identified by its <code>name</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
-     * 
+     *
      * @return A String containing the value of the attribute identified by
      *          <code>attrName</code>. Returns <code>null</code> if no attribute
      *          by this name can be found.
@@ -246,17 +246,17 @@ public class ParsedObject {
     /**
      * Returns the value of an attribute identified by its <code>attrName</code>
      * as <code>int</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @return An <code>int</code> containing the value of the attribute
      *          identified by <code>attrName</code>. If no such attribute can be
      *          found <code>0</code> is returned.
-     * 
+     *
      * @throws NumberFormatException if the string does not contain a parseable
      *          integer.
-     * 
-     * @see #getAttributeInt(String, int) 
-     * 
+     *
+     * @see #getAttributeInt(String, int)
+     *
      * @since 12 Jul 2003
      */
     public int getAttributeInt(String attrName) throws NumberFormatException {
@@ -266,19 +266,19 @@ public class ParsedObject {
     /**
      * Returns the value of an attribute identified by its <code>attrName</code>
      * as <code>int</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @param defaultInt the default value, if <code>attrName</code> was not
      *         found.
      * @return An <code>int</code> containing the value of the attribute
      *          identified by <code>attrName</code>. If no such attribute can be
      *          found <code>defaultInt</code> is returned.
-     * 
+     *
      * @throws NumberFormatException if the string does not contain a parseable
      *          integer.
-     * 
+     *
      * @see #getAttributeInt(String)
-     *  
+     *
      * @since 18 Jul 2003
      */
     public int getAttributeInt(String attrName, int defaultInt) throws NumberFormatException {
@@ -292,17 +292,17 @@ public class ParsedObject {
     /**
      * Returns the value of an attribute identified by its <code>attrName</code>
      * as <code>float</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @return An <code>float</code> containing the value of the attribute
      *          identified by <code>attrName</code>. If no such attribute can be
      *          found <code>0</code> is returned.
-     * 
+     *
      * @throws NumberFormatException if the string does not contain a parseable
      *          float.
-     * 
-     * @see #getAttributeFloat(String, int) 
-     * 
+     *
+     * @see #getAttributeFloat(String, int)
+     *
      * @since 20 Nov 2003
      */
     public float getAttributeFloat(String attrName) throws NumberFormatException {
@@ -312,20 +312,20 @@ public class ParsedObject {
     /**
      * Returns the value of an attribute identified by its <code>attrName</code>
      * as <code>float</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @param defaultFloat the default value, if <code>attrName</code> was not
      *         found.
-     * 
+     *
      * @return A <code>float</code> containing the value of the attribute
      *          identified by <code>attrName</code>. If no such attribute can be
      *          found <code>defaultFloat</code> is returned.
-     * 
+     *
      * @throws NumberFormatException if the string does not contain a parseable
      *          float.
-     * 
+     *
      * @see #getAttributeFloat(String)
-     *  
+     *
      * @since 20 Nov 2003
      */
     public float getAttributeFloat(String attrName, int defaultFloat)
@@ -340,12 +340,12 @@ public class ParsedObject {
     /**
      * Returns the value of an attribute identified by its <code>name</code> as
      * a <code>long</code>.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @return An <code>int</code> containing the value of the attribute
      *          identified by <code>attrName</code>. If no such attribute can be
      *          found <code>0</code> is returned.
-     * 
+     *
      * @throws NumberFormatException if the string does not contain a parseable
      *          long.
      */
@@ -361,14 +361,14 @@ public class ParsedObject {
      * Returns the value of an attribute identified by its <code>name</code> as
      * <code>boolean</code>. If the attribute cannot be found <code>false</code>
      * ist returned.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @return A <code>boolean</code> value containing the value of the
      *          attribute identified by . If <code>attrName</code> can not be
      *          found, <code>false</code> is returned.
      *
-     * @see #getAttributeBoolean(String, boolean) 
-     * 
+     * @see #getAttributeBoolean(String, boolean)
+     *
      * @since 12 Jul 2003
      */
     public boolean getAttributeBoolean(String attrName) {
@@ -379,17 +379,17 @@ public class ParsedObject {
      * Returns the value of an attribute identified by its <code>name</code> as
      * <code>boolean</code>. If the attribute cannot be found <code>false</code>
      * ist returned.
-     * 
+     *
      * @param attrName The name of the attribute.
      * @param defaultBool the default value to return if <code>name</code> is
      *         not an attribute of this object.
-     * 
+     *
      * @return A <code>boolean</code> value containing the value of the
      *          attribute identified by . If <code>attrName</code> can not be
      *          found <code>defaultBool</code> is returned.
-     * 
+     *
      * @see Boolean#valueOf(java.lang.String)
-     * 
+     *
      * @since 12 Jul 2003
      */
     public boolean getAttributeBoolean(String attrName, boolean defaultBool) {
@@ -412,7 +412,7 @@ public class ParsedObject {
 
     /**
      * Removes an attribute from this <code>ParsedObject</code>.
-     * 
+     *
      * @param attrName the name of the attribute to be removed.
      * @return the value of the attribute identified by <code>attrName</code>,
      *          or <code>null</code> if no such attribute existed on this
@@ -428,7 +428,7 @@ public class ParsedObject {
     /**
      * Returns the name of this <code>ParsedObject</code>. This name corresponds
      * to the tagname of the DOM Element.
-     * 
+     *
      * @return the name of this Object.
      */
     public String getName() {
@@ -437,7 +437,7 @@ public class ParsedObject {
 
     /**
      * Sets the name of this <code>ParsedObject</code>.
-     * 
+     *
      * @param newName the new name.
      */
     public void setName(String newName) {
@@ -448,7 +448,7 @@ public class ParsedObject {
      * Provides a list of <code>ParsedObject</code> that correspond to the child
      * DOM Elements of the DOM Element that is described by this
      * <code>ParsedObject</code>
-     * 
+     *
      * @return a list of <code>ParsedObject</code> representing the children
      *          of this Object. A new list will be created for this
      *          <code>ParsedObject</code> if no children have existed prior to
@@ -463,7 +463,7 @@ public class ParsedObject {
 
     /**
      * May be used to set the children of this <code>ParsedObject</code>.
-     * 
+     *
      * @param c a list of <code>ParsedObjects</code>. If <code>c</code> is
      *         <code>null</code> the children of this <code>Parsedobject</code>
      *         will be set to <code>null</code>.
@@ -474,7 +474,7 @@ public class ParsedObject {
 
     /**
      * Updates an existing child, overwriting its position with a new one.
-     * 
+     *
      * @param pos the position of the old object
      * @param updatedChild the new object.
      */
@@ -489,7 +489,7 @@ public class ParsedObject {
 
     /**
      * Adds a new child to the list of children.
-     * 
+     *
      * @param newChild the new child.
      */
     public void addChild(ParsedObject newChild) {
@@ -503,9 +503,9 @@ public class ParsedObject {
     /**
      * Adds a new empty child with the given name and returns the newly created
      * child.
-     * 
+     *
      * @param childName the name of the child that is created.
-     * 
+     *
      * @return the newly created child.
      */
     public ParsedObject addChild(String childName) {
@@ -521,11 +521,11 @@ public class ParsedObject {
      * traversal of a <code>ParsedObject</code> to find a single child and
      * returns the first child encountered with <code>childName</code> as its
      * name.</p>
-     * 
+     *
      * <p>If the intention is to retrieve different children please use the
      * method {@link #getChildren()} and traverse the returned
-     * <code>List</code>.</p> 
-     * 
+     * <code>List</code>.</p>
+     *
      * @param childName the name of the child.
      * @return <code>ParsedObject</code> representing an element identified by
      *          <code>childName</code>, or <code>null</code> if no element with
@@ -546,9 +546,9 @@ public class ParsedObject {
     /**
      * Creates an empty child of this <code>ParsedObject</code>. The newly
      * created object is aleady in the list of children for this object.
-     * 
+     *
      * @param childName The name of the newly created child.
-     * 
+     *
      * @return A new child of this <code>ParsedObject</code> with the given
      *          name.
      */
@@ -560,7 +560,7 @@ public class ParsedObject {
 
     /**
      * Removes <code>o</code> from the list of children.
-     * 
+     *
      * @param o the object to remove.
      * @return see {@link List#remove(int)}.
      */
@@ -580,7 +580,7 @@ public class ParsedObject {
     /**
      * Returns the object saved in the <code>parent</code> field of this
      * <code>ParsedObject</code>
-     * 
+     *
      * @return the parent of this <code>ParsedObject</code>, or
      *          <code>null</code> if this object does not have any parent.
      */
@@ -590,7 +590,7 @@ public class ParsedObject {
 
     /**
      * Sets the <code>parent</code> field of this object.
-     * 
+     *
      * @param newParent the parent of this <code>ParsedObject</code>.
      */
     public void setParent(ParsedObject newParent) {
@@ -657,7 +657,7 @@ public class ParsedObject {
     /**
      * Creates a standard XML <code>Element</code> representation of this
      * <code>ParsedObject</code>.
-     * 
+     *
      * @return a newly created element that contains the same information this
      *         instance of <code>ParsedObject</code> contains.
      */
@@ -695,13 +695,13 @@ public class ParsedObject {
     /**
      * Creates a new <code>ParsedObject</code> from the information found in an
      * XML file. This method does not validate the XML content.
-     * 
+     *
      * @param filename The filename that contains the information for the new
      *         instance.
-     * 
-     * @return A newly created <code>Object</code> representing the same 
+     *
+     * @return A newly created <code>Object</code> representing the same
      *          information found in the given XML file.
-     * 
+     *
      * @throws SAXException If the XML data contains syntactic or semantic
      *          errors. These are related to non-wellformedness, because
      *          validation is disabled for this method.
@@ -717,9 +717,9 @@ public class ParsedObject {
     /**
      * Creates a new <code>ParsedObject</code> from the information found in an
      * XML file. This method does not validate the XML content.
-     * 
+     *
      * @param file The file that contains the information for the new instance.
-     * 
+     *
      * @return ParsedObject A newly created <code>Object</code> representing the
      *          same information found in the given XML file.
      *
@@ -729,8 +729,8 @@ public class ParsedObject {
      * @throws ParserConfigurationException If the underlying XML implementation
      *          and/or configuration throws errors.
      * @throws IOException If the file does not exist or is not readable.
-     * 
-     * @see XmlParser#loadDocument(File). 
+     *
+     * @see XmlParser#loadDocument(File).
      */
     public static ParsedObject loadFromFile(File file)
             throws SAXException, ParserConfigurationException, IOException {
@@ -739,11 +739,11 @@ public class ParsedObject {
 
     /**
      * Loads a ParsedObject from an URI.
-     * 
+     *
      * @param uri the address of the file to load.
-     * @return A newly created <code>ParsedObject</code> representing the same 
+     * @return A newly created <code>ParsedObject</code> representing the same
      *          information found in the given XML file.
-     * 
+     *
      * @throws SAXException If the XML data contains syntactic or semantic
      *          errors. These are related to non-wellformedness, because
      *          validation is disabled for this method.
@@ -758,11 +758,11 @@ public class ParsedObject {
 
     /**
      * Loads a ParsedObject from an URL.
-     * 
+     *
      * @param url the address of the file to load.
-     * @return A newly created <code>ParsedObject</code> representing the same 
+     * @return A newly created <code>ParsedObject</code> representing the same
      *          information found in the given XML file.
-     * 
+     *
      * @throws SAXException If the XML data contains syntactic or semantic
      *          errors. These are related to non-wellformedness, because
      *          validation is disabled for this method.
@@ -778,14 +778,14 @@ public class ParsedObject {
     /**
      * Creates a new <code>ParsedObject</code> from the information found in an
      * XML file.
-     * 
+     *
      * @param filename The filename that contains the information for the new
      *         instance.
      * @param validation Indicates, if the content should be validated
-     *  
+     *
      * @return ParsedObject A newly created <code>Object</code> representing the
      *          same information found in the given XML file.
-     * 
+     *
      * @throws SAXException If the XML data contains syntactic or semantic
      *          errors. These are related to non-wellformedness, because
      *          validation is disabled for this method.
@@ -802,11 +802,11 @@ public class ParsedObject {
     /**
      * Creates a new <code>ParsedObject</code> from the information found in an
      * input stream.
-     * 
+     *
      * @param is the input stream used to retrieve data.
      * @return A newly created <code>Object</code> holding the same
      *          information found in the given XML file.
-     * 
+     *
      * @throws SAXException If the XML data contains syntactic or semantic
      *          errors. These are related to non-wellformedness, because
      *          validation is disabled for this method.
@@ -822,18 +822,18 @@ public class ParsedObject {
     /**
      * Creates a new <code>ParsedObject</code> from the information found in a
      * string.
-     * 
+     *
      * @param string the String that holds the data.
      * @return A newly created <code>Object</code> holding the same
      *          information found in the given XML file.
-     * 
+     *
      * @throws SAXException If the XML data contains syntactic or semantic
      *          errors. These are related to non-wellformedness, because
      *          validation is disabled for this method.
      * @throws ParserConfigurationException If the underlying XML implementation
      *          and/or configuration throws errors.
      * @throws IOException If the file does not exist or is not readable.
-     * 
+     *
      * @see #parse(InputStream)
      */
     public static ParsedObject parse(String string)
@@ -874,10 +874,10 @@ public class ParsedObject {
     /**
      * Returns a String representation of this <code>ParsedObject</code>. The
      * resulting string will not be indented.
-     * 
+     *
      * @return a String that contains this <code>ParsedObject</code> with its
      *         attributes the children as XML string.
-     * 
+     *
      * @see Object#toString()
      * @see #toString(boolean)
      */
@@ -887,12 +887,12 @@ public class ParsedObject {
 
     /**
      * Returns a String representation of this <code>ParsedObject</code>.
-     * 
+     *
      * @param indentation whether the output string should contain indentation.
-     * 
+     *
      * @return a String that contains this <code>ParsedObject</code> with its
      *         attributes the children as XML string.
-     * 
+     *
      * @see Object#toString()
      */
     public String toString(boolean indentation) {

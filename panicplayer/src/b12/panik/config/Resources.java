@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Resources.java
 //                created: 01.12.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -10,7 +10,7 @@ import java.util.ResourceBundle;
 
 /**
  * Class that provides resource bundle loading.
- * 
+ *
  * @author kariem
  */
 public class Resources {
@@ -25,7 +25,7 @@ public class Resources {
 
     /**
      * Returns the string from the resource bundle associated with <code>key</code>.
-     * 
+     *
      * @param key
      *            the key.
      * @return the associated string.

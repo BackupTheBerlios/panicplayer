@@ -1,6 +1,6 @@
-/* 
+/*
  * ParsedObject.java
- * 
+ *
  * This Object is used to easily convert from XML DOM to a simple data structure
  * using Collection classes.
  *
@@ -23,10 +23,10 @@
  *     misrepresented as being the original software.
  *
  *  3. This notice may not be removed or altered from any source distribution.
- * 
- *  In case of a desired commercial use, please contact the author 
+ *
+ *  In case of a desired commercial use, please contact the author
  *  for further information.
- * 
+ *
  *****************************************************************************/
 package b12.panik.config;
 
@@ -50,7 +50,7 @@ import org.xml.sax.helpers.DefaultHandler;
 
 /**
  * This class provides convenience methods to access XML content.
- * 
+ *
  * @author Kariem Hussein
  */
 public class XmlParser {
@@ -68,7 +68,7 @@ public class XmlParser {
     private static final CustomizedErrorHandler HANDLER = new CustomizedErrorHandler(true);
 
     /**
-     * Creates a new <code>XmlParser</code> from a document with a possible 
+     * Creates a new <code>XmlParser</code> from a document with a possible
      * validation
      * @param filename The filename this parser should read.
      * @param validation Indicates validation or no validation
@@ -88,8 +88,8 @@ public class XmlParser {
         Document d = null;
         if (validation) {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            //Configure DocumentBuilderFactory to generate a 
-            //namespace-aware, validating parser that uses XML Schema  
+            //Configure DocumentBuilderFactory to generate a
+            //namespace-aware, validating parser that uses XML Schema
             factory.setNamespaceAware(true);
             factory.setValidating(true);
             factory.setAttribute("http://java.sun.com/xml/jaxp/properties/schemaLanguage",
@@ -153,9 +153,9 @@ public class XmlParser {
     /**
      * Loads the document from a specified input stream. This method does not
      * validate the contents of the xml file.
-     * 
+     *
      * @param is the input stream with the data
-     * 
+     *
      * @return Document An instance of the Document representing the contents
      *         of the file.
      * @throws ParserConfigurationException if the underlying XML implementation
@@ -178,9 +178,9 @@ public class XmlParser {
     /**
      * Loads the document from a specified input stream. This method does not
      * validate the contents of the xml file.
-     * 
+     *
      * @param f the file containing the data.
-     * 
+     *
      * @return Document An instance of the Document representing the contents
      *          of the file.
      * @throws ParserConfigurationException if the underlying XML implementation
@@ -270,12 +270,12 @@ public class XmlParser {
     /**
      * Writes a <code>ParsedObject</code> with its contents to an
      * <code>OutputStream</code>. The given <code>ParsedObject</code> will be the
-     * root element of the output. 
-     * 
+     * root element of the output.
+     *
      * @param o a <code>ParsedObject</code> that should be saved.
      * @param writer the output writer.
      * @param indentation whether the output will be indented.
-     * 
+     *
      * @throws IOException If there occured an error accessing the file system.
      * @throws ParserConfigurationException If there is an error with the
      *         underlying XML configuration.
@@ -319,15 +319,15 @@ public class XmlParser {
     /**
      * Writes a <code>ParsedObject</code> with its contents to an
      * <code>OutputStream</code>. The given <code>ParsedObject</code> will be the
-     * root element of the output. 
-     * 
+     * root element of the output.
+     *
      * @param object a <code>ParsedObject</code> that should be saved.
      * @param w the output writer.
      * @throws ParserConfigurationException If an error occured in the
      *          underlying XML configuration.
-     * @throws IOException If there occured an error accessing the file system. 
+     * @throws IOException If there occured an error accessing the file system.
      *
-     * @see #writeParsedObject(ParsedObject, StringWriter) 
+     * @see #writeParsedObject(ParsedObject, StringWriter)
      */
     public static void writeParsedObject(ParsedObject object, StringWriter w)
             throws IOException, ParserConfigurationException {
@@ -337,15 +337,15 @@ public class XmlParser {
     /**
      * Creates a <code>List</code> of <code>ParsedObject</code>s contained under
      * the root of a given file.
-     * 
+     *
      * @param filename The name of the file to read data from.
-     * 
+     *
      * @return A <code>List</code> of <code>ParsedObject</code>s.
      * @throws SAXException If the given file does not containt well-formed XML
      *          data.
      * @throws ParserConfigurationException If an error occured in the
      *          underlying XML configuration.
-     * @throws IOException If there occured an error accessing the file system. 
+     * @throws IOException If there occured an error accessing the file system.
      */
     public static List readParsedObjects(String filename)
             throws SAXException, ParserConfigurationException, IOException {
@@ -363,7 +363,7 @@ public class XmlParser {
 
     /**
      * Returns a reusable XML document.
-     * 
+     *
      * @return A reusable <code>Document</code>.
      * @throws ParserConfigurationException if no reusable document exists and
      *          no new document could be created.
@@ -378,10 +378,10 @@ public class XmlParser {
     /**
      * Returns a reusable <code>DocumentBuilder</code>. If no instance exists yet
      * a new object will be instantiated.
-     * 
+     *
      * @return A new <code>DocumentBuilder</code> or a reference to an already
      *          existing.
-     * 
+     *
      * @throws ParserConfigurationException If there is an error with the
      *          underlying XML configuration.
      */
@@ -395,10 +395,10 @@ public class XmlParser {
     /**
      * Returns the child elements of a specified <code>Node</code> with a
      * given name.
-     * 
+     *
      * @param parentNode the node which will be searched.
      * @param nodeName the name of the nodes to search for.
-     * 
+     *
      * @return a <code>List</code> of DOM elements, that are direct children of
      *          the given parent node.
      */
@@ -442,9 +442,9 @@ public class XmlParser {
      * for XML are not allowed to begin with digits. For this reason, a
      * statically defined prefix ({@link #PREFIX}) is added. This method removes
      * all spaces from the checked String.
-     * 
+     *
      * @param string the String to be checked for errors.
-     * 
+     *
      * @return the corrected String.
      */
     public static String checkString(String string) {
@@ -456,7 +456,7 @@ public class XmlParser {
      * <i>clean</i> version of it. Strings acceptable as tagnames for XML are not
      * allowed to begin with digits. For this reason, a statically defined prefix
      * is added. This method removes all spaces from the checked String.
-     * 
+     *
      * @param string the String to be checked for errors.
      * @param prefix a String that is added as a prefix for Strings, only
      *         containing numbers.
@@ -469,13 +469,13 @@ public class XmlParser {
     /**
      * This method removes any characters that are invalid for an XML tag name
      * and returns a <i>clean</i> version of it.
-     * 
+     *
      * @param string the String to be checked for errors.
      * @param prefix a String that is added as a prefix for Strings, only
      *         containing numbers.
      * @param removeSpaces is true if spaces are to be removed, false if they
      *         should not be touched.
-     * 
+     *
      * @return the corrected String.
      */
     public static String checkString(String string, String prefix, boolean removeSpaces) {

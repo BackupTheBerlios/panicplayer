@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -14,7 +14,7 @@ import b12.panik.util.TimeFormatter;
 /**
  * Represents a configurable input. The input consists of a data source and
  * several properties that configure the input's behaviour.
- * 
+ *
  * @author kariem
  */
 public class InputProperty {
@@ -107,7 +107,7 @@ public class InputProperty {
         }
         return URI.create(urlString);
     }
-    
+
     private static long getTime(String s) {
         if (s == null) {
             return 0;
@@ -120,7 +120,7 @@ public class InputProperty {
      * <code>InputProperty</code>. If filename is set, the resulting
      * <code>ParsedObject</code> will only contain the <i>file</i> attribute,
      * and no <i>url</i>.
-     * 
+     *
      * @param po the object.
      */
     void fillParsedObject(ParsedObject po) {
@@ -128,7 +128,7 @@ public class InputProperty {
             // reduce to current directory;
             String dirString = new File(".").getAbsolutePath();
             // without "."
-            dirString = dirString.substring(0, dirString.length() - 1); 
+            dirString = dirString.substring(0, dirString.length() - 1);
             String saveFile = file.toString();
             if (saveFile.startsWith(dirString)) {
                 // remove current directory to avoid absolute paths in file name
