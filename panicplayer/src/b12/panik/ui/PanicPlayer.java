@@ -1,11 +1,14 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.10 $
+//              $Revision: 1.11 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -13,7 +16,13 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.media.Player;
-import javax.swing.*;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.WindowConstants;
 
 import b12.panik.config.Configuration;
 import b12.panik.config.ConfigurationException;

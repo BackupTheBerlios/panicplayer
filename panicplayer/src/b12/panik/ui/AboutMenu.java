@@ -1,16 +1,16 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: AboutMenu.java
 //                created: 30.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JWindow;
 
 /**
  * The about menu
@@ -31,14 +31,18 @@ public class AboutMenu extends JMenu {
                 about();
             }
         });
-    add(itemAbout);
+        add(itemAbout);
     }
     /**
-     * 
-     */
-    protected void about() {
-        JLabel jl = new JLabel("About");
-        
+	 *  
+	 */
+    void about() {
+        // JPanel contentPane = new JPanel();
+        //  JLabel jl = new JLabel("About")
+        JWindow jw = new JWindow();
+        SplashScreen about = new SplashScreen("res/about.gif", "PanicPlayer Project by Kariem, Georg & Oliver");
+        about.showFor(7600);
+
     }
 
 }
