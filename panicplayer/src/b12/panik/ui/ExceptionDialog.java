@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ExceptionDialog.java
 //                created: 30.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -11,7 +11,7 @@ import java.awt.HeadlessException;
 import javax.swing.JDialog;
 
 /**
- * 
+ * Simple dialog that shows an exception.
  * @author kariem
  */
 public class ExceptionDialog extends JDialog {
