@@ -1,17 +1,23 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanel.java
 //                created: 29.10.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.awt.dnd.DnDConstants;
 import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.JPanel;
 
-import b12.panik.ui.util.*;
+import b12.panik.ui.util.RoundBorder;
 
 /**
  * The <code>TracksPanel</code> offers a visual control to display and alter
@@ -47,7 +53,17 @@ public class TracksPanel extends JPanel {
         add(availablePanel, new GridBagConstraints(0, 1, 1, 1, 1, .4,
                 GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0,
                 0));
-
+        
+		DragObject dragLabel = new DragObject("DragME",DnDConstants.ACTION_COPY_OR_MOVE);
+			dragLabel.setBackground(Color.white);
+			dragLabel.setOpaque(true);    
+			availablePanel.add(dragLabel);
+			
+		DropObject dropLabel = new DropObject("DropME",DnDConstants.ACTION_COPY_OR_MOVE);
+			dropLabel.setBackground(Color.yellow);
+			dropLabel.setOpaque(true);        
+			dropPanel.add(dropLabel);
+	
         // TODO initialize with default information
     }
     
