@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -9,8 +9,11 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 
 import b12.panik.player.PanicAudioPlayer;
 
@@ -18,11 +21,35 @@ import b12.panik.player.PanicAudioPlayer;
  * Represents the main frame of the panic player.
  */
 public class PanicPlayer extends JFrame {
-
+   
+   private JMenuBar menuBar;
+   private FileMenu fileMenu;
+   
     /** Creates a new PanicPlayer. */
     public PanicPlayer() {
         super("Panic Player");
         addWindowListener(new WindowClosingAdapter(false));
+        menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+        fileMenu = new FileMenu();
+        menuBar.add(fileMenu);
+        fileMenu.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                String name = evt.getPropertyName();
+                if (name.equals(FileMenu.PROP_FILE_EXIT)) {
+                    exitApplication();
+                }
+            }
+        });
+    }
+
+    /**
+     * 
+     */
+    protected void exitApplication() {
+		setVisible(false);
+		dispose();
+		System.exit(0);
     }
 
     /** Shows the player. */
@@ -73,12 +100,11 @@ public class PanicPlayer extends JFrame {
         }
         
         public void windowClosing(WindowEvent event) {
-            event.getWindow().setVisible(false);
-            event.getWindow().dispose();
+                        
             if (closePlayer) {
                 panicAudioPlayer.stop();
             }
-            System.exit(0);
+            exitApplication();
         }
     }
     
