@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -305,7 +305,7 @@ public class InputProperty {
      * Returns the file.
      * @return the file.
      */
-    public File getFilename() {
+    public File getFile() {
         return file;
     }
 
@@ -313,7 +313,7 @@ public class InputProperty {
      * Sets the file.
      * @param file The file.
      */
-    public void setFilename(File file) {
+    public void setFile(File file) {
         this.file = file;
     }
     

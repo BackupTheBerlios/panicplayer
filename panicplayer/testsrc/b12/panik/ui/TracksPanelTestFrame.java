@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanelTest.java
 //                created: 10.01.2004
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -124,21 +124,6 @@ public class TracksPanelTestFrame extends JFrame {
     }
 
     void throwError(String message, Exception exception) {
-        /*
-         if (exception != null) {
-         StringBuffer buf = new StringBuffer(message);
-         buf.append('\n');
-         StackTraceElement[] traces = exception.getStackTrace();
-         for (int i = 0; i < traces.length && i < 3; i++) {
-         for (int j = 0; j < i; j++) {
-         buf.append("  ");
-         }
-         buf.append(traces[i]);
-         buf.append('\n');
-         }
-         message = buf.toString();
-         }
-         */
         Logging.warning(message, exception);
     }
 

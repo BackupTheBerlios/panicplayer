@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.21 $
+//              $Revision: 1.22 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -279,9 +279,9 @@ public class MixEffect implements Codec, TrackManager {
                         tracksPanel.setLength(seconds);
                         setTimePer1000Byte(IOUtils.getTimePer1000Byte(url));
                     } catch (UnsupportedAudioFileException e) {
-                        Logging.severe("Format not supported by audio system.", e);
+                        Logging.warning("Format not supported by audio system.", e);
                     } catch (IOException e) {
-                        Logging.severe("Audio file could not be found.", e);
+                        Logging.warning("Audio file could not be found.", e);
                     }
                 }
             }

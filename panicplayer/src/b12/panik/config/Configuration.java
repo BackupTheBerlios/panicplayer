@@ -1,17 +1,16 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.12 $
+//              $Revision: 1.13 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
-import java.util.*;
+import java.net.URISyntaxException;
+import java.util.Iterator;
+import java.util.Properties;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -50,7 +49,7 @@ public class Configuration {
     private Configuration() {
         effectConfig = new EffectConfiguration();
     }
-    
+
     /**
      * Resets the configuration to an initial state. 
      */
@@ -58,7 +57,6 @@ public class Configuration {
         player.reset();
         effectConfig.reset();
     }
-    
 
     /**
      * Creates a new instance of <code>Configuration</code>.
@@ -74,27 +72,49 @@ public class Configuration {
     }
 
     /**
-     * Returns the current configuration.
+     * Returns the current configuration. If the configuration has not been
+     * initialized yet, a new configuration will be created.
+     * 
+     * @param p the player to be associated with the configuration.
+     * 
      * @return the current configuration.
      */
-    public static Configuration getConfiguration() {
+    public static Configuration getConfiguration(PanicAudioPlayer p) {
         if (instance == null) {
+            instance = new Configuration();
+            if (p != null) {
+                instance.setPlayer(p);
+            }
             File f = new File(DEFAULT_CONF_FILE);
 
-            try {
-                String uri = f.exists() ? f.toString() : null;
-                instance = new Configuration(uri);
-            } catch (ConfigurationException e) {
-                Logging.severe(
-                        "Configuration could not be loaded, switching to empty configuration.",
-                        e);
-                instance = new Configuration();
+            String uri = f.exists() ? f.toString() : null;
+            if (uri != null) {
+                try {
+                    instance.loadConfig(uri);
+                } catch (ConfigurationException e) {
+                    Logging.severe("Configuration could not be loaded, "
+                            + "switching to empty configuration.", e);
+                }
             }
         }
         return instance;
     }
 
-    private void loadConfig(String uri) throws ConfigurationException {
+    /**
+     * Returns the current configuration.
+     * @return the current configuration.
+     */
+    public static Configuration getConfiguration() {
+        return getConfiguration(null);
+    }
+
+    /**
+     * Loads the configuration with the information found in the given uri.
+     * @param uri the location of the new information.
+     * @throws ConfigurationException if an error occurred while trying to
+     *          read the target.
+     */
+    public void loadConfig(String uri) throws ConfigurationException {
         ParsedObject po = null;
         try {
             po = ParsedObject.loadFromURI(uri);
@@ -119,7 +139,16 @@ public class Configuration {
     private void parseInput(ParsedObject po) {
         try {
             inputProperty = InputProperty.parseInputProperty(po);
+            File f = inputProperty.getFile();
+            if (f != null) {
+                loadMainTrack(f);
+            } else {
+                String urlString = inputProperty.getAddress().toString();
+                loadMainTrack(urlString);
+            }
         } catch (MalformedURLException e) {
+            Logging.warning(Resources.getString("Configuration.error"), e); //$NON-NLS-1$
+        } catch (MediaIOException e) {
             Logging.warning(Resources.getString("Configuration.error"), e); //$NON-NLS-1$
         }
     }
@@ -144,12 +173,22 @@ public class Configuration {
      *
      * @param f the file.
      * @throws IOException on IO error.
+     * @see #writeTo(Writer)
      */
     public void writeTo(File f) throws IOException {
+        FileWriter writer = new FileWriter(f);
+        writeTo(writer);
+    }
+
+    /**
+     * Writes the configuration to the given writer.
+     * @param w the writer.
+     * @throws IOException
+     */
+    public void writeTo(Writer w) throws IOException {
         try {
-            FileWriter writer = new FileWriter(f);
-            XmlParser.writeParsedObject(getParsedObject(), writer, true);
-            writer.close();
+            XmlParser.writeParsedObject(getParsedObject(), w, true);
+            w.close();
         } catch (ParserConfigurationException e) {
             throw new IOException(Resources.getString("Configuration.xmlerror")
                     + e.getMessage()); //$NON-NLS-1$
@@ -231,23 +270,6 @@ public class Configuration {
     }
 
     /**
-     * Loads a sound file.
-     * @param f the file to be loaded.
-     * @throws MediaIOException if an error occured while loading the sound
-     *          file. See {@linkplain #loadMainTrack(URL)} for
-     *          more information.
-     */
-    public void loadMainSoundFile(File f) throws MediaIOException {
-        URL url;
-        try {
-            url = f.toURL();
-            loadMainTrack(url);
-        } catch (IOException e) {
-            throw new MediaIOException(e);
-        }
-    }
-
-    /**
      * Returns whether the main track is already available.
      * @return <code>true</code> if a main track is available,
      *          <code>false</code> otherwise.
@@ -258,13 +280,45 @@ public class Configuration {
 
     /**
      * Loads the sound with the given URL into the configuration.
-     * @param url the url.
-     * @throws MediaIOException if an error occurred while creating the
-     *          player.
+     * @param urlString the url string.
+     * @throws MediaIOException if an error occurred while setting the main
+     *          track
      */
-    public void loadMainTrack(URL url) throws MediaIOException {
-        setInputProperty(new InputProperty(new File(url.toString()), 0));
-        player.setMainTrack(url);
+    public void loadMainTrack(String urlString) throws MediaIOException {
+        setInputProperty(new InputProperty(new File(urlString), 0));
+        loadMain(urlString);
+    }
+
+    /**
+     * Loads the sound file with the given file into the configuration.
+     * @param f the file name.
+     * @throws MediaIOException if an error occurred while setting the main
+     *          track
+     */
+    public void loadMainTrack(File f) throws MediaIOException {
+        setInputProperty(new InputProperty(f, 0));
+        loadMain(f.toURI().toString());
+    }
+
+    /**
+     * Loads the main track from a given URL.
+     * @param urlString the location as string.
+     * @throws MediaIOException if an error occurred while setting the main
+     *          track
+     */
+    public void loadMainTrackURL(String urlString) throws MediaIOException {
+        try {
+            setInputProperty(new InputProperty(new URI(urlString), 0));
+            loadMain(urlString);
+        } catch (URISyntaxException e) {
+            throw new MediaIOException(e);
+        }
+    }
+
+    private void loadMain(String s) throws MediaIOException {
+        if (player != null) {
+            player.setMainTrack(s);
+        }
         mainTrackLoaded = true;
     }
 
@@ -279,8 +333,6 @@ public class Configuration {
         try {
             UrlTrack track = player.addTrack(uri);
             effectConfig.addTrack(uri, 0);
-            // effect config should update track behaviour
-            //track.setTrackListener(effectConfig);
             return track;
         } catch (IOException e) {
             throw new MediaIOException(e);

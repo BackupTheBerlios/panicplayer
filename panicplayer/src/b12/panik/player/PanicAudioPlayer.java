@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.17 $
+//              $Revision: 1.18 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -11,8 +11,9 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.util.Collection;
 
 import javax.media.*;
@@ -32,7 +33,7 @@ import b12.panik.util.Logging;
  * 
  * <p>After initialization the player may be filled with the main track and the
  * additional tracks to mix in. For this purpose the methods
- * {@linkplain #setMainTrack(URL)}and {@linkplain #addTrack(URL)}are used.
+ * {@linkplain #setMainTrack(String)}and {@linkplain #addTrack(URI)}are used.
  * The <code>Track</code> objects returned by these methods may be altered to
  * correctly set the start time or other properties, according to the
  * configuration or user input.</p>
@@ -197,15 +198,21 @@ public class PanicAudioPlayer implements ControllerListener {
 
     /**
      * Loads the sound file for this player.
-     * @param url the url to be loaded.
+     * @param urlString the url to be loaded.
      * @throws MediaIOException thrown if the player cannot be instantiated
      *          or playing is not possible.
      */
-    public void setMainTrack(URL url) throws MediaIOException {
-        final Processor processor = input.readProcessor(url.toString(), this);
-        Logging.fine("Sound file " + url + " opened, loading processor");
-        mixEffect.setMainTrack(url);
-        mainComponent.setPlayer(processor);
+    public void setMainTrack(String urlString) throws MediaIOException {
+        final Processor processor = input.readProcessor(urlString, this);
+        Logging.fine("Sound file " + urlString + " opened, loading processor");
+        try {
+            mixEffect.setMainTrack(new URI(urlString).toURL());
+            mainComponent.setPlayer(processor);
+        } catch (MalformedURLException e) {
+            Logging.warning("Cannot set track correctly, url not valid.", e);
+        } catch (URISyntaxException e) {
+            Logging.warning("Cannot set track correctly, uri not parseable.", e);
+        }
     }
 
     /** @see ControllerListener#controllerUpdate(ControllerEvent) */

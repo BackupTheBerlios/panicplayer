@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.11 $
+//              $Revision: 1.12 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -100,9 +100,11 @@ public class MediaInput {
             throws MediaIOException {
         // log loaded processor
         int indexColon = url.indexOf(':');
+        String protocol = null; 
         String message;
         if (indexColon != -1) {
-            message = "Protocol: " + url.substring(0, indexColon);
+            protocol = url.substring(0, indexColon);
+            message = "Protocol: " + protocol;
         } else {
             message = "Locator: " + url;
         }
@@ -122,7 +124,7 @@ public class MediaInput {
             p.configure();
             return p;
         } catch (NoProcessorException e) {
-            throw new MediaIOException("No processor can be found.", e);
+            throw new MediaIOException("Could not find processor for \"" + url + "\".", e);
         } catch (IOException e) {
             throw new MediaIOException("Problem when trying to connect to source", e);
         }

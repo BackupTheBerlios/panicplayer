@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.27 $
+//              $Revision: 1.28 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -78,8 +78,7 @@ public class PanicPlayer extends JFrame {
 
         initMenuBar();
         initContent();
-        conf = Configuration.getConfiguration();
-        conf.setPlayer(panicAudioPlayer);
+        conf = Configuration.getConfiguration(panicAudioPlayer);
         intro.close();
     }
 
@@ -107,6 +106,8 @@ public class PanicPlayer extends JFrame {
                     exitApplication();
                 } else if (name.equals(MenuFile.PROP_FILE_OPEN)) {
                     loadMainTrack((File) evt.getNewValue());
+                } else if (name.equals(MenuFile.PROP_FILE_URL)) {
+                    loadMainTrackURL((String)evt.getNewValue());
                 }
             }
         });
@@ -262,12 +263,35 @@ public class PanicPlayer extends JFrame {
         centerPane.add(effectControl, gbc);
     }
 
+    /**
+     * Loads the main track from a location indicated by a string.
+     * @param urlString the location.
+     */
+    void loadMainTrackURL(String urlString) {
+        try {
+            conf.loadMainTrackURL(urlString);
+        } catch (MediaIOException e) {
+            String errorCause = "Problem while trying to load sound from RTP resource."; //$NON-NLS-1$
+            Logging.severe(errorCause, e);
+            UIUtils.openExceptionDialog(this, e, errorCause);
+        } catch (Throwable t) {
+            // the rest should be handled in a general way.
+            String errorCause = t.getMessage();
+            Logging.info(errorCause);
+            UIUtils.openExceptionDialog(this, t, errorCause);
+        }
+    }
+    
+    /**
+     * Loads the main track from a file.
+     * @param f the file.
+     */
     void loadMainTrack(File f) {
         try {
-            conf.loadMainSoundFile(f);
+            conf.loadMainTrack(f);
         } catch (MediaIOException e) {
             String errorCause = "Problem while trying to load sound file."; //$NON-NLS-1$
-            Logging.info(errorCause);
+            Logging.severe(errorCause, e);
             UIUtils.openExceptionDialog(this, e, errorCause);
         } catch (Throwable t) {
             // the rest should be handled in a general way.

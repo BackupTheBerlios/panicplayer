@@ -1,18 +1,23 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuConfig.java
 //                created: 25.12.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
 import java.awt.Dialog;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 
 import b12.panik.config.Configuration;
+import b12.panik.config.ConfigurationException;
 import b12.panik.ui.util.UIUtils;
+import b12.panik.util.Logging;
 
 /**
  * Menu for the configuration.
@@ -45,19 +50,19 @@ public class MenuConfig extends JMenu {
             }
         });
 
-        itemEdit = new JMenuItem("Edit Config...");
-        itemEdit.setAccelerator(KeyStroke.getKeyStroke("control C"));
+        itemEdit = new JMenuItem("View Config...");
+        itemEdit.setAccelerator(KeyStroke.getKeyStroke("control shift C"));
         itemEdit.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // edit configuration
+                showConfig();
             }
-       });
+        });
 
         itemSave = new JMenuItem("Save Config...");
         itemSave.setAccelerator(KeyStroke.getKeyStroke("control S"));
         itemSave.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO save configuration
+                saveConfig();
             }
         });
 
@@ -65,7 +70,7 @@ public class MenuConfig extends JMenu {
         itemLoad.setAccelerator(KeyStroke.getKeyStroke("control L"));
         itemLoad.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                // TODO load configuration from file
+                loadConfig();
             }
         });
 
@@ -78,9 +83,71 @@ public class MenuConfig extends JMenu {
 
     /** Opens a dialog with information about the installed plugins. */
     void showInfo() {
-        Dialog dlgConf = new ConfigurationViewer();
-        dlgConf.pack();
-        UIUtils.centerOnParentWindow(dlgConf, this);
-        dlgConf.show();
+        Dialog dlg = new RegisteredComponentsViewer();
+        dlg.pack();
+        UIUtils.centerOnParentWindow(dlg, this);
+        dlg.show();
+    }
+
+    /** Shows the current configuration */
+    void showConfig() {
+        Dialog dlg = new ConfigurationViewer();
+        dlg.pack();
+        UIUtils.centerOnParentWindow(dlg, this);
+        dlg.show();
+    }
+
+    /** Saves the configuration to a file. */
+    void saveConfig() {
+        FileDialog fd = new FileDialog();
+        final Window parentWindow = SwingUtilities.windowForComponent(this);
+        int returnVal = fd.showSaveDialog(parentWindow);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fd.getSelectedFile();
+            String title, text;
+            int type;
+            try {
+                Configuration.getConfiguration().writeTo(file);
+                title = "Configuration saved.";
+                text = "The configuration was saved to: " + file;
+                type = JOptionPane.INFORMATION_MESSAGE;
+            } catch (IOException e) {
+                title = "Error while saving configuration.";
+                text = "An Error has occured while trying to write the configuration.\n "
+                        + "See the error log for more information";
+                type = JOptionPane.ERROR_MESSAGE;
+                Logging.warning(title, e);
+            }
+            JOptionPane.showMessageDialog(parentWindow, text, title, type);
+        }
+    }
+
+    /** Loads the configuration. */
+    void loadConfig() {
+        FileDialog fd = new FileDialog();
+        final Window parentWindow = SwingUtilities.windowForComponent(this);
+        int returnVal = fd.showOpenDialog(parentWindow);
+
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fd.getSelectedFile();
+            String title, text;
+            int type;
+            try {
+                Configuration conf = Configuration.getConfiguration();
+                conf.resetConfig();
+                conf.loadConfig(file.toURI().toString());
+                title = "Configuration loaded.";
+                text = "The configuration was successfully loaded from " + file;
+                type = JOptionPane.INFORMATION_MESSAGE;
+            } catch (ConfigurationException e) {
+                title = "Error while loading configuration.";
+                text = "An Error has occured while trying to load the configuration.\n "
+                    + "See the error log for more information";
+                type = JOptionPane.ERROR_MESSAGE;
+                Logging.warning(title, e);
+            }
+            JOptionPane.showMessageDialog(parentWindow, text, title, type);
+        }
     }
 }
