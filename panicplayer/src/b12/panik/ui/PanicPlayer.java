@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -11,11 +11,17 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.File;
+import java.io.IOException;
+import java.net.MalformedURLException;
 
+import javax.media.NoPlayerException;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
+import b12.panik.io.IOUtils;
 import b12.panik.player.PanicAudioPlayer;
+import b12.panik.util.Logging;
 
 /**
  * Represents the main frame of the panic player.
@@ -38,9 +44,20 @@ public class PanicPlayer extends JFrame {
                 String name = evt.getPropertyName();
                 if (name.equals(FileMenu.PROP_FILE_EXIT)) {
                     exitApplication();
+                } else if (name.equals(FileMenu.PROP_FILE_OPEN)) {
+                    playSound((File) evt.getNewValue());
                 }
             }
         });
+    }
+
+    protected void playSound(File f) {
+        try {
+            IOUtils.playSimple(f);
+        } catch (Exception e) {
+            Logging.severe("Error while playing sound", e);
+            e.printStackTrace();
+        }
     }
 
     /**
