@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.13 $
+//              $Revision: 1.14 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -11,6 +11,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.util.Collection;
 
@@ -82,7 +83,7 @@ public class PanicAudioPlayer implements ControllerListener {
     /**
      * Adds a <code>Track</code> to this player's tracks.
      *
-     * @param url the url of the track to be loaded.
+     * @param uri the url of the track to be loaded.
      * @return the resulting UrlTrack.
      *
      * @throws IOException if the track could not be found.
@@ -90,8 +91,8 @@ public class PanicAudioPlayer implements ControllerListener {
      *          with previously entered information (e.g. the new track is
      *          longer than the background track).
      */
-    public UrlTrack addTrack(URL url) throws IOException, ConstraintsException {
-        UrlTrack track = IOUtils.createTrack(url);
+    public UrlTrack addTrack(URI uri) throws IOException, ConstraintsException {
+        UrlTrack track = IOUtils.createTrack(uri);
         mixEffect.addInputUrlTrack(track);
         return track;
     }
@@ -207,7 +208,8 @@ public class PanicAudioPlayer implements ControllerListener {
         // - payload change should result in a new player to be generated
         //   => inform receiver of created player of a payload change
         // - (optional) handle new receive stream
-        // in configured state add mixeffect codec for processing
+        // in configured state add mixeffect codec for processing
+
         if (event instanceof ConfigureCompleteEvent) {
 
             Processor p = (Processor) event.getSource();
@@ -216,21 +218,19 @@ public class PanicAudioPlayer implements ControllerListener {
 
             TrackControl[] trackControls = p.getTrackControls();
 
-            /*
-             Format format = MixEffect.FORMATS_INPUT[0];
-             if (!setTrackFormat(trackControls, format)) {
-             Logging.warning("Could not transcode any track to " + format);
-             }
-             */             
             final Codec[] codecChain = new Codec[]{mixEffect};
             for (int i = 0; i < trackControls.length; i++) {
                 try {
-                    Logging.info("processing format: " + trackControls[i].getFormat());
+                    Logging.info("Original input format: " + trackControls[i].getFormat());
                     trackControls[i].setCodecChain(codecChain);
                 } catch (UnsupportedPlugInException e) {
                     Logging.warning("Not supported plugin", e);
                 }
             }
-        }                if(event instanceof EndOfMediaEvent) {        	mixEffect.prepareToRestart();        }
+        }
+
+        if (event instanceof TransitionEvent) {
+            mixEffect.prepareToRestart();
+        }
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
-    <input url="rtp://loser.net"/>
+    <input uri="rtp://loser.net"/>
     <output firstprop="test"/>
     <effect start="00:00" duration="00:00" volume="0.7">
         <voice file="voice1.wav"/>
         <voice file="voice2.wav" multiply="4"/>
-        <voice url="rtp://lll"/>
-        <voice url="http://www.google.com/testdrive.wav"/>
+        <voice uri="rtp://lll"/>
+        <voice uri="http://www.google.com/testdrive.wav"/>
     </effect>
 </configuration>

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.25 $
+//              $Revision: 1.26 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -10,7 +10,7 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.net.URL;
+import java.net.URI;
 
 import javax.swing.*;
 import javax.swing.border.AbstractBorder;
@@ -18,9 +18,7 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import b12.panik.config.Configuration;
-import b12.panik.config.ConfigurationException;
 import b12.panik.io.MediaIOException;
-import b12.panik.io.UrlTrack;
 import b12.panik.player.PanicAudioPlayer;
 import b12.panik.ui.util.*;
 import b12.panik.util.Logging;
@@ -80,12 +78,8 @@ public class PanicPlayer extends JFrame {
 
         initMenuBar();
         initContent();
-        try {
-            conf = new Configuration(null);
-            conf.setPlayer(panicAudioPlayer);
-        } catch (ConfigurationException e1) {
-            Logging.warning("Configuration could not be loaded", e1); //$NON-NLS-1$
-        }
+        conf = Configuration.getConfiguration();
+        conf.setPlayer(panicAudioPlayer);
         intro.close();
     }
 
@@ -221,11 +215,11 @@ public class PanicPlayer extends JFrame {
                 FileDialog fd = new FileDialog();
                 int returnVal = fd.showOpenDialog(PanicPlayer.this);
                 if (returnVal == FileDialog.APPROVE_OPTION) {
+                    URI uri = fd.getSelectedFile().toURI();
                     try {
-                        URL url = fd.getSelectedFile().toURL();
-                        UrlTrack track = conf.addTrack(url);
+                        conf.addTrack(uri);
                     } catch (Exception ex) {
-                        Logging.info(ex.getMessage());
+                        Logging.severe("Error adding track: " + uri, ex);
                     }
                 }
 

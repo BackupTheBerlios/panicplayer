@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PSlider.java
 //                created: 06.12.2003
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -26,17 +26,17 @@ public class PSlider extends JPanel {
     private int min, max, actu;
 
     /**
-	 * Creates a Slider with parameters
-	 *
-	 * @param minimum
-	 *            the lowest value
-	 * @param maximum
-	 *            the highest value
-	 * @param actual
-	 *            the initial value
-	 * @param type
-	 *            the type the slider controls
-	 */
+     * Creates a Slider with parameters
+     *
+     * @param minimum
+     *            the lowest value
+     * @param maximum
+     *            the highest value
+     * @param actual
+     *            the initial value
+     * @param type
+     *            the type the slider controls
+     */
     public PSlider(int minimum, int maximum, int actual, String type) {
 
         min = minimum;
@@ -56,11 +56,11 @@ public class PSlider extends JPanel {
         txt = new JLabel(type);
         txt.setBounds(0, 135, 30, 20);
         add(txt);
-		slider.addChangeListener(new ChangeListener() {
-					public void stateChanged(ChangeEvent e) {
-						changeValue();
-					}
-				});
+        slider.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                changeValue();
+            }
+        });
 
     }
 
@@ -75,17 +75,17 @@ public class PSlider extends JPanel {
     }
 
     /**
-	 * @param event
-	 */
+     * @param event
+     */
     private void fireChangeEvent(ChangeEvent event) {
         for (int i = 0; i < getChangeListeners().size(); i++)
-             ((ChangeListener) getChangeListeners().elementAt(i)).stateChanged(event);
+            ((ChangeListener) getChangeListeners().elementAt(i)).stateChanged(event);
     }
 
     /**
      * Returns the change listeners.
-	 * @return the change listeners.
-	 */
+     * @return the change listeners.
+     */
     public Vector getChangeListeners() {
         if (changeListeners == null)
             changeListeners = new Vector();
@@ -103,8 +103,8 @@ public class PSlider extends JPanel {
 
     /**
      * Returns the slider value.
-	 * @return the slider's value
-	 */
+     * @return the slider's value
+     */
     private int getValue() {
         return slider.getValue();
     }

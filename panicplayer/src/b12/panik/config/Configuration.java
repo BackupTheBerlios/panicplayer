@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.10 $
+//              $Revision: 1.11 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -22,9 +22,11 @@ import b12.panik.util.ConstraintsException;
 import b12.panik.util.Logging;
 
 /**
- * Used to configure the player with all its properties. This class provides
+ * <p>Used to configure the player with all its properties. This class provides
  * public accessors to override default properties and may load its setting
- * from an XML file.
+ * from an XML file.</p>
+ * 
+ * <p>The configuration is a singular object.</p>
  */
 public class Configuration {
 
@@ -36,46 +38,70 @@ public class Configuration {
     private static final String TAG_OUTPUT = "output"; //$NON-NLS-1$
     private static final String TAG_EFFECT = "effect"; //$NON-NLS-1$
 
+    private static Configuration instance;
+
     InputProperty inputProperty;
     Properties outputProps;
     private PanicAudioPlayer player;
 
     private boolean mainTrackLoaded;
     private final EffectConfiguration effectConfig;
-    
+
+    private Configuration() {
+        effectConfig = new EffectConfiguration();
+    }
+
     /**
      * Creates a new instance of <code>Configuration</code>.
      *
      * @param uri the address.
      * @throws ConfigurationException if an error occured in the configuration.
      */
-    public Configuration(String uri) throws ConfigurationException {
-        effectConfig = new EffectConfiguration();
-        if (uri == null) {
-            // read from default configuration
+    Configuration(String uri) throws ConfigurationException {
+        this();
+        if (uri != null) {
+            loadConfig(uri);
+        }
+    }
+
+    /**
+     * Returns the current configuration.
+     * @return the current configuration.
+     */
+    public static Configuration getConfiguration() {
+        if (instance == null) {
             File f = new File(DEFAULT_CONF_FILE);
-            if (f.exists()) {
-                uri = f.toString();
+
+            try {
+                String uri = f.exists() ? f.toString() : null;
+                instance = new Configuration(uri);
+            } catch (ConfigurationException e) {
+                Logging.severe(
+                        "Configuration could not be loaded, switching to empty configuration.",
+                        e);
+                instance = new Configuration();
             }
         }
-        if (uri != null) {
-            ParsedObject po = null;
-            try {
-                po = ParsedObject.loadFromURI(uri);
-            } catch (Exception e) {
-                throw new ConfigurationException(Resources.getString("Configuration.error"), e); //$NON-NLS-1$
-            }
+        return instance;
+    }
 
-            for (Iterator i = po.getChildren().iterator(); i.hasNext(); ) {
-                final ParsedObject child = (ParsedObject) i.next();
-                final String name = child.getName();
-                if (name.equals(TAG_INPUT)) {
-                    parseInput(child);
-                } else if (name.equals(TAG_OUTPUT)) {
-                    outputProps = parseOutput(child);
-                } else if (name.equals(TAG_EFFECT)) {
-                    effectConfig.load(child);
-                }
+    private void loadConfig(String uri) throws ConfigurationException {
+        ParsedObject po = null;
+        try {
+            po = ParsedObject.loadFromURI(uri);
+        } catch (Exception e) {
+            throw new ConfigurationException(Resources.getString("Configuration.error"), e); //$NON-NLS-1$
+        }
+
+        for (Iterator i = po.getChildren().iterator(); i.hasNext(); ) {
+            final ParsedObject child = (ParsedObject) i.next();
+            final String name = child.getName();
+            if (name.equals(TAG_INPUT)) {
+                parseInput(child);
+            } else if (name.equals(TAG_OUTPUT)) {
+                outputProps = parseOutput(child);
+            } else if (name.equals(TAG_EFFECT)) {
+                effectConfig.load(child);
             }
         }
     }
@@ -83,9 +109,9 @@ public class Configuration {
     /** Parses the input properties. */
     private void parseInput(ParsedObject po) {
         try {
-            inputProperty = new InputProperty(po);
+            inputProperty = InputProperty.parseInputProperty(po);
         } catch (MalformedURLException e) {
-            Logging.warning(Resources.getString("Configuration.error") + e.toString()); //$NON-NLS-1$
+            Logging.warning(Resources.getString("Configuration.error"), e); //$NON-NLS-1$
         }
     }
 
@@ -145,7 +171,9 @@ public class Configuration {
     }
 
     /*
+     * 
      * simple getters and setters
+     * 
      */
 
     /**
@@ -155,15 +183,6 @@ public class Configuration {
      */
     public EffectConfiguration getEffectConf() {
         return effectConfig;
-    }
-
-    /**
-     * Adds an input property directly to the effect configuration.
-     *
-     * @param ip the new input property.
-     */
-    public void addEffectProperty(InputProperty ip) {
-        effectConfig.add(ip);
     }
 
     /**
@@ -227,7 +246,7 @@ public class Configuration {
     public boolean isMainTrackLoaded() {
         return mainTrackLoaded;
     }
-    
+
     /**
      * Loads the sound with the given URL into the configuration.
      * @param url the url.
@@ -242,21 +261,21 @@ public class Configuration {
 
     /**
      * Adds a single track to the configuration.
-     * @param url the url to load.
+     * @param uri the uri to load.
      * @return the created track.
      * @throws MediaIOException if an IO error occurs, or the URL could not
      *          be correctly converted.
      */
-    public UrlTrack addTrack(URL url) throws MediaIOException {
+    public UrlTrack addTrack(URI uri) throws MediaIOException {
         try {
-            UrlTrack track = player.addTrack(url);
-            addEffectProperty(new InputProperty(new URI(url.toString()), 0, 1));
+            UrlTrack track = player.addTrack(uri);
+            effectConfig.addTrack(uri, 0);
+            // effect config should update track behaviour
+            //track.setTrackListener(effectConfig);
             return track;
         } catch (IOException e) {
             throw new MediaIOException(e);
         } catch (ConstraintsException e) {
-            throw new MediaIOException(e);
-        } catch (Exception e) {
             throw new MediaIOException(e);
         }
     }

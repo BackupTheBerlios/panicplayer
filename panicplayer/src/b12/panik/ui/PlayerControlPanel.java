@@ -1,12 +1,12 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.10 $
+//              $Revision: 1.11 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 import javax.media.*;
 import javax.swing.JLabel;
@@ -14,6 +14,8 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 import b12.panik.util.Logging;
+
+import com.sun.media.ui.BufferedPanelLight;
 
 /**
  * A panel that provides controls for a simple audio player.
@@ -24,6 +26,14 @@ public class PlayerControlPanel extends JPanel {
     /** This property indicates that the player is realized. */
     public static final String PLAYER_REALIZED = "player_realized";
 
+    static Image img;
+    static {
+        img = new BufferedImage(5, 5, BufferedImage.TYPE_INT_ARGB);
+        Graphics g = img.getGraphics();
+        g.setColor(SystemColor.control);
+        g.fillRect(0, 0, 5, 5);
+    }
+    
     private JLabel infoLabel;
     JLabel visLabel;
 
@@ -94,6 +104,11 @@ public class PlayerControlPanel extends JPanel {
                 final Component cpc = player.getControlPanelComponent();
                 removeLowerComponent();
                 if (cpc != null) {
+                    if (cpc instanceof BufferedPanelLight) {
+                        ((BufferedPanelLight) cpc).setBackgroundTile(img);
+                    }
+                    cpc.setBackground(PlayerControlPanel.this.getBackground());
+                    cpc.repaint();
                     add(cpc, BorderLayout.SOUTH);
                     lowerComponent = cpc;
                 }

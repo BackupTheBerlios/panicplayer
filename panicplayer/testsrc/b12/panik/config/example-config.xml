@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <configuration>
-    <input url="rtp://loser.net"/>
+    <input uri="rtp://loser.net"/>
     <output/>
     <effect start="00:00" duration="00:00" volume="0.7">
         <voice file="voice1.wav"/>
-        <voice file="voice2.wav" multiply="4"/>
-        <voice url="rtp://lll"/>
+        <voice file="voice2.wav"/>
+        <voice uri="rtp://lll"/>
     </effect>
 </configuration>

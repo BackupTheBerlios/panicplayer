@@ -1,11 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: IOUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 
 import javax.media.Manager;
@@ -52,22 +54,22 @@ public class IOUtils {
 
     /**
      * Creates a track from an URL.
-     * @param url the url to load the track from.
+     * @param uri the uri to load the track from.
      * @return the track which is to be loaded.
      * @throws IOException if the audio file at the specified url is not
      *          supported, or the url could not be read.
      */
-    public static UrlTrack createTrack(URL url) throws IOException {
+    public static UrlTrack createTrack(URI uri) throws IOException {
         try {
-            AudioInputStream stream = AudioSystem.getAudioInputStream(url);
+            AudioInputStream stream = AudioSystem.getAudioInputStream(new File(uri));
             AudioFormat f = stream.getFormat();
             double seconds = stream.getFrameLength() / f.getFrameRate();
-            return new UrlTrack(url, 0, seconds, f);
+            return new UrlTrack(uri, 0, seconds, f);
         } catch (UnsupportedAudioFileException e) {
             throw new IOException(e.getMessage());
         }
     }
- 
+
     /**
      * Returns the length of a track at the given address.
      * @param trackAddress the address where the audio file is located.
@@ -78,9 +80,29 @@ public class IOUtils {
      * @throws IOException if the file could not be found or an error occured
      *          while loading the file.
      */
-    public static double getTrackLength(URL trackAddress) throws UnsupportedAudioFileException, IOException {
+    public static double getTrackLength(URL trackAddress) throws UnsupportedAudioFileException,
+            IOException {
         AudioInputStream stream = AudioSystem.getAudioInputStream(trackAddress);
         AudioFormat f = stream.getFormat();
         return stream.getFrameLength() / f.getFrameRate();
-    }	/**	 * Returns the time per 1000 byte of a track at the given address.	 * @param trackAddress the address where the audio file is located.	 * @return the time in milliseconds.	 * 	 * @throws UnsupportedAudioFileException if the audio file is not	 *          supported.	 * @throws IOException if the file could not be found or an error occured	 *          while loading the file.	 */	public static double getTimePer1000Byte(URL trackAddress) throws UnsupportedAudioFileException, IOException {		AudioInputStream stream = AudioSystem.getAudioInputStream(trackAddress);		AudioFormat f = stream.getFormat();		return (((double) (1000*1000))/(((double) (f.getFrameSize())*f.getFrameRate()) ));	}
+    }
+
+    /**     * Returns the time per 1000 byte of a track at the given address.     * @param trackAddress the address where the audio file is located.     * @return the time in milliseconds.     *      * @throws UnsupportedAudioFileException if the audio file is not     *          supported.     * @throws IOException if the file could not be found or an error occured     *          while loading the file.     */
+    public static double getTimePer1000Byte(URL trackAddress)
+            throws UnsupportedAudioFileException, IOException {
+        AudioInputStream stream = AudioSystem.getAudioInputStream(trackAddress);
+        AudioFormat f = stream.getFormat();
+
+        return timePer1000Byte(f.getFrameSize(), f.getFrameRate());
+    }
+    
+    /**
+     * Returns the time in milliseconds per 1000 bytes.
+     * @param frameSize the frame size
+     * @param frameRate the frame rate.
+     * @return the time in milliseconds for 1000 bytes.
+     */
+    public static double timePer1000Byte(int frameSize, double frameRate) {
+        return 1E6 / (frameSize * frameRate);      
+    }
 }

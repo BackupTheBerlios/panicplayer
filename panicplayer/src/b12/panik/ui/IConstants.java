@@ -2,7 +2,7 @@
 // [MM1 - Massenpanik]
 //       Java Source File: IConstants.java
 //                created: 09.01.2004
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -21,5 +21,5 @@ public interface IConstants {
     Font FONT_SANS_SMALL = new Font("SansSerif", Font.PLAIN, 10);
 
     /** Background color of the tracks panel */
-    Color COLOR_TRACKS_PANEL = null;
+    Color COLOR_TRACKS_PANEL = new Color(220, 220, 220);
 }

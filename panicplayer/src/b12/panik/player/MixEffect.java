@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.16 $
+//              $Revision: 1.17 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -27,17 +27,12 @@ import b12.panik.util.*;
  * the input buffer correctly.
  */
 public class MixEffect implements Codec {
-    // two audio formats
-    private static final AudioFormat[] FORMATS = new AudioFormat[]{
-            new AudioFormat(AudioFormat.LINEAR, 11025, 8, 1, AudioFormat.BIG_ENDIAN,
-                    AudioFormat.UNSIGNED),
-            new AudioFormat(AudioFormat.LINEAR, 8000, 8, 1, AudioFormat.BIG_ENDIAN,
-                    AudioFormat.UNSIGNED)};
+
     // the arrays for input and output formats
     /** input formats */
-    public static final AudioFormat[] FORMATS_INPUT = FORMATS;
+    public static final AudioFormat[] FORMATS_INPUT = IFormat.FORMATS;
     /** output formats */
-    public static final AudioFormat[] FORMATS_OUTPUT = FORMATS;
+    public static final AudioFormat[] FORMATS_OUTPUT = IFormat.FORMATS;
 
     private Format currentFormat;
     private String effectName = "PanicPlayerEffect";
@@ -46,29 +41,29 @@ public class MixEffect implements Codec {
     private int maxConcurrentTracks = 4;
 
     private SortedSet offsetedArrays;
-    private Set playedOffsetedArrays;
-    private SortedSet nonPlayedOffsetedArrays;
-    private OffsetedArray currentOffsetedArray;
-    private OffsetedArray currentOffsetedArrayToPlay;
-    private Set offsetedArraysToAdd;
-    private SortedSet tempNonPlayedOffsetedArrays;
-    private SortedSet tempPlayedOffsetedArrays;
-    
 
-    //	time in ms pro 1000 byte
+    /*    private Set playedOffsetedArrays;
+     private SortedSet nonPlayedOffsetedArrays;
+     private OffsetedArray currentOffsetedArray;
+     private OffsetedArray currentOffsetedArrayToPlay;
+     private Set offsetedArraysToAdd;
+     private SortedSet tempNonPlayedOffsetedArrays;
+     private SortedSet tempPlayedOffsetedArrays;
+     */
+    /**	Time in ms per 1000 byte. */
     private double timePer1000Byte;
 
     private boolean initialisationRealized = false;
 
     private long currentBeginIndex;
     private long currentEndIndex;
-    private Iterator iterator;
+    //    private Iterator iterator;
 
     private Set urlTracks;
 
     private byte[] currentData;
 
-    private TracksPanel tracksPanel;
+    TracksPanel tracksPanel;
 
     /**
      * Creates a new instance of <code>MixEffect</code>.
@@ -77,7 +72,7 @@ public class MixEffect implements Codec {
         urlTracks = new TreeSet(new TrackComparator());
         // initialize component
         tracksPanel = new TracksPanel();
-		//setTimePer1000Byte();
+        //setTimePer1000Byte();
     }
 
     /**
@@ -103,7 +98,7 @@ public class MixEffect implements Codec {
     void addInputUrlTrack(UrlTrack urlTrack) throws ConstraintsException {
         urlTracks.add(urlTrack);
         tracksPanel.addTrack(urlTrack);
-        initialisationRealized=false;
+        initialisationRealized = false;
     }
 
     //
@@ -121,8 +116,8 @@ public class MixEffect implements Codec {
 
     /** @see Codec#setInputFormat(Format) */
     public Format setInputFormat(Format format) {
-        for (int i = 0; i < FORMATS.length; i++) {
-            if (FORMATS[i].matches(format)) {
+        for (int i = 0; i < FORMATS_INPUT.length; i++) {
+            if (FORMATS_INPUT[i].matches(format)) {
                 currentFormat = format;
                 break;
             }
@@ -133,8 +128,8 @@ public class MixEffect implements Codec {
 
     /** @see Codec#setOutputFormat(Format) */
     public Format setOutputFormat(Format format) {
-        for (int i = 0; i < FORMATS.length; i++) {
-            if (FORMATS[i].matches(format)) {
+        for (int i = 0; i < FORMATS_OUTPUT.length; i++) {
+            if (FORMATS_OUTPUT[i].matches(format)) {
                 currentFormat = format;
                 break;
             }
@@ -142,35 +137,46 @@ public class MixEffect implements Codec {
         Logging.fine("MixEffect: current output format set to " + currentFormat);
         return currentFormat;
     }
-    
-  
 
     /** @see Codec#process(Buffer, Buffer) */
     public int process(Buffer inputBuffer, Buffer outputBuffer) {
-        System.out.println("...");
-        
-       /* System.out.println("temps en ns: "+processor.getMediaNanoseconds());
-        double temp=(double) ((processor.getMediaNanoseconds())/(((double) (1000))*timePer1000Byte));
-        long timeInByte=(long) Math.floor(temp);
-        
-        System.out.println("temps en byte: "+timeInByte); */
-        
-        
+        //System.out.println("...");
+        //printShortedBuffer(inputBuffer);
+        final long timeStamp = inputBuffer.getTimeStamp();
+        System.out.println(timeStamp);
+        // calculate number of bytes from zero
+        /* System.out.println("temps en ns: "+processor.getMediaNanoseconds());
+         double temp=(double) ((processor.getMediaNanoseconds())/(((double) (1000))*timePer1000Byte));
+         long timeInByte=(long) Math.floor(temp);
+         
+         System.out.println("temps en byte: "+timeInByte); */
+
         int inputLength = (inputBuffer.getLength());
         if (!initialisationRealized) {
             //setTimePer1000Byte();
 
             //test
             /*	try {
-             URL urlAah =
-             new java.net.URL(
-             "file:///E:/boulot/multimedia1/1°abgabe/panicplayer/src/aaaa2.25.11k.wav");
-             URL urlOoh =
-             new java.net.URL(
-             "file:///E:/boulot/multimedia1/1°abgabe/panicplayer/src/oooo2.5.11k.wav");
-             URL urlIih =
-             new java.net.URL(
-             "file:///E:/boulot/multimedia1/1°abgabe/panicplayer/src/iiii2.5.11k.wav");
+             //                    URI urlAah =
+             //                        new File(
+             //                        "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/aaaa2.25.11k.wav").toURI();
+             URI urlAah =
+             new File("sounds/aaaa2.25.11k.wav").toURI();
+             
+             URI urlOoh =
+             new File("sounds/oooo2.5.11k.wav").toURI();
+             URI urlIih =
+             new File("sounds/iiii2.5.11k.wav").toURI();
+             
+             //             URL urlAah =
+             //             new java.net.URL(
+             //             "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/aaaa2.25.11k.wav");
+             //             URL urlOoh =
+             //             new java.net.URL(
+             //             "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/oooo2.5.11k.wav");
+             //             URL urlIih =
+             //             new java.net.URL(
+             //             "file:///D:/Kariem/Uni/ws0304/mm1ue/project/massenpanik2/sounds/iiii2.5.11k.wav");
 
              UrlTrack trackAah = new UrlTrack(urlAah, 500);
              urlTracks.add(trackAah);
@@ -188,10 +194,11 @@ public class MixEffect implements Codec {
             //fin test
             initialiseOffsetedArrays();
             currentBeginIndex = -inputLength;
-            playedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
-            if (!(offsetedArrays.isEmpty())) {
-                nonPlayedOffsetedArrays = new TreeSet(offsetedArrays);
-            }
+            /*            playedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
+             if (!(offsetedArrays.isEmpty())) {
+             nonPlayedOffsetedArrays = new TreeSet(offsetedArrays);
+             }
+             */
             initialisationRealized = true;
         }
 
@@ -200,86 +207,112 @@ public class MixEffect implements Codec {
             return BUFFER_PROCESSED_OK;
         }
 
-        currentBeginIndex += inputLength;
+        ///currentBeginIndex += inputLength;
+        double byteOffset = timeStamp / 1000 / timePer1000Byte - inputLength;
+        currentBeginIndex = (long) byteOffset;
         currentEndIndex = currentBeginIndex + inputLength;
 
-        if (!(nonPlayedOffsetedArrays.isEmpty())) {
-            iterator = nonPlayedOffsetedArrays.iterator();
-            currentOffsetedArray = (OffsetedArray) iterator.next();
-        } else {
-            currentOffsetedArray = null;
-        }
+        /*        if (!(nonPlayedOffsetedArrays.isEmpty())) {
+         iterator = nonPlayedOffsetedArrays.iterator();
+         currentOffsetedArray = (OffsetedArray) iterator.next();
+         } else {
+         currentOffsetedArray = null;
+         }
 
-        tempNonPlayedOffsetedArrays = new TreeSet(nonPlayedOffsetedArrays);
+         tempNonPlayedOffsetedArrays = new TreeSet(nonPlayedOffsetedArrays);
 
-        while ((currentOffsetedArray != null)
-                && (currentOffsetedArray.getStartIndex() <= currentEndIndex)) {
-            playedOffsetedArrays.add(currentOffsetedArray);
-            tempNonPlayedOffsetedArrays.remove(currentOffsetedArray);
-            if (iterator.hasNext()) {
-                currentOffsetedArray = (OffsetedArray) iterator.next();
-            } else {
-                currentOffsetedArray = null;
+         while ((currentOffsetedArray != null)
+         && (currentOffsetedArray.getStartIndex() <= currentEndIndex)) {
+         playedOffsetedArrays.add(currentOffsetedArray);
+         tempNonPlayedOffsetedArrays.remove(currentOffsetedArray);
+         if (iterator.hasNext()) {
+         currentOffsetedArray = (OffsetedArray) iterator.next();
+         } else {
+         currentOffsetedArray = null;
+         }
+         }
+
+         nonPlayedOffsetedArrays = new TreeSet(tempNonPlayedOffsetedArrays);
+         offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
+         offsetedArraysToAdd.add(new OffsetedArray(inputBuffer, currentBeginIndex,
+         maxConcurrentTracks));
+
+         tempPlayedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
+         tempPlayedOffsetedArrays.addAll(playedOffsetedArrays);
+         currentOffsetedArray = null;
+         for (Iterator i = playedOffsetedArrays.iterator(); i.hasNext(); ) {
+         currentOffsetedArray = (OffsetedArray) i.next();
+         currentOffsetedArrayToPlay = new OffsetedArray(currentOffsetedArray,
+         currentBeginIndex, currentEndIndex);
+
+         if (currentOffsetedArrayToPlay.getDurationIndex() == 0) {
+         tempPlayedOffsetedArrays.remove(currentOffsetedArray);
+         } else {
+         offsetedArraysToAdd.add(currentOffsetedArrayToPlay);
+         }
+         }
+         playedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
+         playedOffsetedArrays.addAll(tempPlayedOffsetedArrays);
+         */
+        Set offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
+
+        // add current buffer
+        OffsetedArray main = new OffsetedArray(inputBuffer, currentBeginIndex, maxConcurrentTracks);
+        main.name = "main";
+        offsetedArraysToAdd.add(main);
+
+        for (Iterator i = offsetedArrays.iterator(); i.hasNext(); ) {
+            OffsetedArray osa = (OffsetedArray) i.next();
+            final long osaStart = osa.getStartIndex();
+            if (osaStart <= currentBeginIndex) {
+                if (osaStart + osa.getDurationIndex() > currentBeginIndex) {
+                    offsetedArraysToAdd.add(osa);
+                }
+            } else if (osaStart > currentBeginIndex
+                    && osaStart < currentEndIndex) {
+                offsetedArraysToAdd.add(osa);
             }
         }
+        System.out.println("---");
 
-        nonPlayedOffsetedArrays = new TreeSet(tempNonPlayedOffsetedArrays);
-        offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
-        offsetedArraysToAdd.add(new OffsetedArray(inputBuffer, currentBeginIndex,
-                maxConcurrentTracks));
-
-        tempPlayedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
-        tempPlayedOffsetedArrays.addAll(playedOffsetedArrays);
-        currentOffsetedArray = null;
-        for (Iterator i = playedOffsetedArrays.iterator(); i.hasNext(); ) {
-            currentOffsetedArray = (OffsetedArray) i.next();
-            currentOffsetedArrayToPlay = new OffsetedArray(currentOffsetedArray,
-                    currentBeginIndex, currentEndIndex);
-
-            if (currentOffsetedArrayToPlay.getDurationIndex() == 0) {
-                tempPlayedOffsetedArrays.remove(currentOffsetedArray);
-            } else {
-                offsetedArraysToAdd.add(currentOffsetedArrayToPlay);
-            }
-        }
-        playedOffsetedArrays = new TreeSet(new OffsetedArrayComparator());
-        playedOffsetedArrays.addAll(tempPlayedOffsetedArrays);
-
-        OffsetedArray outputArray = addOffsetedArrays(offsetedArraysToAdd,
-                (((byte[]) inputBuffer.getData()).length));
+        OffsetedArray outputArray = addOffsetedArrays(offsetedArraysToAdd);
+        outputArray.setSizeTo(((byte[]) inputBuffer.getData()).length);
 
         outputBuffer.copy(inputBuffer);
 
         outputArray.putData(outputBuffer);
+        //        System.out.print("out: ");
+        //        printShortedBuffer(outputBuffer);
         return BUFFER_PROCESSED_OK;
     }
 
-    OffsetedArray addOffsetedArrays(Set offsetedArraysSet, long length) {
+    OffsetedArray addOffsetedArrays(Set offsetedArraysSet) {
+        System.out.println("Adding offset arrays");
         OffsetedArray offsetedArrayResult = null;
-        int i = 1;
+        //        int i = 1;
         for (Iterator iter = offsetedArraysSet.iterator(); iter.hasNext(); ) {
-            currentOffsetedArray = (OffsetedArray) iter.next();
+            OffsetedArray currentOffsetedArray = (OffsetedArray) iter.next();
+            System.out.println("  adding " + currentOffsetedArray);
             offsetedArrayResult = OffsetedArray.addOffsetedArray(offsetedArrayResult,
                     currentOffsetedArray);
-            i++;
+            //            i++;
         }
-        offsetedArrayResult.setSizeTo(length);
         return offsetedArrayResult;
     }
-    
+
     /**
      * Prepare the effect to restart.
      *
      */
     public void prepareToRestart() {
-    	initialisationRealized=false;
-    	currentBeginIndex=0;    	
+        initialisationRealized = false;
+        //    	currentBeginIndex=0;    	
     }
 
-	/**
-	 * Set the time in nanosecond per 1000 byte.
-	 * @param wanted the time per 1000 byte wanted
-	 */
+    /**
+     * Set the time in nanosecond per 1000 byte.
+     * @param wanted the time per 1000 byte wanted
+     */
     public void setTimePer1000Byte(double wanted) {
         timePer1000Byte = wanted; //90.70;
     }
@@ -290,9 +323,9 @@ public class MixEffect implements Codec {
      */
     public void printShortedBuffer(Buffer buffer) {
         byte[] dataIn = ((byte[]) buffer.getData());
-        int length = dataIn.length;
+        int length = buffer.getLength();
         for (int i = 0; i < length; i = i + 800) {
-            System.out.print(dataIn[i] + " ");
+            System.out.print(dataIn[i + buffer.getOffset()] + " ");
         }
         System.out.println("");
     }
@@ -355,7 +388,7 @@ public class MixEffect implements Codec {
                 }
             }
         };
-        initialisationRealized=false;
+        initialisationRealized = false;
         lengthUpdater.start();
     }
 

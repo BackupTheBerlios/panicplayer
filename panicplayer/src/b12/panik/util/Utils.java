@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Utils.java
 //                created: 29.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -15,13 +15,13 @@ public class Utils {
     }
 
     /**
-	 * Converts a <code>long</code> value to an <code>int</code> value.
-	 *
-	 * @param longInput the input as <code>int</code>.
-	 * @return the input as <code>int</code>, while too small or too big
-	 *          input values are cut down to maximum or minimum
+     * Converts a <code>long</code> value to an <code>int</code> value.
+     *
+     * @param longInput the input as <code>int</code>.
+     * @return the input as <code>int</code>, while too small or too big
+     *          input values are cut down to maximum or minimum
      *          <code>int</code> values.
-	 */
+     */
     public static int convertToInt(long longInput) {
         if (longInput > Integer.MAX_VALUE) {
             return Integer.MAX_VALUE;

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuFile.java
 //                created: 29.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -29,8 +29,8 @@ public class MenuFile extends JMenu {
     private JMenuItem itemClose;
 
     /**
-	 * Creates a new instance of <code>FileMenu</code>.
-	 */
+     * Creates a new instance of <code>FileMenu</code>.
+     */
     public MenuFile() {
         super("File");
 

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanelTest.java
 //                created: 10.01.2004
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -12,8 +12,7 @@ import java.awt.event.*;
 import java.io.File;
 import java.io.OutputStream;
 import java.io.PrintStream;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -86,17 +85,11 @@ public class TracksPanelTestFrame extends JFrame {
                     throwError("File == null");
                     return;
                 }
-                URL url = null;
-                try {
-                    url = file.toURL();
-                } catch (MalformedURLException ex) {
-                    throwError("Wrong Url", ex);
-                    return;
-                }
+                URI uri = file.toURI();
 
                 try {
                     long start = getLong(tfStart.getText());
-                    UrlTrack track = new UrlTrack(url, start * 1000);
+                    UrlTrack track = new UrlTrack(uri, start * 1000);
                     tracksPanel.addTrack(track);
                 } catch (NumberFormatException ex) {
                     throwError("Wrong Start Time", ex);

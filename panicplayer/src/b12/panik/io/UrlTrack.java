@@ -1,14 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UrlTrack.java
 //                created: 10.01.2004
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
+import java.net.URI;
 
 import javax.media.*;
 import javax.media.format.AudioFormat;
@@ -20,7 +19,7 @@ public class UrlTrack implements Track, Serializable {
     private static final double MILLIS_TO_SECONDS = 1.0E-3;
 
     //tracks url
-    private URL url;
+    private URI uri;
     private Time duration;
     private Time start;
     private AudioFormat format;
@@ -34,9 +33,11 @@ public class UrlTrack implements Track, Serializable {
      * Creates a new instance of <code>UrlTrack</code>.
      * @param wantedUrl the url for this track.
      * @param wantedBegin the begin in milli seconds.
+     * @param enabled whether this track is enabled.
      */
-    public UrlTrack(URL wantedUrl, long wantedBegin) {
-        url = wantedUrl;
+    public UrlTrack(URI wantedUrl, long wantedBegin, boolean enabled) {
+        this.enabled = enabled;
+        uri = wantedUrl;
         // convert from millis to nanos
         startTime = wantedBegin;
         start = new Time(wantedBegin * MILLIS_TO_SECONDS);
@@ -48,23 +49,31 @@ public class UrlTrack implements Track, Serializable {
 
     /**
      * Creates a new instance of <code>UrlTrack</code>.
-     * @param file the File for this track.
+     * @param wantedUrl the url for this track.
      * @param wantedBegin the begin in milli seconds.
-     * @throws MalformedURLException if the file.toURL() method fails.
      */
-    public UrlTrack(File file, long wantedBegin) throws MalformedURLException {
-        this(file.toURL(), wantedBegin);
+    public UrlTrack(URI wantedUrl, long wantedBegin) {
+        this(wantedUrl, wantedBegin, true);
     }
 
     /**
      * Creates a new instance of <code>UrlTrack</code>.
-     * @param url the url.
+     * @param file the File for this track.
+     * @param wantedBegin the begin in milli seconds.
+     */
+    public UrlTrack(File file, long wantedBegin) {
+        this(file.toURI(), wantedBegin);
+    }
+
+    /**
+     * Creates a new instance of <code>UrlTrack</code>.
+     * @param uri the url.
      * @param start the start in milliseconds.
      * @param seconds the duration in seconds.
      * @param format the format.
      */
-    public UrlTrack(URL url, int start, double seconds, javax.sound.sampled.AudioFormat format) {
-        this(url, start);
+    public UrlTrack(URI uri, int start, double seconds, javax.sound.sampled.AudioFormat format) {
+        this(uri, start);
         this.format = new AudioFormat(format.getEncoding().toString(), format.getSampleRate(),
                 format.getSampleSizeInBits(), format.getChannels());
         duration = new Time(seconds);
@@ -81,9 +90,13 @@ public class UrlTrack implements Track, Serializable {
     /**
      * Returns the URL associated with this track.
      * @return the url for this track.
-     */
+     *
     public URL getUrl() {
         return url;
+    }*/
+
+    public URI getUri() {
+        return uri;
     }
 
     /**
@@ -99,7 +112,7 @@ public class UrlTrack implements Track, Serializable {
         if (enabled != this.enabled) {
             this.enabled = enabled;
             if (listener != null) {
-                listener.stateHasChanged(this);
+                listener.propertyChanged(this, TrackPropertyListener.PROP_ENABLED, Boolean.valueOf(!enabled), Boolean.valueOf(enabled));
             }
         }
     }
@@ -117,15 +130,10 @@ public class UrlTrack implements Track, Serializable {
         if (listener instanceof TrackPropertyListener) {
             this.listener = (TrackPropertyListener) listener;
         } else {
-            this.listener = new TrackPropertyListener() {
-                /** @see TrackPropertyListener#readHasBlocked(Track) */
+            this.listener = new TrackPropertyAdapter() {
+                /** @see TrackPropertyAdapter#readHasBlocked(Track) */
                 public void readHasBlocked(Track t) {
                     listener.readHasBlocked(t);
-                }
-
-                /** @see TrackPropertyListener#stateHasChanged(Track) */
-                public void stateHasChanged(Track t) {
-                    // do nothing
                 }
             };
         }
@@ -177,4 +185,5 @@ public class UrlTrack implements Track, Serializable {
         // TODO implement if needed.
         return null;
     }
+
 }

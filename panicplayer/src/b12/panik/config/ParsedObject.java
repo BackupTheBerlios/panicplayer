@@ -377,8 +377,8 @@ public class ParsedObject {
 
     /**
      * Returns the value of an attribute identified by its <code>name</code> as
-     * <code>boolean</code>. If the attribute cannot be found <code>false</code>
-     * ist returned.
+     * <code>boolean</code>, or <code>defaultBool</code>, if the attribute
+     * cannot be found.
      *
      * @param attrName The name of the attribute.
      * @param defaultBool the default value to return if <code>name</code> is
