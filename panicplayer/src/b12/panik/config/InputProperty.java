@@ -1,16 +1,14 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 
-import b12.panik.util.Logging;
 import b12.panik.util.TimeFormatter;
 
 /**
@@ -31,7 +29,7 @@ public class InputProperty {
     // multipy sound file
     private int multiply = 1;
     // address
-    private URL address;
+    private URI address;
     // filename
     private File file;
 
@@ -43,11 +41,7 @@ public class InputProperty {
      * @param multiply the multiplier.
      */
     public InputProperty(URI address, File file, long offset, int multiply) {
-        try {
-            this.address = address.toURL();
-        } catch (MalformedURLException e) {
-            Logging.warning("Address for input could not be resolved.", e);
-        }
+        this.address = address;
         this.offset = offset;
         this.multiply = multiply;
         this.file = file;
@@ -62,6 +56,7 @@ public class InputProperty {
     public InputProperty(URI address, long offset, int multiply) {
         this(address, null, offset, multiply);
     }
+
     /**
      * Creates a new instance of <code>InputProperty</code>.
      * @param file the file to use.
@@ -79,8 +74,8 @@ public class InputProperty {
      *          convert the string into an address.
      */
     public InputProperty(ParsedObject po) throws MalformedURLException {
-        this(getURI(po), getFile(po), getTime(po.getAttribute(ATTR_OFFSET)), po.getAttributeInt(
-                ATTR_MULTIPLY, 1));
+        this(getURI(po), getFile(po), getTime(po.getAttribute(ATTR_OFFSET)), po
+                .getAttributeInt(ATTR_MULTIPLY, 1));
     }
 
     /**
@@ -156,16 +151,18 @@ public class InputProperty {
      * Returns the address.
      * @return the address.
      */
-    public URL getAddress() {
+    public URI getAddress() {
         return address;
     }
+
     /**
      * Sets the address.
      * @param address The address.
      */
-    public void setAddress(URL address) {
+    public void setAddress(URI address) {
         this.address = address;
     }
+
     /**
      * Returns the multiply.
      * @return the multiply.
@@ -173,6 +170,7 @@ public class InputProperty {
     public int getMultiply() {
         return multiply;
     }
+
     /**
      * Sets the multiply.
      * @param multiply The multiply.
@@ -180,6 +178,7 @@ public class InputProperty {
     public void setMultiply(int multiply) {
         this.multiply = multiply;
     }
+
     /**
      * Returns the offset.
      * @return the offset.
@@ -187,6 +186,7 @@ public class InputProperty {
     public long getOffset() {
         return offset;
     }
+
     /**
      * Sets the offset.
      * @param offset The offset.
@@ -194,6 +194,7 @@ public class InputProperty {
     public void setOffset(long offset) {
         this.offset = offset;
     }
+
     /**
      * Returns the file.
      * @return the file.
@@ -201,11 +202,12 @@ public class InputProperty {
     public File getFilename() {
         return file;
     }
+
     /**
      * Sets the file.
      * @param file The file.
      */
     public void setFilename(File file) {
-        this.file= file;
+        this.file = file;
     }
 }

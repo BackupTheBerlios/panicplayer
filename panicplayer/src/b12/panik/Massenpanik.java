@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Massenpanik.java
 //                created: 26.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik;
 
@@ -33,8 +33,7 @@ public class Massenpanik {
         // TODO read command line arguments
 
         // Start logging in user home
-        Logging.setLogFile(System.getProperty("user.home")
-                + System.getProperty("file.separator") + LOGFILE);
+        Logging.setLogFile(LOGFILE);
 
         // launch player UI
         PanicPlayer pp = new PanicPlayer();

@@ -2,9 +2,9 @@
 <!--
      [b12] Ant Build File: build.xml
                   created: 01.11.2003
-                $Revision: 1.2 $
+                $Revision: 1.3 $
 -->
-<project name="Panic Player" default="test" basedir=".">
+<project name="Panic Player" default="run" basedir=".">
     <property name="project" value="panicplayer"/>
     <property name="src" value="src"/>
     <property name="testsrc" value="testsrc"/>
@@ -164,8 +164,8 @@
     		</classpath>
     	</java>
     </target>
-    
-    
+
+
     <target name="all" description="Runs all tasks" depends="binary-distro, source-distro"/>
 
     <target name="javadoc" description="Generates javadoc Documentation.">

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanelTest.java
 //                created: 10.01.2004
-//              $Revision: 1.2 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -27,14 +27,14 @@ import b12.panik.util.Logging;
  * Visually tests the tracks panel.
  * @author kariem
  */
-public class TracksPanelTest extends JFrame {
+public class TracksPanelTestFrame extends JFrame {
 
     private JTextArea area;
 
     /**
      * Creates a new panel test frame.
      */
-    public TracksPanelTest() {
+    public TracksPanelTestFrame() {
         super("Test TracksPanel");
 
         JPanel main = new JPanel(new BorderLayout());
@@ -171,7 +171,7 @@ public class TracksPanelTest extends JFrame {
         Logging.setLevel(Logging.LVL_FINE);
         
 
-        JFrame f = new TracksPanelTest();
+        JFrame f = new TracksPanelTestFrame();
         f.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         f.addWindowListener(new WindowAdapter() {
             public void windowClosed(WindowEvent e) {

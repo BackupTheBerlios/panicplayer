@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.10 $
+//              $Revision: 1.11 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -21,7 +21,6 @@ import javax.swing.JComponent;
 import b12.panik.io.*;
 import b12.panik.ui.PlayerControlPanel;
 import b12.panik.util.ConstraintsException;
-import b12.panik.util.LocationException;
 import b12.panik.util.Logging;
 
 /**
