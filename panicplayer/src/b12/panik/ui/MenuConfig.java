@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuConfig.java
 //                created: 25.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -80,7 +80,7 @@ public class MenuConfig extends JMenu {
     void showInfo() {
         Dialog dlgConf = new ConfigurationViewer();
         dlgConf.pack();
-        UIUtils.center(dlgConf, SwingUtilities.windowForComponent(this));
+        UIUtils.centerOnParentWindow(dlgConf, this);
         dlgConf.show();
     }
 }

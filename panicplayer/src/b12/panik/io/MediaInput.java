@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -13,7 +13,6 @@ import java.net.URL;
 import javax.media.*;
 import javax.media.control.TrackControl;
 
-import b12.panik.player.MixEffect;
 import b12.panik.util.Logging;
 
 /**
@@ -23,6 +22,7 @@ import b12.panik.util.Logging;
 public class MediaInput implements ControllerListener {
 
     // register effect plugin
+    /*
     static {
         // Name of the new plugin
         String MixEffectPlugin = MixEffect.class.getName();
@@ -35,6 +35,7 @@ public class MediaInput implements ControllerListener {
             Logging.warning("Effect plugin could not be registered with plugin manager.", e);
         }
     }
+    */
 
     /**
 	 * Creates a new instance of <code>MediaInput</code>.
@@ -60,7 +61,7 @@ public class MediaInput implements ControllerListener {
         
         // Create a player for this rtp session
         try {
-            Processor p = Manager.createProcessor(locator);
+            Player p = Manager.createPlayer(locator);
             p.addControllerListener(this);
             return p;
         } catch (NoPlayerException e) {
@@ -92,6 +93,7 @@ public class MediaInput implements ControllerListener {
         // - (optional) handle new receive stream
         
         // in configured state add mixeffect codec for processing
+        
         if (event instanceof ConfigureCompleteEvent) {
             Processor p = (Processor) event.getSource();
             
@@ -101,5 +103,6 @@ public class MediaInput implements ControllerListener {
                 // trackControls[i].setCodecChain(codecs)
             }
         }
+        
     }
 }

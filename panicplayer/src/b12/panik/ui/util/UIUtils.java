@@ -1,13 +1,14 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UIUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
 import java.awt.*;
 
 import javax.swing.JOptionPane;
+import javax.swing.SwingUtilities;
 
 /**
  * Provides utility methods for UI components.
@@ -64,6 +65,18 @@ public class UIUtils {
     }
 
     /**
+     * Centers the target component on the parent window of the given component.
+     * @param target the target component.
+     * @param otherChild the other component.
+     */
+    public static void centerOnParentWindow(Component target, Component otherChild) {
+        Component parent = SwingUtilities.windowForComponent(otherChild);
+        System.out.println("centering: " + target.getBounds());
+        System.out.println("on parent: " + parent.getBounds());
+        center(target, parent);
+    }
+
+    /**
      * Centers the component on its parent.
      * @param target the target component.
      * @param parent the parent component.
@@ -89,16 +102,16 @@ public class UIUtils {
      *         than the rectangle.
      */
     public static void center(Component target, Rectangle r, boolean adjustSize) {
-        Dimension d = target.getSize();
+        Dimension dimTarget = target.getSize();
         if (adjustSize) {
-            if (d.height > r.height) {
-                d.height = r.height;
+            if (dimTarget.height > r.height) {
+                dimTarget.height = r.height;
             }
-            if (d.width > r.width) {
-                d.width = r.width;
+            if (dimTarget.width > r.width) {
+                dimTarget.width = r.width;
             }
         }
-        target.setLocation(r.x + (r.width / 2) - (d.width / 2), r.y + (r.height / 2)
-                - (d.height / 2));
+        target.setLocation(r.x + ((r.width - dimTarget.width) / 2), r.y
+                + ((r.height - dimTarget.height) / 2));
     }
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MenuFile.java
 //                created: 29.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -9,9 +9,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import b12.panik.util.Logging;
 
@@ -57,20 +55,16 @@ public class MenuFile extends JMenu {
         add(itemClose);
     }
 
-    /**
-     * 
-     */
-    protected void exit() {
+    void exit() {
         Logging.fine(getClass().getName(), "exitFile()", "file exit");
         firePropertyChange(PROP_FILE_EXIT, null, null);
-        
     }
 
     void openFile() {
         FileDialog fd = new FileDialog();
 
         Logging.fine(getClass().getName(), "openFile()", "dialog opened");
-        int returnVal = fd.showOpenDialog(this);
+        int returnVal = fd.showOpenDialog(SwingUtilities.windowForComponent(this));
         switch (returnVal) {
             case FileDialog.APPROVE_OPTION :
                 openFile(fd.getSelectedFile());

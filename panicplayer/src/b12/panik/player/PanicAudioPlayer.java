@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -182,6 +182,7 @@ public class PanicAudioPlayer {
                     final String name = evt.getPropertyName();
                     if (name.equals(PlayerControlPanel.PLAYER_REALIZED)) {
                         // validate component ... to adjust its size
+                        System.out.println("player realized");
                         parent.validate();
                     }
                 }
@@ -208,6 +209,7 @@ public class PanicAudioPlayer {
      */
     public void loadSoundFile(File f) throws MediaIOException {
         player = input.read(f);
+        //player = IOUtils.getSimplePlayer(f.toURL());
         mainComponent.setPlayer(player);
     }
 }
