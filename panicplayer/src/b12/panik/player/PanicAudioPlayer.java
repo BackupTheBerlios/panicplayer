@@ -1,10 +1,11 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
@@ -31,8 +32,12 @@ import b12.panik.util.LocationException;
  */
 public class PanicAudioPlayer {
 
-    // TODO change this if necessary
+    // TODO change Collection implementation if necessary (List, set, ..)
     Collection tracks;
+    
+    /** Holds the players status, to be displayed for the user */
+    String status;
+    
 
     /**
      * Initializes a new <code>PanicAudioPlayer</code>. This player is then
@@ -42,6 +47,26 @@ public class PanicAudioPlayer {
         // TODO implement initialization
     }
 
+    /**
+     * Returns the original input stream, in order to visualize the sound
+     * befire applying the effect,
+     * @return the original input stream.
+     */
+    public InputStream getOriginalStream() {
+        // TODO implement this
+        return null;
+    }
+    
+    /**
+     * Returns the altered stream. This method may be used to visualize the
+     * sound after applying the effect.
+     * @return the altered stream (output).
+     */
+    public InputStream getAlteredStream() {
+        // TODO implement this
+        return null;
+    }
+    
     /**
      * Sets the main <code>Track</code>, the "background" track for this
      * player. If the <code>Track</code> was successfully loaded it is
@@ -85,5 +110,39 @@ public class PanicAudioPlayer {
      */
     public boolean removeTrack(Track t) {
         return tracks.remove(t);
+    }
+
+    /*
+     * 
+     * player controls to be used from the outside
+     * 
+     */
+    
+    public void play() {
+        // TODO implement play
+    }
+    
+    public void pause() {
+        // TODO implement pause
+    }
+    
+    public void stop() {
+        // TODO implement stop
+    }
+    
+    public void fastForward() {
+        // TODO implement fast forward
+    }
+    
+    public void rewind() {
+        // TODO implement rewind
+    }
+
+    /**
+     * Returns the status.
+     * @return the status.
+     */
+    public String getStatus() {
+        return status;
     }
 }
