@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.15 $
+//              $Revision: 1.16 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -53,6 +53,7 @@ public class MixEffect implements Codec {
     private Set offsetedArraysToAdd;
     private SortedSet tempNonPlayedOffsetedArrays;
     private SortedSet tempPlayedOffsetedArrays;
+    
 
     //	time in ms pro 1000 byte
     private double timePer1000Byte;
@@ -76,6 +77,7 @@ public class MixEffect implements Codec {
         urlTracks = new TreeSet(new TrackComparator());
         // initialize component
         tracksPanel = new TracksPanel();
+		//setTimePer1000Byte();
     }
 
     /**
@@ -101,6 +103,7 @@ public class MixEffect implements Codec {
     void addInputUrlTrack(UrlTrack urlTrack) throws ConstraintsException {
         urlTracks.add(urlTrack);
         tracksPanel.addTrack(urlTrack);
+        initialisationRealized=false;
     }
 
     //
@@ -139,13 +142,23 @@ public class MixEffect implements Codec {
         Logging.fine("MixEffect: current output format set to " + currentFormat);
         return currentFormat;
     }
+    
+  
 
     /** @see Codec#process(Buffer, Buffer) */
     public int process(Buffer inputBuffer, Buffer outputBuffer) {
         System.out.println("...");
+        
+       /* System.out.println("temps en ns: "+processor.getMediaNanoseconds());
+        double temp=(double) ((processor.getMediaNanoseconds())/(((double) (1000))*timePer1000Byte));
+        long timeInByte=(long) Math.floor(temp);
+        
+        System.out.println("temps en byte: "+timeInByte); */
+        
+        
         int inputLength = (inputBuffer.getLength());
         if (!initialisationRealized) {
-            setTimePer1000Byte();
+            //setTimePer1000Byte();
 
             //test
             /*	try {
@@ -253,12 +266,22 @@ public class MixEffect implements Codec {
         offsetedArrayResult.setSizeTo(length);
         return offsetedArrayResult;
     }
-
+    
     /**
-     * Set the time in nanosecond per 1000 byte.
+     * Prepare the effect to restart.
+     *
      */
-    public void setTimePer1000Byte() {
-        timePer1000Byte = 90.70;
+    public void prepareToRestart() {
+    	initialisationRealized=false;
+    	currentBeginIndex=0;    	
+    }
+
+	/**
+	 * Set the time in nanosecond per 1000 byte.
+	 * @param wanted the time per 1000 byte wanted
+	 */
+    public void setTimePer1000Byte(double wanted) {
+        timePer1000Byte = wanted; //90.70;
     }
 
     /**
@@ -323,6 +346,7 @@ public class MixEffect implements Codec {
                     try {
                         double seconds = IOUtils.getTrackLength(url);
                         tracksPanel.setLength(seconds);
+                        setTimePer1000Byte(IOUtils.getTimePer1000Byte(url));
                     } catch (UnsupportedAudioFileException e) {
                         Logging.severe("Format not supported by audio system.", e);
                     } catch (IOException e) {
@@ -331,6 +355,7 @@ public class MixEffect implements Codec {
                 }
             }
         };
+        initialisationRealized=false;
         lengthUpdater.start();
     }
 

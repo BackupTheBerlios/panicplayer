@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.12 $
+//              $Revision: 1.13 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -207,8 +207,7 @@ public class PanicAudioPlayer implements ControllerListener {
         // - payload change should result in a new player to be generated
         //   => inform receiver of created player of a payload change
         // - (optional) handle new receive stream
-        // in configured state add mixeffect codec for processing
-
+        // in configured state add mixeffect codec for processing
         if (event instanceof ConfigureCompleteEvent) {
 
             Processor p = (Processor) event.getSource();
@@ -222,7 +221,7 @@ public class PanicAudioPlayer implements ControllerListener {
              if (!setTrackFormat(trackControls, format)) {
              Logging.warning("Could not transcode any track to " + format);
              }
-             */
+             */             
             final Codec[] codecChain = new Codec[]{mixEffect};
             for (int i = 0; i < trackControls.length; i++) {
                 try {
@@ -232,6 +231,6 @@ public class PanicAudioPlayer implements ControllerListener {
                     Logging.warning("Not supported plugin", e);
                 }
             }
-        }
+        }                if(event instanceof EndOfMediaEvent) {        	mixEffect.prepareToRestart();        }
     }
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: IOUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -82,5 +82,5 @@ public class IOUtils {
         AudioInputStream stream = AudioSystem.getAudioInputStream(trackAddress);
         AudioFormat f = stream.getFormat();
         return stream.getFrameLength() / f.getFrameRate();
-    }
+    }	/**	 * Returns the time per 1000 byte of a track at the given address.	 * @param trackAddress the address where the audio file is located.	 * @return the time in milliseconds.	 * 	 * @throws UnsupportedAudioFileException if the audio file is not	 *          supported.	 * @throws IOException if the file could not be found or an error occured	 *          while loading the file.	 */	public static double getTimePer1000Byte(URL trackAddress) throws UnsupportedAudioFileException, IOException {		AudioInputStream stream = AudioSystem.getAudioInputStream(trackAddress);		AudioFormat f = stream.getFormat();		return (((double) (1000*1000))/(((double) (f.getFrameSize())*f.getFrameRate()) ));	}
 }
