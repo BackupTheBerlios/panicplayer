@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- 
+     [b12] Ant Build File: build.xml
+                  created: 01.11.2003
+                $Revision: 1.1 $
+-->
+<project name="Panic Player" default="test" basedir=".">
+    <property name="project" value="panicplayer"/>
+    <property name="src" value="src"/>
+    <property name="doc" value="docs"/>
+    <property name="lib" value="lib"/>
+    <property name="show.output" value="false"/>
+    <property name="show.summary" value="true"/>
+
+    <property name="dir.target" value="${project}"/>
+    <property name="dir.deploy" value="${dir.target}/deploy"/>
+    <property name="dir.build" value="${dir.target}/classes"/>
+    <property name="dir.build-test" value="${dir.target}/testclasses"/>
+    <property name="dir.binaries" value="${dir.deploy}/binary-distribution"/>
+    <property name="dir.sources" value="${dir.deploy}/source-distribution"/>
+    <property name="dir.reports" value="${dir.target}/reports"/>
+
+    <property name="test.sources" value="**/*Test.java"/>
+    <property name="test.classes" value="**/*Test*.class"/>
+    <property name="test.dirs" value="**/test/*"/>
+
+	<!-- project's class path including necessary libraries -->
+    <path id="project.classpath">
+        <fileset dir="${lib}">
+            <include name="**/*.jar"/>
+        </fileset>
+    </path>
+
+    <target name="init" description="Creates the Target and Deployment Directories.">
+        <mkdir dir="${dir.target}"/>
+        <mkdir dir="${dir.deploy}"/>
+        <mkdir dir="${dir.build}"/>
+        <mkdir dir="${dir.build-test}"/>
+        <mkdir dir="${dir.binaries}"/>
+        <mkdir dir="${dir.sources}"/>
+        <mkdir dir="${dir.reports}"/>
+    </target>
+
+	<!--         -->
+	<!-- compile -->
+	<!--         -->
+    <target name="compile" description="Builds the sources in ${dir.build}" depends="init">
+    	<!-- compile classes to build -->
+        <javac srcdir="${src}" destdir="${dir.build}" source="1.4">
+            <exclude name="${test.sources}"/>
+        </javac>
+        <!-- compile test classes to test-build, remove non-test classes from dir -->
+        <javac srcdir="${src}" destdir="${dir.build-test}" source="1.4">
+            <include name="${test.sources}"/>
+        </javac>
+        <delete>
+            <fileset dir="${dir.build-test}">
+                <include name="**/*.class"/>
+                <exclude name="${test.classes}"/>
+            </fileset>
+        </delete>
+        <!-- copy resources to classes directory -->
+        <copy todir="${dir.build}" verbose="${show.output}">
+            <fileset dir="${src}">
+                <exclude name="**/*.java"/>
+                <exclude name="${test.dirs}"/>
+            </fileset>
+        </copy>
+        <!-- copy test resources to test-classes directory -->
+        <copy todir="${dir.build-test}" verbose="${show.output}">
+            <fileset dir="${src}">
+                <exclude name="**/*.java"/>
+                <include name="${test.dirs}"/>
+            </fileset>
+        </copy>
+        <!-- delete empty directories in build and test-build directories -->
+        <delete includeemptydirs="true">
+            <fileset dir="${dir.build}" includes="**/*">
+                <size value="0" when="equal"/>
+            </fileset>
+            <fileset dir="${dir.build-test}" includes="**/*">
+                <size value="0" when="equal"/>
+            </fileset>
+        </delete>
+    </target>
+
+	<!--      -->
+	<!-- test -->
+	<!--      -->
+    <target name="test" description="Runs JUnit on Test Classes." depends="compile">
+        <junit printsummary="${show.summary}" haltonfailure="no" showoutput="${show.output}">
+            <formatter type="brief"/>
+            <classpath>
+                <path refid="project.classpath"/>
+                <pathelement location="${dir.build}"/>
+                <pathelement location="${dir.build-test}"/>
+            </classpath>
+            <!-- run all test classes in source tree -->
+            <batchtest fork="yes" todir="${dir.reports}">
+                <fileset dir="${src}">
+                    <include name="${test.sources}"/>
+                </fileset>
+            </batchtest>
+        </junit>
+    </target>
+
+
+    <target name="source-distro" description="Creates a source distribution in directory ${dir.sources}" depends="test, javadoc"/>
+    <target name="binary-distro" description="Creates a binary distribution in directory ${dir.binaries}" depends="test"/>
+
+    <target name="all" description="Runs all tasks" depends="binary-distro, source-distro"/>
+
+    <target name="javadoc" description="Generates javadoc Documentation.">
+        <ant antfile="javadoc.xml"/>
+    </target>
+
+    <target name="clean" description="Deletes created files in directory ${dir.target}">
+        <delete dir="${dir.target}" verbose="${show.output}"/>
+    </target>
+</project>
