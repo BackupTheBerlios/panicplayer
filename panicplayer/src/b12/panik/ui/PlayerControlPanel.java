@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -31,6 +31,7 @@ public class PlayerControlPanel extends JPanel {
 
     /**
      * Creates a new instance of <code>PlayerControlPanel</code>.
+     * @param p the player.
      */
     public PlayerControlPanel(Player p) {
         super(new BorderLayout());
@@ -51,7 +52,7 @@ public class PlayerControlPanel extends JPanel {
     }
     /**
      * Sets the player.
-     * @param player The player.
+     * @param p The player.
      */
     public void setPlayer(Player p) {
         if (this.player != null) {
@@ -103,7 +104,7 @@ public class PlayerControlPanel extends JPanel {
         }
     }
         
-    protected void removeLowerComponent() {
+    void removeLowerComponent() {
         if (lowerComponent != null) {
             remove(lowerComponent);
         }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TimeFormatter.java
 //                created: 30.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -17,6 +17,11 @@ public class TimeFormatter {
 
     static SimpleDateFormat format = new SimpleDateFormat("mm:ss.SSS");
 
+    /**
+     * Formats the time given as long value. 
+     * @param time the time.
+     * @return a string representing the time value.
+     */
     public static String format(long time) {
         return format.format(new Date(time));
     }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ComparatorTest.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -28,7 +28,7 @@ public class ComparatorTest extends TestCase {
         random = new Random();
     }
     
-    /** Test  */
+    /** Test for time comparator. */
     public final void testTimeComparator() {
         Time[] times = new Time[NB_TEST_UNITS];
         for (int i = 0; i < times.length; i++) {
@@ -61,6 +61,7 @@ public class ComparatorTest extends TestCase {
         }
     }
 
+    /** Test for track comparator. */
     public final void testTrackComparator() {
         Track[] tracks = new Track[NB_TEST_UNITS];
         int maxStart = NB_TEST_UNITS / 2;

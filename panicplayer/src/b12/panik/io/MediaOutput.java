@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaOutput.java
 //                created: 01.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -22,25 +22,32 @@ import b12.panik.util.Logging;
  */
 public class MediaOutput {
 
-    public static final Format FORMAT_RTP_OUTPUT =
-        new AudioFormat(AudioFormat.GSM_RTP, 8000, 8, 1);
+    /** The output format. */
+    public static final Format FORMAT_RTP_OUTPUT = new AudioFormat(AudioFormat.GSM_RTP, 8000,
+            8, 1);
 
     /**
      * Writes a data source to its destination.
-     *  
-     * @param source the source to write.
-     * @param destUrl the destination URL. If the protocol is <i>RTP</i> the
-     *         output is encoded in {@linkplain FORMAT_RTP_OUTPUT}, in order to
-     *         be effectively sent over the network. 
-     * @throws MediaIOException if one of the following errors occur:
-     *          <ul>
-     *           <li>No data sink was found.</li>          
-     *           <li>Problem writing to the data sink.</li>
-     *           <li>Security violation while accessing <code>destUrl</code>.</li>          
-     *           <li>No processor could be created for the data source (RTP).</li>
-     *           <li>No connection to the data source is possible (RTP).</li>
-     *           <li>Encoding failed (RTP).</li>
-     *          </ul>
+     * 
+     * @param source
+     *            the source to write.
+     * @param destUrl
+     *            the destination URL. If the protocol is <i>RTP</i> the
+     *            output is encoded in {@linkplain FORMAT_RTP_OUTPUT}, in
+     *            order to be effectively sent over the network.
+     * @throws MediaIOException
+     *             if one of the following errors occur:
+     *             <ul>
+     *             <li>No data sink was found.</li>
+     *             <li>Problem writing to the data sink.</li>
+     *             <li>Security violation while accessing <code>destUrl</code>.
+     *             </li>
+     *             <li>No processor could be created for the data source
+     *             (RTP).</li>
+     *             <li>No connection to the data source is possible (RTP).
+     *             </li>
+     *             <li>Encoding failed (RTP).</li>
+     *             </ul>
      */
     public void write(DataSource source, URL destUrl) throws MediaIOException {
         String protocol = destUrl.getProtocol();
@@ -63,8 +70,7 @@ public class MediaOutput {
             // block until processor is configured
             p.configure();
             // output content is in RAW format
-            p.setContentDescriptor(
-                new ContentDescriptor(ContentDescriptor.RAW));
+            p.setContentDescriptor(new ContentDescriptor(ContentDescriptor.RAW));
             TrackControl[] trackControls = p.getTrackControls();
             boolean encodingOk = false;
             for (int i = 0; i < trackControls.length; i++) {
@@ -86,11 +92,11 @@ public class MediaOutput {
                     debug("write", "disabled track " + c);
                 }
             }
-            
+
             if (!encodingOk) {
                 error("Encoding failed.");
             }
-            
+
             // all tracks correctly converted to FORMAT_RTP_OUTPUT or disabled
             p.realize();
             DataSource ds = p.getDataOutput();
@@ -105,12 +111,14 @@ public class MediaOutput {
      * Writes <code>source</code> to <code>destUrl</code> without further
      * processing.
      * 
-     * @param source the source.
-     * @param destUrl the destination url.
-     * @throws MediaIOException if an error occurs.
+     * @param source
+     *            the source.
+     * @param destUrl
+     *            the destination url.
+     * @throws MediaIOException
+     *             if an error occurs.
      */
-    private void writeSimple(DataSource source, URL destUrl)
-        throws MediaIOException {
+    private void writeSimple(DataSource source, URL destUrl) throws MediaIOException {
         DataSink sink;
         MediaLocator dest = new MediaLocator(destUrl);
         try {
@@ -120,13 +128,9 @@ public class MediaOutput {
         } catch (NoDataSinkException e) {
             error("No correct data sink found for " + destUrl + ".", e);
         } catch (IOException e) {
-            error(
-                "IO problem while trying to open/start writing to destination.",
-                e);
+            error("IO problem while trying to open/start writing to destination.", e);
         } catch (SecurityException e) {
-            error(
-                "Security violation while trying to access " + destUrl + ".",
-                e);
+            error("Security violation while trying to access " + destUrl + ".", e);
         }
     }
 
@@ -135,9 +139,7 @@ public class MediaOutput {
     }
 
     private void error(String message, Throwable t) throws MediaIOException {
-        if (t == null) {
-            throw new MediaIOException(message);
-        }
+        if (t == null) { throw new MediaIOException(message); }
         throw new MediaIOException(message, t);
     }
 

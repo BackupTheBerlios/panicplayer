@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TrackLabel.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -93,7 +93,7 @@ public class TrackLabel extends JLabel {
         setToolTipText(tooltip.toString());
     }
 
-    /** @see JComponent#setEnabled(boolean) */
+    /** @see java.awt.Component#setEnabled(boolean) */
     public void setEnabled(boolean enabled) {
         super.setEnabled(enabled);
         if (enabled) {

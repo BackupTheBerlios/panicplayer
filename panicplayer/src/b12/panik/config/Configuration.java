@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -26,21 +26,30 @@ public class Configuration {
             .getString("Configuration.default.file");
 
     private static final String TAG_ROOT = "panicplayer-conf"; //$NON-NLS-1$
+
     private static final String TAG_INPUT = "input"; //$NON-NLS-1$
+
     private static final String TAG_OUTPUT = "output"; //$NON-NLS-1$
+
     private static final String TAG_EFFECT = "effect"; //$NON-NLS-1$
+
     private static final String TAG_VOICE = "voice"; //$NON-NLS-1$
 
     InputProperty inputProperty;
+
     Properties effectProps;
+
     List effectInput;
 
     Properties outputProps;
 
     /**
      * Creates a new instance of <code>Configuration</code>.
-     * @param uri the address.
-     * @throws ConfigurationException if an error occured in the configuration.
+     * 
+     * @param uri
+     *            the address.
+     * @throws ConfigurationException
+     *             if an error occured in the configuration.
      */
     public Configuration(String uri) throws ConfigurationException {
         effectInput = new ArrayList();
@@ -59,7 +68,7 @@ public class Configuration {
             } catch (Exception e) {
                 throw new ConfigurationException(Resources.getString("Configuration.error"), e); //$NON-NLS-1$
             }
-            
+
             for (Iterator i = po.getChildren().iterator(); i.hasNext(); ) {
                 final ParsedObject child = (ParsedObject) i.next();
                 final String name = child.getName();
@@ -91,7 +100,7 @@ public class Configuration {
             for (Iterator i = children.iterator(); i.hasNext(); ) {
                 try {
                     final ParsedObject child = (ParsedObject) i.next();
-                    if (child.getName().equals(TAG_VOICE)) {    
+                    if (child.getName().equals(TAG_VOICE)) {
                         effectInput.add(new InputProperty(child));
                     }
                 } catch (MalformedURLException e) {
@@ -109,39 +118,44 @@ public class Configuration {
 
     /**
      * Saves the configuration to the default configuration file.
-     * @throws IOException on IO error.
+     * 
+     * @throws IOException
+     *             on IO error.
      */
     public void save() throws IOException {
         writeTo(new File(DEFAULT_CONF_FILE));
     }
-    
+
     /**
      * Writes the configuration to the given file.
-     * @param f the file.
-     * @throws IOException on IO error.
+     * 
+     * @param f
+     *            the file.
+     * @throws IOException
+     *             on IO error.
      */
     public void writeTo(File f) throws IOException {
         try {
             XmlParser.writeParsedObject(getParsedObject(), new FileWriter(f), true);
         } catch (ParserConfigurationException e) {
-            throw new IOException(Resources.getString("Configuration.xmlerror") + e.getMessage()); //$NON-NLS-1$
+            throw new IOException(Resources.getString("Configuration.xmlerror")
+                    + e.getMessage()); //$NON-NLS-1$
         }
     }
 
-    /** 
-     * Creates a ParsedObject from the information in this
-     * <code>Configuration</code>
+    /**
+     * Creates a ParsedObject from the information in this <code>Configuration</code>
      * 
      * @return a new <code>ParsedObject</code>.
      */
     private ParsedObject getParsedObject() throws ParserConfigurationException {
         ParsedObject root = new ParsedObject(TAG_ROOT);
-        
+
         // fill input
         if (inputProperty != null) {
             inputProperty.fillParsedObject(root.getEmptyChild(TAG_INPUT));
         }
-        
+
         // TODO output
 
         // fill effect
@@ -160,7 +174,7 @@ public class Configuration {
     }
 
     /*
-     * simple getters and setters 
+     * simple getters and setters
      */
 
     /**
@@ -171,6 +185,7 @@ public class Configuration {
     public Properties getEffectProps() {
         return effectProps;
     }
+
     /**
      * Sets the effect's properties.
      * 
@@ -181,6 +196,12 @@ public class Configuration {
         this.effectProps = effectProps;
     }
 
+    /**
+     * Adds an effect property to the input.
+     * 
+     * @param ip
+     *            the new input property.
+     */
     public void addEffectProperty(InputProperty ip) {
         effectInput.add(ip);
     }
@@ -194,6 +215,12 @@ public class Configuration {
         return inputProperty;
     }
 
+    /**
+     * Sets the input property.
+     * 
+     * @param ip
+     *            the new input property.
+     */
     public void setInputProperty(InputProperty ip) {
         inputProperty = ip;
     }
@@ -206,6 +233,7 @@ public class Configuration {
     public Properties getOutputProps() {
         return outputProps;
     }
+
     /**
      * Sets the output properties.
      * 

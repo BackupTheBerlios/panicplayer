@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Massenpanik.java
 //                created: 26.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik;
 
@@ -15,10 +15,23 @@ public class Massenpanik {
 
     private static final String LOGFILE = "panicplayer.log";
 
+    /**
+     * The main method
+     * 
+     * @param args
+     *            command line arguments. The syntax is as follows
+     * 
+     * <pre>
+     *  &gt;program name&lt; [config.xml]
+     * </pre>
+     * 
+     * where <i>config.xml</i> indicates the configuration file to
+     *            be read. If omitted the default configuration or the last
+     *            user entered configuration is loaded.
+     */
     public static void main(String[] args) {
         // TODO read command line arguments
-        
-        
+
         // Start logging in user home
         Logging.setLogFile(System.getProperty("user.home")
                 + System.getProperty("file.separator") + LOGFILE);

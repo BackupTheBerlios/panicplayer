@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TrackPropertyPanel.java
 //                created: 31.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -15,9 +15,11 @@ import javax.swing.JPanel;
  */ 
 public class TrackPropertyPanel extends JPanel {
 
-
     Track track;
 
+    /**
+     * Creates a new instance of <code>TrackPropertyPanel</code>.
+     */
     public TrackPropertyPanel() {
         // TODO design user interface
     }

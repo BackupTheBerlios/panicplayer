@@ -231,16 +231,19 @@ public class XmlParser {
             this.verbose = output;
         }
 
+        /** @see org.xml.sax.ErrorHandler#warning(org.xml.sax.SAXParseException) */
         public void warning(SAXParseException ex) {
             logError("Warning:\t(line " + ex.getLineNumber() + ") " + ex.getMessage());
         }
+        /** @see org.xml.sax.ErrorHandler#error(org.xml.sax.SAXParseException) */
         public void error(SAXParseException ex) {
             logError("Error:\t(line " + ex.getLineNumber() + ") " + ex.getMessage());
         }
+        /** @see org.xml.sax.ErrorHandler#fatalError(org.xml.sax.SAXParseException) */
         public void fatalError(SAXParseException ex) {
             logError("Fatal Error:\t(line " + ex.getLineNumber() + ") " + ex.getMessage());
         }
-        public boolean isValid() {
+        boolean isValid() {
             return valid;
         }
 
@@ -253,7 +256,7 @@ public class XmlParser {
             valid = false;
         }
 
-        public String getErrors() {
+        String getErrors() {
             return errors.toString();
         }
 
@@ -276,7 +279,6 @@ public class XmlParser {
      * @throws IOException If there occured an error accessing the file system.
      * @throws ParserConfigurationException If there is an error with the
      *         underlying XML configuration.
-     * @throws ParserConfigurationException
      */
     public static void writeParsedObject(ParsedObject o, Writer writer, boolean indentation)
             throws IOException, ParserConfigurationException {

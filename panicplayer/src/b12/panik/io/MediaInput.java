@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -54,6 +54,12 @@ public class MediaInput implements ControllerListener {
         }
     }
     
+    /**
+     * Reads a file.
+     * @param f the file.
+     * @return the player for reading the file.
+     * @throws MediaIOException if the file could not be parsed.
+     */
     public Player read(File f) throws MediaIOException {
         try {
             return read(f.toURL());

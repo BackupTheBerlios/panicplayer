@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ConfigurationTest.java
 //                created: 26.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -18,6 +18,7 @@ public class ConfigurationTest extends TestCase {
     private static final String FILENAME2 = ConfigurationTest.class
             .getResource("example-config1.xml").toString();
 
+    /** Test for configuration loading */
     public final void testConfiguration() {
         Configuration conf = null;
         try {
@@ -30,7 +31,7 @@ public class ConfigurationTest extends TestCase {
         assertNotNull(conf.getInputProperty());
     }
 
-    
+    /** Test for configuration writing */
     public final void testParsedObject()  {
         Configuration conf = null;
         try {

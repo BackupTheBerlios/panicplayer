@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: InputProperty.java
 //                created: 30.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -38,7 +38,7 @@ public class InputProperty {
      * @param address the address to use.
      * @param file the file.
      * @param offset the offset.
-     * @param multiplier the multiplier.
+     * @param multiply the multiplier.
      */
     public InputProperty(URI address, File file, long offset, int multiply) {
         this.address = address;
@@ -51,18 +51,16 @@ public class InputProperty {
      * Creates a new instance of <code>InputProperty</code>.
      * @param address the address to use.
      * @param offset the offset.
-     * @param multiplier the multiplier.
+     * @param multiply the multiplier.
      */
     public InputProperty(URI address, long offset, int multiply) {
         this(address, null, offset, multiply);
     }
     /**
      * Creates a new instance of <code>InputProperty</code>.
-     * @param address the address to use.
+     * @param file the file to use.
      * @param offset the offset.
-     * @param multiplier the multiplier.
-     * @throws MalformedURLException if an error occured while trying to
-     *          convert the string into an address.
+     * @param multiply the multiplier.
      */
     public InputProperty(File file, long offset, int multiply) {
         this(file.toURI(), file, offset, multiply);

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -61,6 +61,9 @@ public class MixEffect implements Codec {
 	 */
     SortedSet tracks;
     
+    /**
+     * Creates a new instance of <code>MixEffect</code>.
+     */
     public MixEffect() {
         // should be sorted automatically
         tracks = new TreeSet(new TrackComparator());
@@ -103,14 +106,14 @@ public class MixEffect implements Codec {
     public Format setInputFormat(Format format) {
         // TODO Implement method
 		/* inputFormat = (AudioFormat)format; */
-		return (Format)inputFormat;
+		return inputFormat;
     }
 
     /** @see Codec#setOutputFormat(Format) */
     public Format setOutputFormat(Format format) {
         // TODO Implement method
 		// outputFormat = (AudioFormat)format;
-		return (Format)outputFormat;
+		return outputFormat;
     }
 
     /** @see Codec#process(Buffer, Buffer) */
@@ -147,7 +150,7 @@ public class MixEffect implements Codec {
     /** @see Controls#getControls() */
     public Object[] getControls() {
         // TODO Implement method
-		return (Object[]) new Control[0];
+		return new Control[0];
     }
 
     /** @see Controls#getControl(String) */

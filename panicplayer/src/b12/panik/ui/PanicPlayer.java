@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.12 $
+//              $Revision: 1.13 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -109,7 +109,7 @@ public class PanicPlayer extends JFrame {
         intro.close();
     }
 
-    protected void loadSoundFile(File f) {
+    void loadSoundFile(File f) {
         Player player;
         try {
             conf.setInputProperty(new InputProperty(f, 0));
