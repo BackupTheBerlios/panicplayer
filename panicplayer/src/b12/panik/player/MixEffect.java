@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -24,14 +24,36 @@ import b12.panik.util.TrackComparator;
 public class MixEffect implements Codec {
 
     // one main output format ... at a later stage there may be more
-    private static final AudioFormat outputFormat = new AudioFormat("???");
+    private static final AudioFormat outputFormat = new AudioFormat(	       
+    			AudioFormat.LINEAR,
+                Format.NOT_SPECIFIED,
+                16,
+                Format.NOT_SPECIFIED,
+                AudioFormat.BIG_ENDIAN,
+                AudioFormat.SIGNED,
+                16,
+                Format.NOT_SPECIFIED,
+                Format.byteArray
+	);
 
     // one main input format ... later more
-    private static final AudioFormat inputFormat = new AudioFormat("???");
+    private static final AudioFormat inputFormat = new AudioFormat(
+					AudioFormat.LINEAR,
+					Format.NOT_SPECIFIED,
+					16,
+					Format.NOT_SPECIFIED,
+					AudioFormat.BIG_ENDIAN,
+					AudioFormat.SIGNED,
+					16,
+					Format.NOT_SPECIFIED,
+					Format.byteArray
+	);
 
     // the arrays for input and output formats
     private AudioFormat[] inputFormats = new AudioFormat[]{inputFormat};
     private AudioFormat[] outputFormats = new AudioFormat[]{outputFormat};
+    
+    private String effectName="PanicPlayerEffect";
 
     /**
 	 * Contains a sorted set of tracks that have to be mixed into the input.
@@ -61,6 +83,7 @@ public class MixEffect implements Codec {
      */
     boolean addInputTracks(Collection newTracks) {
         return tracks.addAll(newTracks);
+        // return true;
     }
     
     //
@@ -79,13 +102,15 @@ public class MixEffect implements Codec {
     /** @see Codec#setInputFormat(Format) */
     public Format setInputFormat(Format format) {
         // TODO Implement method
-        return null;
+		/* inputFormat = (AudioFormat)format; */
+		return (Format)inputFormat;
     }
 
     /** @see Codec#setOutputFormat(Format) */
     public Format setOutputFormat(Format format) {
         // TODO Implement method
-        return null;
+		// outputFormat = (AudioFormat)format;
+		return (Format)outputFormat;
     }
 
     /** @see Codec#process(Buffer, Buffer) */
@@ -100,7 +125,7 @@ public class MixEffect implements Codec {
     /** @see PlugIn#getName() */
     public String getName() {
         // TODO Implement method
-        return null;
+        return effectName;
     }
 
     /** @see PlugIn#open() */
@@ -122,13 +147,23 @@ public class MixEffect implements Codec {
     /** @see Controls#getControls() */
     public Object[] getControls() {
         // TODO Implement method
-        return null;
+		return (Object[]) new Control[0];
     }
 
     /** @see Controls#getControl(String) */
     public Object getControl(String controlType) {
         // TODO Implement method
-        return null;
+		try {
+			Class cls = Class.forName(controlType);
+			Object cs[] = getControls();
+			for (int i = 0; i < cs.length; i++) {
+				if (cls.isInstance(cs[i]))
+					return cs[i];
+				}
+				return null;
+			} catch (Exception e) { // no such controlType or such control
+				return null;
+			}
     }
 
 }
