@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -39,7 +39,7 @@ public class MixEffect implements Codec {
    public static final AudioFormat[] FORMATS_OUTPUT = FORMATS;
 
    private Format currentFormat;
-   
+
    private String effectName = "PanicPlayerEffect";
 
    /**
@@ -60,7 +60,7 @@ public class MixEffect implements Codec {
 
    /**
     * Adds a single input <code>Track</code> to the effect.
-    * @param track the track to be added. 
+    * @param track the track to be added.
     */
    void addInputTrack(Track track) {
       tracks.add(track);
