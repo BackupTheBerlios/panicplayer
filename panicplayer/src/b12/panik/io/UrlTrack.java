@@ -1,13 +1,18 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TrackComparator.java
 //                created: 10.01.2004
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
+import java.io.File;
 import java.net.URL;
 
-import javax.media.*;
+import javax.media.Buffer;
+import javax.media.Format;
+import javax.media.Time;
+import javax.media.Track;
+import javax.media.TrackListener;
 
 /**
  * @author Teo
@@ -18,7 +23,8 @@ public class UrlTrack implements Track {
     
     private URL url; //url des tracks
     private Time duration;
-    private Time startTime;
+    //private Time startTime;
+    private long startTime;
     private boolean enabled;
     private TrackPropertyListener listener;
 
@@ -30,15 +36,30 @@ public class UrlTrack implements Track {
     public UrlTrack(URL wantedUrl, long wantedBegin) {
         url = wantedUrl;
         // convert from millis to nanos
-        startTime = new Time(wantedBegin * MILLIS_TO_NANOS);
+        //!!! the constructor Time need millisecond!!! 
+        //startTime = new Time(wantedBegin );
+        startTime=wantedBegin;
+        //System.out.println("wanted begin: "+wantedBegin+" time applique en ns: "+startTime.getNanoseconds()+" idem en ms: "+startTime.getNanoseconds() * NANOS_TO_MILLIS);
+        
     }
+
+	public UrlTrack(File file, long wantedBegin) {
+		try{
+			//UrlTrack urlTrackTemp=
+			this=new UrlTrack(file.toURL(),wantedBegin);
+		} catch (Exception e) {
+			System.out.println("unable to become url from file"); 
+		}
+        
+	}
 
     /**
      * Returns the begin in milliseconds.
      * @return the time for the begin of this track.
      */
     public long getBegin() {
-        return (long) (startTime.getNanoseconds() * NANOS_TO_MILLIS);
+        //return (long) (startTime.getNanoseconds() * NANOS_TO_MILLIS);
+        return startTime;
     }
 
     /**
@@ -54,8 +75,9 @@ public class UrlTrack implements Track {
      * @return the start time.
      */
     public Time getStartTime() {
-        return startTime;
-    }
+    	//!!! false: have to use getBegin()
+        return new Time(startTime);
+    } 
 
     /**
      * Returns the exact duration.
