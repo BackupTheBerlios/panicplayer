@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -28,23 +28,15 @@ public class Configuration {
             .getString("Configuration.default.file");
 
     private static final String TAG_ROOT = "panicplayer-conf"; //$NON-NLS-1$
-
     private static final String TAG_INPUT = "input"; //$NON-NLS-1$
-
     private static final String TAG_OUTPUT = "output"; //$NON-NLS-1$
-
     private static final String TAG_EFFECT = "effect"; //$NON-NLS-1$
-
     private static final String TAG_VOICE = "voice"; //$NON-NLS-1$
 
     InputProperty inputProperty;
-
     Properties effectProps;
-
     List effectInput;
-
     Properties outputProps;
-
     private PanicAudioPlayer player;
 
     /**

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: FileOpenerPanel.java
 //                created: 22.12.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -16,9 +16,6 @@ import javax.swing.*;
 class FileOpenerPanel extends JPanel {
 
     private static final int NB_CHARS = 15;
-    private static final int FONT_SIZE = 12;
-    private static final Font FONT = new Font("SansSerif", Font.BOLD, FONT_SIZE);
-
     /**
      * Creates a new instance of <code>FileOpenerPanel</code>.
      * @param title the title.
@@ -30,7 +27,7 @@ class FileOpenerPanel extends JPanel {
         // label
         JLabel lblTitle = new JLabel(title);
         lblTitle.setOpaque(false);
-        lblTitle.setFont(FONT);
+        lblTitle.setFont(IConstants.FONT_SANS_12_BOLD);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
         gbc.gridy = 0;

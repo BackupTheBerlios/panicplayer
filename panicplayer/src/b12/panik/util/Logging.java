@@ -1,10 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Logger.java
 //                created: 26.10.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.logging.*;
 
 /**
@@ -32,18 +35,16 @@ public class Logging {
 
     /** Default logging level. */
     public static final byte LVL_INFO = 0;
-
     /** Fine logging level. */
     public static final byte LVL_FINE = -2;
-
     /** Config logging level. */
     public static final byte LVL_CONFIG = -1;
-
     /** Config logging level. */
     public static final byte LVL_WARNING = 1;
-
     /** Config logging level. */
     public static final byte LVL_SEVERE = 2;
+
+    static URL logFile;
 
     /**
      * Sets the log file for the application.
@@ -56,7 +57,14 @@ public class Logging {
         for (int i = 0; i < handlers.length; i++) {
             logger.removeHandler(handlers[i]);
         }
-
+        File f = new File(filename);
+        if (f.canWrite()) {
+            try {
+                logFile = f.toURL();
+            } catch (MalformedURLException e) {
+                logger.log(Level.WARNING, "Error while trying to set log file.", e);
+            }
+        }
         addLogFile(filename);
     }
 
@@ -80,11 +88,18 @@ public class Logging {
                 }
             }
             logger.addHandler(fh);
-            System.out.println("Logging to " + filename);
-            logger.log(Level.FINE, "Logging started");
+            fine("Logging started");
         } catch (Exception e) {
             logger.log(Level.WARNING, "Error while trying to create default logfile.", e);
         }
+    }
+
+    /**
+     * Returns the current log file.
+     * @return the current log file.
+     */
+    public static URL getLogFile() {
+        return logFile;
     }
 
     private static Level getLogLevel(Logger log) {
@@ -242,15 +257,15 @@ public class Logging {
      */
     private static Level getLevel(byte lvl) {
         switch (lvl) {
-            case LVL_FINE:
+            case LVL_FINE :
                 return Level.FINE;
-            case LVL_CONFIG:
+            case LVL_CONFIG :
                 return Level.CONFIG;
-            case LVL_WARNING:
+            case LVL_WARNING :
                 return Level.WARNING;
-            case LVL_SEVERE:
+            case LVL_SEVERE :
                 return Level.SEVERE;
-            default:
+            default :
                 return Level.INFO;
         }
     }
