@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
-// [b12] Java Source File: FileMenu.java
+// [b12] Java Source File: MenuFile.java
 //                created: 29.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -20,7 +20,7 @@ import b12.panik.util.Logging;
  * 
  * @author kariem
  */
-public class FileMenu extends JMenu {
+public class MenuFile extends JMenu {
 
     /** property for file opening.  */
     public static final String PROP_FILE_OPEN = "fileopen";
@@ -33,7 +33,7 @@ public class FileMenu extends JMenu {
     /**
 	 * Creates a new instance of <code>FileMenu</code>.
 	 */
-    public FileMenu() {
+    public MenuFile() {
         super("File");
 
         itemOpen = new JMenuItem("Open File");

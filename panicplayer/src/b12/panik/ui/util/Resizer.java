@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Resizer.java
 //                created: 24.12.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
-package b12.panik.ui;
+package b12.panik.ui.util;
 
 import java.awt.*;
 import java.awt.event.*;

@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Dragger.java
 //                created: 24.12.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
-package b12.panik.ui;
+package b12.panik.ui.util;
 
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -20,10 +20,10 @@ import javax.swing.JFrame;
  * 
  * @author kariem
  */
-class Dragger extends MouseAdapter implements MouseMotionListener {
+public class Dragger extends MouseAdapter implements MouseMotionListener {
 
     static final Color MOUSE_OVER = new Color(255, 255, 255, 50);
-    static final Color HIGHLIGHT = new Color(255, 255, 255, 128);
+    static final Color MOUSE_PRESS = new Color(255, 255, 255, 128);
     
     private final JFrame frame;
     private final Glass glassPane;
@@ -31,11 +31,12 @@ class Dragger extends MouseAdapter implements MouseMotionListener {
     private Point pressPoint;
     private Component component;
     
-    static Dragger createDragger(Component component, JFrame f) {
-        return new Dragger(component, f);
-    }
-    
-    Dragger(Component component, JFrame f) {
+    /**
+     * Creates a new instance of <code>Dragger</code>.
+     * @param component the component that will be dragged.
+     * @param f the frame that will be moved.
+     */
+    public Dragger(Component component, JFrame f) {
         this.frame = f;
         this.component = component;
         glassPane = new Glass();
@@ -65,7 +66,7 @@ class Dragger extends MouseAdapter implements MouseMotionListener {
     /** @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent) */
     public void mousePressed(MouseEvent e) {
         pressPoint = e.getPoint();
-        glassPane.highlightComponent(component.getBounds(), HIGHLIGHT);
+        glassPane.highlightComponent(component.getBounds(), MOUSE_PRESS);
         glassPane.repaint();
     }
     
@@ -73,7 +74,7 @@ class Dragger extends MouseAdapter implements MouseMotionListener {
     public void mouseReleased(MouseEvent e) {
         glassPane.resetHighlight();
     }
-    
+
     /** @see java.awt.event.MouseAdapter#mouseEntered(java.awt.event.MouseEvent) */
     public void mouseEntered(MouseEvent e) {
         glassPane.highlightComponent(component.getBounds(), MOUSE_OVER);
@@ -88,7 +89,7 @@ class Dragger extends MouseAdapter implements MouseMotionListener {
     class Glass extends JComponent {
         
         private Rectangle r;
-        private Color color;
+        Color color;
         
         Glass() {
             setVisible(true);

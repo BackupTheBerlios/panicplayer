@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
-// [b12] Java Source File: AboutMenu.java
+// [b12] Java Source File: MenuAbout.java
 //                created: 30.11.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -16,12 +16,12 @@ import javax.swing.JMenuItem;
  * 
  * @author schurli
  */
-public class AboutMenu extends JMenu {
+public class MenuAbout extends JMenu {
 
     private JMenuItem itemAbout;
     
     /** Creates a new AboutMenu */  
-    public AboutMenu() {
+    public MenuAbout() {
         super("?");
         itemAbout = new JMenuItem("About PanicPlayer");
         itemAbout.addActionListener(new ActionListener() {

@@ -3,7 +3,7 @@
 //                created: 22.12.2003
 //              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
-package b12.panik.ui;
+package b12.panik.ui.util;
 
 import java.awt.*;
 
@@ -14,7 +14,7 @@ import javax.swing.border.LineBorder;
  * 
  * @author kariem
  */
-class RoundBorder extends LineBorder {
+public class RoundBorder extends LineBorder {
 
     private static final int ARC_WIDTH_HEIGHT = 20;
 
@@ -92,7 +92,15 @@ class RoundBorder extends LineBorder {
         g2d.dispose();
     }
 
-    void paintInterior(Graphics g, int x, int y, int width, int height) {
+    /**
+     * Paints the interior of this border.
+     * @param g the paint graphics
+     * @param x the x position of the painted border
+     * @param y the y position of the painted border
+     * @param width the width of the painted border
+     * @param height the height of the painted border
+     */
+    public void paintInterior(Graphics g, int x, int y, int width, int height) {
         if (insets != null) {
             // adjust border to insets
             x += insets.left;
