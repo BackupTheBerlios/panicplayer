@@ -22,4 +22,12 @@ public class UrlTrack {
 		url=wantedUrl;
 		begin=wantedBegin;
 	}
+	
+	public long getBegin() {
+		return begin;
+	}
+	
+	public URL getUrl() {
+		return url;
+	}
 }
