@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.8 $
+//              $Revision: 1.9 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -43,10 +43,13 @@ public class PanicPlayer extends JFrame {
 
     private JMenuBar menuBar;
     private FileMenu fileMenu;
+    private AboutMenu aboutMenu;
 
     /** Creates a new PanicPlayer. */
     public PanicPlayer() {
         super("Panic Player");
+		SplashScreen intro = new SplashScreen("res/munch.gif", "The PanicPlayer");
+		intro.showFor(3000);
         try {
             //String plaf = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
             //String plaf =
@@ -88,7 +91,9 @@ public class PanicPlayer extends JFrame {
                 }
             }
         });
-
+        aboutMenu = new AboutMenu();
+        menuBar.add(aboutMenu);
+        
         Container contentPane = getContentPane();
         contentPane.setLayout(new BorderLayout());
         // Player Controls
