@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: FileOpenerPanel.java
 //                created: 22.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -25,9 +25,11 @@ class FileOpenerPanel extends JPanel {
      */
     public FileOpenerPanel(String title) {
         super(new GridBagLayout());
+        setOpaque(false);
         
         // label
         JLabel lblTitle = new JLabel(title);
+        lblTitle.setOpaque(false);
         lblTitle.setFont(FONT);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;

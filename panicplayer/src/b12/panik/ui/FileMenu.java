@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: FileMenu.java
 //                created: 29.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -22,7 +22,9 @@ import b12.panik.util.Logging;
  */
 public class FileMenu extends JMenu {
 
+    /** property for file opening.  */
     public static final String PROP_FILE_OPEN = "fileopen";
+    /** property for application exit. */
     public static final String PROP_FILE_EXIT = "fileexit";
 
     private JMenuItem itemOpen;
@@ -42,7 +44,7 @@ public class FileMenu extends JMenu {
             }
         });
 
-        itemClose = new JMenuItem("Close PanicPlayer");
+        itemClose = new JMenuItem("Quit");
         itemClose.setAccelerator(KeyStroke.getKeyStroke("control Q"));
         itemClose.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {

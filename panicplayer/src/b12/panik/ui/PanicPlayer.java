@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.14 $
+//              $Revision: 1.15 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -13,6 +13,7 @@ import java.io.File;
 
 import javax.media.Player;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 
 import b12.panik.config.Configuration;
 import b12.panik.config.ConfigurationException;
@@ -29,23 +30,21 @@ public class PanicPlayer extends JFrame {
 
     private static final boolean CLOSE_PLAYER_ON_EXIT = true;
     private static final Font FONT_TITLE = new Font("Arial Black", Font.BOLD, 16);
-
+    
     private PanicAudioPlayer panicAudioPlayer;
     private PlayerControlPanel panelPlayerControl;
     private Configuration conf;
     
     MediaInput input = new MediaInput();
 
-    private JMenuBar menuBar;
-    private FileMenu fileMenu;
-    private AboutMenu aboutMenu;
-
-
     /** Creates a new PanicPlayer. */
     public PanicPlayer() {
         super("PanicPlayer");
+        setUndecorated(true);
+        // show intro window (separate thread)
 		SplashScreen intro = new SplashScreen("res/munch.gif", "The PanicPlayer");
 		intro.showFor(3000);
+        
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException e) {
@@ -61,6 +60,7 @@ public class PanicPlayer extends JFrame {
             String errorCause = "Look and Feel Illegal Acces";
             Logging.info(errorCause);
         }
+        
         Toolkit.getDefaultToolkit().setDynamicLayout(true);
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
@@ -68,7 +68,9 @@ public class PanicPlayer extends JFrame {
                 exitApplication();
             }
         });
-
+        
+        getRootPane().setBorder(new LineBorder(Color.BLACK));
+        
         initMenuBar();
         initContent();
         
@@ -80,15 +82,71 @@ public class PanicPlayer extends JFrame {
         intro.close();
     }
     
+    /** Initializes menu bar. */
+    private void initMenuBar() {
+        JMenuBar menuBar = new JMenuBar();
+        setJMenuBar(menuBar);
+        // menubar is dragger for this frame
+        Dragger.createDragger(menuBar, this);
+        
+        // file menu
+        JMenu fileMenu = new FileMenu();
+        menuBar.add(fileMenu);
+        fileMenu.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                final String name = evt.getPropertyName();
+                if (name.equals(FileMenu.PROP_FILE_EXIT)) {
+                    exitApplication();
+                } else if (name.equals(FileMenu.PROP_FILE_OPEN)) {
+                    loadSoundFile((File) evt.getNewValue());
+                }
+            }
+        });
+        
+        // separator
+        menuBar.add(Box.createHorizontalGlue());
+        
+        // about menu
+        JMenu aboutMenu = new AboutMenu();
+        menuBar.add(aboutMenu);
+        
+        // exit menu
+        final JLabel exitMenu = new JLabel("x");
+        exitMenu.setBorder(BorderFactory.createEmptyBorder(0,5,0,5));
+        exitMenu.addMouseListener(new MouseAdapter() {
+            /** @see java.awt.event.MouseAdapter#mouseClicked(java.awt.event.MouseEvent) */
+            public void mouseClicked(MouseEvent e) {
+                exitApplication();
+            }
+            /** @see java.awt.event.MouseAdapter#mouseEntered(java.awt.event.MouseEvent) */
+            public void mouseEntered(MouseEvent e) {
+                exitMenu.setForeground(Color.WHITE);
+            }
+            /** @see java.awt.event.MouseAdapter#mouseExited(java.awt.event.MouseEvent) */
+            public void mouseExited(MouseEvent e) {
+                exitMenu.setForeground(Color.BLACK);
+            }
+            /** @see java.awt.event.MouseAdapter#mousePressed(java.awt.event.MouseEvent) */
+            public void mousePressed(MouseEvent e) {
+                exitMenu.setForeground(Color.RED);
+            }
+        });
+        menuBar.add(exitMenu);
+    }
+
+    
     /** Initializes frame content */
     private void initContent() {
         JPanel contentPane = new JPanel(new GridBagLayout());
         setContentPane(contentPane);
-
+        contentPane.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        Resizer.createResizer(contentPane, this);
+        
         GridBagConstraints gbc = new GridBagConstraints();
         
         // title
         JLabel lblTitle = new JLabel(getTitle());
+        lblTitle.setOpaque(false);
         lblTitle.setFont(FONT_TITLE);
         gbc.gridx = 6;
         gbc.gridy = 0;
@@ -100,6 +158,7 @@ public class PanicPlayer extends JFrame {
         FileOpenerPanel fopConfigFile = new FileOpenerPanel("Config File");
         // TODO add listeners that load sound/config on button click
         JPanel pnlFops = new JPanel();
+        pnlFops.setOpaque(false);
         pnlFops.setLayout(new BoxLayout(pnlFops, BoxLayout.Y_AXIS));
         pnlFops.add(fopSoundFile);
         pnlFops.add(fopConfigFile);
@@ -133,27 +192,7 @@ public class PanicPlayer extends JFrame {
         contentPane.add(pnlTracks, gbc);
     }
 
-    /** Initializes menu bar. */
-    private void initMenuBar() {
-        menuBar = new JMenuBar();
-        setJMenuBar(menuBar);
-        fileMenu = new FileMenu();
-        menuBar.add(fileMenu);
-        fileMenu.addPropertyChangeListener(new PropertyChangeListener() {
-            public void propertyChange(PropertyChangeEvent evt) {
-                final String name = evt.getPropertyName();
-                if (name.equals(FileMenu.PROP_FILE_EXIT)) {
-                    exitApplication();
-                } else if (name.equals(FileMenu.PROP_FILE_OPEN)) {
-                    loadSoundFile((File) evt.getNewValue());
-                }
-            }
-        });
-        menuBar.add(Box.createHorizontalGlue());
-        aboutMenu = new AboutMenu();
-        menuBar.add(aboutMenu);
-    }
-
+    
     void loadSoundFile(File f) {
         Player player;
         try {
@@ -176,7 +215,7 @@ public class PanicPlayer extends JFrame {
     protected void exitApplication() {
         final JDialog wnd = new JDialog();
 
-        int ret = JOptionPane.showConfirmDialog(wnd, "Do you really want to exit", "Quit",
+        int ret = JOptionPane.showConfirmDialog(wnd, "Do you really want to exit?", "Panic out !!",
                 JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
         if (ret == JOptionPane.YES_OPTION) {
             if (CLOSE_PLAYER_ON_EXIT) {
