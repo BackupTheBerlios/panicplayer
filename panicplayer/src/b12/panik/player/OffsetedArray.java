@@ -1,11 +1,15 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
 import javax.media.Buffer;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+
+import b12.panik.io.UrlTrack;
 
 /**
  * 
@@ -37,9 +41,37 @@ public class OffsetedArray {
     	startIndex=beginIndex;
     	int length=((int) (endIndex-beginIndex));
     	content=new byte[length];
+    	int j;
+    	//System.out.println("sur une longueur de: "+length);
     	for (int i = 0; i < length; i++) {
-    		content[i]=source.getByteI(i+((int) beginIndex));			
+    		//System.out.println("on tente d ajouter le "+i);
+    		j=(i+((int) beginIndex));
+    		if(j<source.getStartIndex()) {
+    			content[i]=byteZero();
+    		} else {
+    			if(j>source.getDurationIndex()+source.getStartIndex()) {
+    				content[i]=byteZero();
+    			} else {
+    				content[i]=source.getByteI(i+((int) beginIndex));
+    			}
+    		}    
 		}       
+    }
+    
+    public OffsetedArray(UrlTrack urlTrack, double timePer1000Bytes) {
+    	startIndex=(long) Math.floor(((double) (1000*urlTrack.getBegin()))/timePer1000Bytes);
+    	System.out.println("le time est de "+timePer1000Bytes+" le startIndex est de "+startIndex);
+    	try{
+    		AudioInputStream inputStream = AudioSystem.getAudioInputStream(urlTrack.getUrl());
+			int numberOfBytes=inputStream.available();
+			byte[] contentResult=new byte[numberOfBytes];
+			inputStream.read(contentResult,0,numberOfBytes);
+			content=contentResult;
+    	} catch (Exception e) {
+    		System.out.println("inputStream ungettable");
+    		content=new byte[0];
+    		return;
+    	}    	
     }
     
     public byte getByteI(int index) {
@@ -70,6 +102,14 @@ public class OffsetedArray {
 		byte resultByte;
 		boolean isInLonger;
 		boolean isInShorter;
+		
+		if(array1==null) {
+			return array2;
+		}
+		
+		if(array2==null) {
+			return array1;
+		}		
 		
 		if(array1.getDurationIndex()>array2.getDurationIndex()) {
 			longerArray=new OffsetedArray(array1);
@@ -119,6 +159,7 @@ public class OffsetedArray {
     }
     
     public static byte addByte(byte byte1,byte byte2) {
+    	System.out.println("on ajoute "+((int) byte1)+" a "+((int) byte2)+" le res est "+(((int) byte1)+((int) byte2)));
     	return ((byte) (((int) byte1)+((int) byte2)));
     }
     
