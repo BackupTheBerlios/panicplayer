@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: ComparatorTest.java
 //                created: 29.10.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.1 $
 // ----------------------------------------------------------------------------
-package b12.panik.util.test;
+package b12.panik.util;
 
 import java.util.*;
 

@@ -1,14 +1,11 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.9 $
+//              $Revision: 1.10 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -16,14 +13,11 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.media.Player;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
+import b12.panik.config.Configuration;
+import b12.panik.config.ConfigurationException;
+import b12.panik.config.InputProperty;
 import b12.panik.io.MediaIOException;
 import b12.panik.io.MediaInput;
 import b12.panik.player.PanicAudioPlayer;
@@ -38,7 +32,8 @@ public class PanicPlayer extends JFrame {
 
     private PanicAudioPlayer panicAudioPlayer;
     private PlayerControlPanel panelPlayerControl;
-
+    private Configuration conf;
+    
     MediaInput input = new MediaInput();
 
     private JMenuBar menuBar;
@@ -52,7 +47,6 @@ public class PanicPlayer extends JFrame {
 		intro.showFor(3000);
         try {
             //String plaf = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-            //String plaf =
             // "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
             //UIManager.setLookAndFeel(plaf);
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -83,7 +77,7 @@ public class PanicPlayer extends JFrame {
         menuBar.add(fileMenu);
         fileMenu.addPropertyChangeListener(new PropertyChangeListener() {
             public void propertyChange(PropertyChangeEvent evt) {
-                String name = evt.getPropertyName();
+                final String name = evt.getPropertyName();
                 if (name.equals(FileMenu.PROP_FILE_EXIT)) {
                     exitApplication();
                 } else if (name.equals(FileMenu.PROP_FILE_OPEN)) {
@@ -98,13 +92,28 @@ public class PanicPlayer extends JFrame {
         contentPane.setLayout(new BorderLayout());
         // Player Controls
         panelPlayerControl = new PlayerControlPanel(null);
-        contentPane.add(panelPlayerControl, BorderLayout.SOUTH);
-
+        panelPlayerControl.addPropertyChangeListener(new PropertyChangeListener() {
+            public void propertyChange(PropertyChangeEvent evt) {
+                final String name = evt.getPropertyName();
+                if (name.equals(PlayerControlPanel.PLAYER_REALIZED)) {
+                    // validate component
+                    PanicPlayer.this.validate();
+                }
+            }
+        });
+        contentPane.add(panelPlayerControl, BorderLayout.CENTER);
+        
+        try {
+            conf = new Configuration(null);
+        } catch (ConfigurationException e1) {
+            Logging.warning("Configuration could not be loaded", e1);
+        }
     }
 
     protected void loadSoundFile(File f) {
         Player player;
         try {
+            conf.setInputProperty(new InputProperty(f, 0));
             player = input.read(f);
             panelPlayerControl.setPlayer(player);
         } catch (MediaIOException e) {
@@ -123,21 +132,25 @@ public class PanicPlayer extends JFrame {
     protected void exitApplication() {
         final JDialog wnd = new JDialog();
 
-        int ret =
-            (int) JOptionPane.showConfirmDialog(
-                wnd,
-                "Do you really want to exit",
-                "Quit",
-                JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE,
-                null);
+        int ret = JOptionPane.showConfirmDialog(wnd, "Do you really want to exit", "Quit",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null);
         if (ret == JOptionPane.YES_OPTION) {
             if (CLOSE_PLAYER_ON_EXIT) {
                 if (panicAudioPlayer != null) {
                     panicAudioPlayer.stop();
                 }
             }
-
+            try {
+                // save configuration
+                conf.save();
+            } catch (Throwable t) {
+                final String errorString = "Error while saving configuration";
+                JOptionPane.showMessageDialog(this,
+                        "An error occurred, while trying to save the configuration:\n\n" 
+                        + t.getMessage(),
+                        errorString, JOptionPane.ERROR_MESSAGE);
+                Logging.warning(errorString, t);
+            }
             setVisible(false);
             dispose();
             System.exit(0);

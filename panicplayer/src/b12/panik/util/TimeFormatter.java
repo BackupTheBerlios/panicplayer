@@ -1,0 +1,48 @@
+// ----------------------------------------------------------------------------
+// [b12] Java Source File: TimeFormatter.java
+//                created: 30.11.2003
+//              $Revision: 1.1 $
+// ----------------------------------------------------------------------------
+package b12.panik.util;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+/**
+ * Simple time formatter.
+ * @author kariem
+ */
+public class TimeFormatter {
+
+    static SimpleDateFormat format = new SimpleDateFormat("mm:ss.SSS");
+
+    public static String format(long time) {
+        return format.format(new Date(time));
+    }
+    
+    /**
+     * Parses <code>s</code> and returns the corresponding time in milliseconds.
+     * 
+     * @param s the string to parse.
+     * @return the time in milliseconds.
+     * @throws ParseException if <code>s</code> cannot be parsed. 
+     */
+    public static long parse(String s) throws ParseException {
+        return format.parse(s).getTime();
+    }
+
+    /**
+     * Parses s and ignores the thrown Exception.
+     * @param s the string to parse
+     * @return the time in milliseconds or <i>0</i> if an error occured while
+     *          parsing.
+     */
+    public static long parseFast(String s) {
+        try {
+            return format.parse(s).getTime();
+        } catch (ParseException e) {
+            return 0;
+        }
+    }
+}

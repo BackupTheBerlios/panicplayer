@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
@@ -69,5 +69,4 @@ public class MediaInput implements ControllerListener {
         //   => inform receiver of created player of a payload change
         // - (optional) handle new receive stream
     }
-
 }
