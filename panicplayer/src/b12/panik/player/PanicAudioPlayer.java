@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.6 $
+//              $Revision: 1.7 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -14,9 +14,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.Collection;
 
-import javax.media.Codec;
-import javax.media.Player;
-import javax.media.Track;
+import javax.media.*;
 import javax.swing.JComponent;
 
 import b12.panik.io.MediaIOException;
@@ -209,7 +207,19 @@ public class PanicAudioPlayer {
      */
     public void loadSoundFile(File f) throws MediaIOException {
         player = input.read(f);
+        //teo
+        player=input.readProcessor(f);
+        //fin teo
+        
+        
         //player = IOUtils.getSimplePlayer(f.toURL());
-        mainComponent.setPlayer(player);
+        
+        
+        
+        //teo
+        mainComponent.setPlayer(((Processor) player));
+        //fin teo
+        
+        // mainComponent.setPlayer(player);
     }
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Logger.java
 //                created: 26.10.2003
-//              $Revision: 1.4 $
+//              $Revision: 1.5 $
 // ----------------------------------------------------------------------------
 package b12.panik.util;
 
@@ -194,6 +194,7 @@ public class Logging {
      */
     public static void warning(String msg, Throwable thrown) {
         logger.log(getLevel(LVL_WARNING), msg, thrown);
+        thrown.printStackTrace();
     }
 
     /**
