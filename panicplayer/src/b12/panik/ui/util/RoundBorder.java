@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: RoundBorder.java
 //                created: 22.12.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -74,6 +74,7 @@ public class RoundBorder extends LineBorder {
             height -= insets.top + insets.bottom;
         }
 
+        // only set baseline once
         if (baseline == 0) {
             baseline = FONT.getLineMetrics(title, g2d.getFontRenderContext()).getAscent();
         }

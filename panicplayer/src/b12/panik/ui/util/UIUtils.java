@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: UIUtils.java
 //                created: 29.11.2003
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui.util;
 
@@ -71,8 +71,6 @@ public class UIUtils {
      */
     public static void centerOnParentWindow(Component target, Component otherChild) {
         Component parent = SwingUtilities.windowForComponent(otherChild);
-        System.out.println("centering: " + target.getBounds());
-        System.out.println("on parent: " + parent.getBounds());
         center(target, parent);
     }
 
