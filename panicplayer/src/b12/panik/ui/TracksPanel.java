@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: TracksPanel.java
 //                created: 29.10.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.swing.JPanel;
+
+import b12.panik.ui.util.*;
 
 /**
  * The <code>TracksPanel</code> offers a visual control to display and alter
