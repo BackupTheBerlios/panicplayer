@@ -2,10 +2,9 @@
 <!--
      [b12] Ant Build File: build.xml
                   created: 01.11.2003
-                $Revision: 1.5 $
+                $Revision: 1.6 $
 -->
 <project name="Panic Player" default="run" basedir=".">
-
     <property file="build.properties"/>
 
 	<!-- project's class path including necessary libraries -->
@@ -15,8 +14,9 @@
         </fileset>
     </path>
 
-    <target name="init" description="Creates the Target and Deployment Directories.">
+    <target name="init" description="Creates the target and deployment directories.">
         <tstamp/>
+        <property name="timestamp" value="${DSTAMP}-${TSTAMP}"/>
         <mkdir dir="${dir.target}"/>
         <mkdir dir="${dir.deploy}"/>
         <mkdir dir="${dir.build}"/>
@@ -26,7 +26,7 @@
 	<!--         -->
 	<!-- compile -->
 	<!--         -->
-    <target name="compile" description="Builds the sources in ${dir.build}" depends="init">
+    <target name="compile" description="Compiles the sources." depends="init">
     	<!-- compile classes to build -->
         <javac srcdir="${src}" destdir="${dir.build}" source="1.4">
             <classpath refid="project.classpath"/>
@@ -71,7 +71,7 @@
 	<!-- test -->
 	<!--      -->
     <target name="test"
-            description="Runs JUnit on Test Classes."
+            description="Runs JUnit on test classes."
             depends="compile">
         <mkdir dir="${dir.reports}"/>
         <junit printsummary="${show.summary}" haltonfailure="no" showoutput="${show.output}">
@@ -95,16 +95,17 @@
 	<!-- distributions -->
 	<!--               -->
     <target name="source-distro"
-            description="Creates a source distribution in directory ${dir.sources}"
+            description="Creates a source distribution."
             depends="test, javadoc">
         <!-- create tar gzip bzip2 and zip files -->
-        <property name="name" value="${file.sources}-${DSTAMP}"/>
-        <tar destfile="${name}.tar">
+        <property name="file.name.timestamp" value="${file.sources}-${timestamp}"/>
+        <tar destfile="${file.name.timestamp}.tar">
             <tarfileset dir="${src}" prefix="/src"/>
             <tarfileset dir="${testsrc}" prefix="/testsrc"/>
             <tarfileset dir="${doc}" prefix="/doc"/>
             <tarfileset dir="${res}" prefix="/res"/>
             <tarfileset dir="${lib}" prefix="/lib"/>
+            <tarfileset dir="${lib.ant}" prefix="/lib_ant"/>
             <tarfileset dir="${conf}" prefix="/conf"/>
             <tarfileset dir="sounds" prefix="/sounds"/>
             <tarfileset dir=".">
@@ -115,14 +116,17 @@
                 <include name="README*"/>
             </tarfileset>
         </tar>
-        <gzip src="${name}.tar" zipfile="${name}.tar.gz"/>
-        <bzip2 src="${name}.tar" zipfile="${name}.tar.bz2"/>
-        <zip destfile="${name}.zip">
+        <gzip src="${file.name.timestamp}.tar" zipfile="${file.name.timestamp}.tar.gz"/>
+        <!--
+        <bzip2 src="${file.name.timestamp}.tar" zipfile="${file.name.timestamp}.tar.bz2"/>
+        -->
+        <zip destfile="${file.name.timestamp}.zip">
             <zipfileset dir="${src}" prefix="src"/>
             <zipfileset dir="${testsrc}" prefix="testsrc"/>
             <zipfileset dir="${doc}" prefix="doc"/>
             <zipfileset dir="${res}" prefix="res"/>
             <zipfileset dir="${lib}" prefix="lib"/>
+            <zipfileset dir="${lib.ant}" prefix="lib_ant"/>
             <zipfileset dir="${conf}" prefix="conf"/>
             <zipfileset dir="sounds" prefix="sounds"/>
             <zipfileset dir=".">
@@ -135,34 +139,37 @@
         </zip>
     </target>
     <target name="binary-distro"
-            description="Creates a binary distribution in directory ${dir.binaries}"
+            description="Creates a binary distribution."
             depends="test">
         <jar basedir="${dir.build}"
-                jarfile="${file.binaries}-${DSTAMP}.jar"
+                jarfile="${file.binaries}-${timestamp}.jar"
                 manifest="${conf}/MANIFEST.MF"
                 index="true"/>
     </target>
 
-    <target name="run" description="Executes the binary distro" depends="binary-distro">
+    <target name="run" description="Executes the binary distribution." depends="binary-distro">
         <java fork="true" classname="b12.panik.Massenpanik">
             <classpath>
                 <path refid="project.classpath"/>
-                <pathelement location="${file.binaries}-${DSTAMP}.jar"/>
+                <pathelement location="${file.binaries}-${timestamp}.jar"/>
             </classpath>
         </java>
     </target>
 
 
     <target name="deploys"
-            description="Creates binary and source distribution"
+            description="Creates binary and source distribution."
             depends="binary-distro, source-distro"/>
 
-    <target name="javadoc" description="Generates javadoc Documentation.">
+	<!--                    -->
+	<!-- Javadoc and Viewer -->
+	<!--                    -->
+    <target name="javadoc" description="Generates javadoc documentation.">
         <ant antfile="javadoc.xml"/>
     </target>
 
     <target name="javadoc-view"
-            description="Opens a browser to view generated javadoc"
+            description="Opens a browser to view the generated javadoc documentation."
             depends="-cond-if,-cond-else"/>
 
     <target name="-check-os">
@@ -182,8 +189,32 @@
     <target name="-cond-else" depends="-check-os" unless="windowscmd">
         <echo>
             Currently the javadoc viewer only works for Windows XP and Windows 2000
-         </echo>
+        </echo>
     </target>
+
+
+	<!--            -->
+	<!-- SSH upload -->
+	<!--            -->
+    <target name="-enter-ssh-user" unless="ssh.user">
+        <input message="Please enter ssh user for ${ssh.host}."
+                addproperty="ssh.user"/>
+    </target>
+    <target name="-enter-ssh-pass" depends="-enter-ssh-user" unless="ssh.pass">
+        <input message="Please enter ssh password for ${ssh.user}@${ssh.host}."
+                addproperty="ssh.pass"/>
+    </target>
+    <target name="upload"
+            description="Copies the source distribution to the project's ftp server."
+            depends="source-distro, -enter-ssh-pass">
+
+        <echo>transferring ${file.name.timestamp}.tar.gz to ${ssh.user}@${ssh.host}:${ssh.dir}</echo>
+        <scp file="${file.name.timestamp}.tar.gz"
+                todir="${ssh.user}@${ssh.host}:${ssh.dir}"
+                password="${ssh.pass}"
+                trust="true"/>
+    </target>
+
 
     <target name="clean"
             description="Deletes created files in directory ${dir.target}">

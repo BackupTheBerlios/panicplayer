@@ -1,5 +1,5 @@
-[b12] README file - $Revision: 1.3 $
-      last change: $Author: kariem $ - $Date: 2004/01/15 18:42:20 $
+[b12] README file - $Revision: 1.4 $
+      last change: $Author: kariem $ - $Date: 2004/01/17 10:45:43 $
 
 This source package contains everything needed to compile, test and run
 the current version of PanicPlayer.
@@ -7,8 +7,7 @@ the current version of PanicPlayer.
 We provided an ant-build file with several tasks. In order to run the build
 file's tasks type one of the following
 
-    "ant <taskname>"   ... if Java and Ant are correctly installed
-    "antme <taskname>" ... if only Java is installed and correctly configured
+    "ant <taskname>" ... if Java is installed and JAVA_HOME is set correctly
 
 
 The build file provides several tasks, the main task is the following.
@@ -18,10 +17,9 @@ The build file provides several tasks, the main task is the following.
 
 for a full list of available tasks please type
 
-    "ant -projecthelp" or "antme -projecthelp"
+    "ant -projecthelp"
 
 
 
 Greetings
-
-Group [b12]
+Panicplayer development team
