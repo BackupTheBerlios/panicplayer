@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MixEffect.java
 //                created: 29.10.2003
-//              $Revision: 1.18 $
+//              $Revision: 1.19 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -26,7 +26,7 @@ import b12.panik.util.*;
  * the outside, so that the <code>MixEffect</code> is capable of modifying
  * the input buffer correctly.
  */
-public class MixEffect implements Codec {
+public class MixEffect implements Codec, TrackManager {
 
     // the arrays for input and output formats
     /** input formats */
@@ -59,11 +59,11 @@ public class MixEffect implements Codec {
     private long currentEndIndex;
     //    private Iterator iterator;
 
-    private Set urlTracks;
+    private final Set urlTracks;
 
     private byte[] currentData;
 
-    TracksPanel tracksPanel;
+    final TracksPanel tracksPanel;
 
     /**
      * Creates a new instance of <code>MixEffect</code>.
@@ -72,6 +72,7 @@ public class MixEffect implements Codec {
         urlTracks = new TreeSet(new TrackComparator());
         // initialize component
         tracksPanel = new TracksPanel();
+        tracksPanel.setTrackManager(this);
         //setTimePer1000Byte();
     }
 
@@ -92,12 +93,23 @@ public class MixEffect implements Codec {
     }
 
     /**
-     * Adds a single input <code>UrlTrack</code> to the effect.
-     * @param urlTrack the UrlTrack to be added.
+     * Adds a single input <code>UrlTrack</code> to the effect. This track will
+     * not be managed.
+     * @param track the track to be added.
      */
-    void addInputUrlTrack(UrlTrack urlTrack) throws ConstraintsException {
-        urlTracks.add(urlTrack);
-        tracksPanel.addTrack(urlTrack);
+    void addInputUrlTrack(UrlTrack track) {
+        tracksPanel.addTrack(track);
+    }
+    
+    /**
+     * Adds a track to this effect, which will be managed by the effect, if the
+     * track is enabled.
+     * @param track the track to be added.
+     * @throws ConstraintsException
+     */
+    public void addTrack(UrlTrack track) throws ConstraintsException {
+        urlTracks.add(track);
+        System.out.println("track added");
         initialisationRealized = false;
     }
 
@@ -143,7 +155,6 @@ public class MixEffect implements Codec {
         //System.out.println("...");
         //printShortedBuffer(inputBuffer);
         final long timeStamp = inputBuffer.getTimeStamp();
-        System.out.println(timeStamp);
         // calculate number of bytes from zero
         /* System.out.println("temps en ns: "+processor.getMediaNanoseconds());
          double temp=(double) ((processor.getMediaNanoseconds())/(((double) (1000))*timePer1000Byte));
@@ -256,7 +267,6 @@ public class MixEffect implements Codec {
          */
         Set offsetedArraysToAdd = new TreeSet(new OffsetedArrayComparator());
 
-
         for (Iterator i = offsetedArrays.iterator(); i.hasNext(); ) {
             OffsetedArray osa = (OffsetedArray) i.next();
             final long osaStart = osa.getStartIndex();
@@ -264,18 +274,26 @@ public class MixEffect implements Codec {
                 if (osaStart + osa.getDurationIndex() > currentBeginIndex) {
                     offsetedArraysToAdd.add(osa);
                 }
-            } else if (osaStart > currentBeginIndex
-                    && osaStart < currentEndIndex) {
+            } else if (osaStart > currentBeginIndex && osaStart < currentEndIndex) {
                 offsetedArraysToAdd.add(osa);
             }
         }
 
         // add current buffer
-        OffsetedArray main = new OffsetedArray(inputBuffer, currentBeginIndex);
+        OffsetedArray main = new OffsetedArray(inputBuffer, currentBeginIndex, false);
         main.name = "main";
         offsetedArraysToAdd.add(main);
-        
+
         System.out.println("---");
+
+        final int size = offsetedArraysToAdd.size();
+        if (size > 0) {
+            // change gain of all tracks which are going to be added
+            for (Iterator i = offsetedArraysToAdd.iterator(); i.hasNext(); ) {
+                OffsetedArray os = (OffsetedArray) i.next();
+                os.multiply(1.0/size);
+            }
+        }
 
         OffsetedArray outputArray = addOffsetedArrays(offsetedArraysToAdd);
         outputArray.setSizeTo(((byte[]) inputBuffer.getData()).length);
@@ -349,9 +367,14 @@ public class MixEffect implements Codec {
         // TODO Implement method
     }
 
-    /** @see PlugIn#reset() */
+    /** 
+     * Resets the mixeffect to its initial state.
+     * 
+     * @see PlugIn#reset() 
+     */
     public void reset() {
-        // TODO Implement method
+       urlTracks.clear();
+       tracksPanel.reset();
     }
 
     /** @see Controls#getControls() */
@@ -370,16 +393,18 @@ public class MixEffect implements Codec {
 
     /**
      * Sets the main track for this effect. This method is important for the
-     * rendering component in order to scale its contents correctlz.
+     * rendering component in order to scale its contents correctlz. The
+     * track's data is processed in the process method.
      * @param url the url.
      */
     public void setMainTrack(final URL url) {
+        // return immediately after call to this method. Thread does the rest.
         Thread lengthUpdater = new Thread("Length Updater") {
             /** @see java.lang.Thread#run() */
             public void run() {
                 if (this == Thread.currentThread()) {
                     try {
-                        double seconds = IOUtils.getTrackLength(url);
+                        double seconds = IOUtils.getTrackLength(url); 
                         tracksPanel.setLength(seconds);
                         setTimePer1000Byte(IOUtils.getTimePer1000Byte(url));
                     } catch (UnsupportedAudioFileException e) {

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: OffsetedArray.java
 //                created: 09.01.2004
-//              $Revision: 1.7 $
+//              $Revision: 1.8 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -30,7 +30,7 @@ public class OffsetedArray {
      * @param beginIndex the startIndex in byte.
      * @param invGain the inverse of the gain.
      */
-    public OffsetedArray(Buffer buffer, long beginIndex, int invGain) {
+    public OffsetedArray(Buffer buffer, long beginIndex, boolean signedToUnsigned) {
         startIndex = beginIndex;
         final byte[] inputData = (byte[]) buffer.getData();
         final int bufferLength = buffer.getLength();
@@ -40,12 +40,23 @@ public class OffsetedArray {
 
         // quick array copy
         System.arraycopy(inputData, offset, content, 0, bufferLength);
-        if (invGain != 1) {
-            // change gain according to gain.
-            for (int i = 0; i < bufferLength; i++) {
-                content[i] = intToUnsignedByte(unsignedByteToInt(content[i]) / invGain);
+
+        if (signedToUnsigned) {
+            System.out.println("converting");
+            for (int i = 0; i < content.length; i++) {
+                // conversion
+                content[i] = (byte) (content[i] + 128);
             }
+        } else {
+            System.out.println("not converting");
         }
+
+        /*        if (invGain != 1) {
+         // change gain according to gain.
+         for (int i = 0; i < bufferLength; i++) {
+         content[i] = intToUnsignedByte(unsignedByteToInt(content[i]) / invGain);
+         }
+         }*/
 
         //        for (int i = 0; i < buffer.getLength(); i++) {
         //	if(invGain==1) {
@@ -111,7 +122,7 @@ public class OffsetedArray {
      * @param timePer1000Bytes the time in ms for 1000 byte.
      * @param invGain the inverse of the gain.
      */
-    public OffsetedArray(UrlTrack urlTrack, double timePer1000Bytes, int invGain) {
+    public OffsetedArray(UrlTrack urlTrack, double timePer1000Bytes) {
         AudioFormat trackFormat = (AudioFormat) urlTrack.getFormat();
         System.out.println("time per 1000 bytes: " + timePer1000Bytes);
         if (trackFormat != null) {
@@ -130,12 +141,13 @@ public class OffsetedArray {
             int numberOfBytes = inputStream.available();
             byte[] contentResult = new byte[numberOfBytes];
             inputStream.read(contentResult, 0, numberOfBytes);
-            if (invGain != 1) {
-                for (int i = 0; i < contentResult.length; i++) {
-                    contentResult[i] = intToUnsignedByte(unsignedByteToInt(contentResult[i])
-                            / invGain);
-                }
-            }
+            /*            if (invGain != 1) {
+             for (int i = 0; i < contentResult.length; i++) {
+             contentResult[i] = intToUnsignedByte(unsignedByteToInt(contentResult[i])
+             / invGain);
+             }
+             }
+             */
             content = contentResult;
         } catch (Exception e) {
             System.out.println("inputStream ungettable");
@@ -338,7 +350,7 @@ public class OffsetedArray {
      * @return the integer value of the unsigned byte
      */
     private static int unsignedByteToInt(byte b) {
-        int intResult = ((new Byte(b)).intValue());
+        int intResult = b;
         if (intResult < 0) {
             intResult += 256;
         }
@@ -364,4 +376,19 @@ public class OffsetedArray {
     public String toString() {
         return getClass().getName() + " " + name;
     }
+
+    /**
+     * @param d
+     */
+    public void multiply(double d) {
+        System.out.println("multiplying : " + d);
+        if (d != 1) {
+            for (int i = 0; i < content.length; i++) {
+                //System.out.print(content[i] + " => ");
+                content[i] = intToUnsignedByte((int) (unsignedByteToInt(content[i]) * d));
+                //System.out.println(content[i]);
+            }
+        }
+    }
+
 }

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: EffectConfiguration.java
 //                created: 11.01.2004
-//              $Revision: 1.2 $
+//              $Revision: 1.3 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -23,13 +23,21 @@ public class EffectConfiguration extends TrackPropertyAdapter {
     private static final String TAG_VOICE = "voice"; //$NON-NLS-1$
 
     Map effectTracks;
-    Map effectProps;
+    final Map effectProps;
 
     /** Creates a new instance of <code>EffectConfiguration</code>. */
     public EffectConfiguration() {
         effectProps = new HashMap();
     }
 
+    /** Resets this configuration to an initial state. */
+    public void reset() {
+        effectProps.clear();
+        if (effectTracks != null) {
+            effectTracks.clear();
+        }
+    }        
+    
     void load(ParsedObject po) {
         effectProps.putAll(po.getAttributes());
         if (po.hasChildren()) {

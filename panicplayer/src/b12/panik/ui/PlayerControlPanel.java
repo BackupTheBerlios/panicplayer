@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PlayerControlPanel.java
 //                created: 29.11.2003
-//              $Revision: 1.11 $
+//              $Revision: 1.12 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -55,6 +55,13 @@ public class PlayerControlPanel extends JPanel {
         visLabel = new JLabel();
         visLabel.setHorizontalAlignment(SwingConstants.CENTER);
         setPlayer(player);
+    }
+
+    /** Resets this panel. */
+    public void reset() {
+        removePlayerComponents();
+        setPlayer(null);
+        validate();
     }
 
     /**

@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: Configuration.java
 //                created: 26.10.2003
-//              $Revision: 1.11 $
+//              $Revision: 1.12 $
 // ----------------------------------------------------------------------------
 package b12.panik.config;
 
@@ -50,6 +50,15 @@ public class Configuration {
     private Configuration() {
         effectConfig = new EffectConfiguration();
     }
+    
+    /**
+     * Resets the configuration to an initial state. 
+     */
+    public void resetConfig() {
+        player.reset();
+        effectConfig.reset();
+    }
+    
 
     /**
      * Creates a new instance of <code>Configuration</code>.

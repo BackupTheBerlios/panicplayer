@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer.java
 //                created: 26.10.2003
-//              $Revision: 1.26 $
+//              $Revision: 1.27 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -226,9 +226,18 @@ public class PanicPlayer extends JFrame {
             }
         });
         pnlFops.add(btnAddTrack);
-        final JButton btnLoadConfig = new JButton("Load Config");
-        pnlFops.add(btnLoadConfig);
+        final JButton btnLoadConfig = new JButton("Reset Config");
         btnLoadConfig.setFocusPainted(false);
+        btnLoadConfig.setDefaultCapable(false);
+        btnLoadConfig.addActionListener(new ActionListener() {
+            /** @see ActionListener#actionPerformed(ActionEvent) */
+            public void actionPerformed(ActionEvent e) {
+                conf.resetConfig();
+            }
+        });
+        pnlFops.add(btnLoadConfig);
+        
+        
         // TODO add listeners that load sound/config on button click
         gbc.gridx = 0;
         gbc.gridy = 1;
@@ -251,15 +260,6 @@ public class PanicPlayer extends JFrame {
         gbc.weightx = 1;
         gbc.weighty = 1;
         centerPane.add(effectControl, gbc);
-
-        /*
-         PSlider volSlider = new PSlider(-50, 50, 0, "Vol");
-         gbc.gridx = 0;
-         gbc.gridy = 2;
-         gbc.gridwidth = 1;
-         gbc.anchor = GridBagConstraints.CENTER;
-         centerPane.add(volSlider, gbc);
-         */
     }
 
     void loadMainTrack(File f) {

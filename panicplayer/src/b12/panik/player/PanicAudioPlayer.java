@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicAudioPlayer.java
 //                created: 28.10.2003
-//              $Revision: 1.14 $
+//              $Revision: 1.15 $
 // ----------------------------------------------------------------------------
 package b12.panik.player;
 
@@ -46,10 +46,10 @@ public class PanicAudioPlayer implements ControllerListener {
     String status;
 
     MediaInput input = new MediaInput();
-    private PlayerControlPanel mainComponent;
+    private final PlayerControlPanel mainComponent;
 
     // TODO use mixeffect
-    private MixEffect mixEffect = new MixEffect();
+    private final MixEffect mixEffect = new MixEffect();
 
     /**
      * Initializes a new <code>PanicAudioPlayer</code>. This player is then
@@ -58,6 +58,12 @@ public class PanicAudioPlayer implements ControllerListener {
     public PanicAudioPlayer() {
         mainComponent = new PlayerControlPanel(null);
         // TODO implement initialization
+    }
+
+    /** Resets the player to an initial state. */
+    public void reset() {
+        mainComponent.reset();
+        mixEffect.reset();
     }
 
     /**
@@ -196,7 +202,7 @@ public class PanicAudioPlayer implements ControllerListener {
      *          or playing is not possible.
      */
     public void setMainTrack(URL url) throws MediaIOException {
-        final Processor processor = input.readProcessor(url, this);
+        final Processor processor = input.readProcessor(url.toString(), this);
         Logging.fine("Sound file " + url + " opened, loading processor");
         mixEffect.setMainTrack(url);
         mainComponent.setPlayer(processor);
@@ -224,7 +230,7 @@ public class PanicAudioPlayer implements ControllerListener {
                     Logging.info("Original input format: " + trackControls[i].getFormat());
                     trackControls[i].setCodecChain(codecChain);
                 } catch (UnsupportedPlugInException e) {
-                    Logging.warning("Not supported plugin", e);
+                    Logging.warning("Unsupported plugin", e);
                 }
             }
         }
