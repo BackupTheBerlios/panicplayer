@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: SplashScreen.java
 //                created: 30.11.2003
-//              $Revision: 1.3 $
+//              $Revision: 1.4 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -16,19 +16,21 @@ import javax.swing.border.Border;
 /**
  * The Splash Screen
  * 
- * @author schurli 
+ * @author schurli
  */
 public class SplashScreen extends JWindow {
 
     final SleeperThread sleeper;
     boolean closed = false;
-    
+
     /**
-     * Creates a new splash screen.
-     * 
-     * @param image the image.
-     * @param text the text.
-     */
+	 * Creates a new splash screen.
+	 * 
+	 * @param image
+	 *            the image.
+	 * @param text
+	 *            the text.
+	 */
     public SplashScreen(String image, String text) {
         JPanel contentPane = new JPanel();
         contentPane.setLayout(new BorderLayout());
@@ -42,7 +44,7 @@ public class SplashScreen extends JWindow {
         contentPane.add(new JLabel(text, JLabel.CENTER), BorderLayout.SOUTH);
         setContentPane(contentPane);
         sleeper = new SleeperThread();
-        
+
         // closes the dialog on click
         addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
@@ -52,11 +54,12 @@ public class SplashScreen extends JWindow {
     }
 
     /**
-     * Shows the splash screen for <code>millis</code> milliseconds. If the
-     * window is clicked the splash screen will be disposed.
-     * 
-     * @param millis the amount of milliseconds.
-     */
+	 * Shows the splash screen for <code>millis</code> milliseconds. If the
+	 * window is clicked the splash screen will be disposed.
+	 * 
+	 * @param millis
+	 *            the amount of milliseconds.
+	 */
     public void showFor(int millis) {
         Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
         setLocation(dim.width / 3, dim.height / 3);
@@ -65,7 +68,19 @@ public class SplashScreen extends JWindow {
         sleeper.setMillis(millis);
         sleeper.start();
     }
-    
+
+    /**
+     * Shows the splash screen until it is clicked
+     *
+     */
+    public void showUntilClick() {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        setLocation(dim.width / 3, dim.height / 3);
+        setSize(dim.width / 3, dim.height / 3);
+        setVisible(true);
+
+    }
+
     /** Closes this dialog */
     public void close() {
         if (!closed) {
@@ -75,14 +90,14 @@ public class SplashScreen extends JWindow {
         }
     }
 
-    /** Sleeps and closes the dialog after some time.  */
+    /** Sleeps and closes the dialog after some time. */
     class SleeperThread extends Thread {
         long millis;
-        
+
         void setMillis(int millis) {
             this.millis = millis;
         }
-        
+
         /** @see java.lang.Thread#run() */
         public void run() {
             if (Thread.currentThread() == this) {
