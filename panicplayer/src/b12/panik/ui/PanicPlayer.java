@@ -1,14 +1,11 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.11 $
+//              $Revision: 1.12 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
@@ -16,13 +13,7 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 
 import javax.media.Player;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JMenuBar;
-import javax.swing.JOptionPane;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
-import javax.swing.WindowConstants;
+import javax.swing.*;
 
 import b12.panik.config.Configuration;
 import b12.panik.config.ConfigurationException;
@@ -55,9 +46,6 @@ public class PanicPlayer extends JFrame {
 		SplashScreen intro = new SplashScreen("res/munch.gif", "The PanicPlayer");
 		intro.showFor(3000);
         try {
-            //String plaf = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-            // "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-            //UIManager.setLookAndFeel(plaf);
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (UnsupportedLookAndFeelException e) {
             String errorCause = "Unsupported Look and Feel";
@@ -94,6 +82,7 @@ public class PanicPlayer extends JFrame {
                 }
             }
         });
+        menuBar.add(Box.createHorizontalGlue());
         aboutMenu = new AboutMenu();
         menuBar.add(aboutMenu);
         
@@ -117,6 +106,7 @@ public class PanicPlayer extends JFrame {
         } catch (ConfigurationException e1) {
             Logging.warning("Configuration could not be loaded", e1);
         }
+        intro.close();
     }
 
     protected void loadSoundFile(File f) {

@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<!-- 
+<!--
      [b12] Ant Build File: build.xml
                   created: 01.11.2003
-                $Revision: 1.1 $
+                $Revision: 1.2 $
 -->
 <project name="Panic Player" default="test" basedir=".">
     <property name="project" value="panicplayer"/>
     <property name="src" value="src"/>
+    <property name="testsrc" value="testsrc"/>
     <property name="doc" value="docs"/>
     <property name="lib" value="lib"/>
+    <property name="res" value="res"/>
+    <property name="conf" value="conf"/>
     <property name="show.output" value="false"/>
     <property name="show.summary" value="true"/>
 
@@ -19,6 +22,10 @@
     <property name="dir.binaries" value="${dir.deploy}/binary-distribution"/>
     <property name="dir.sources" value="${dir.deploy}/source-distribution"/>
     <property name="dir.reports" value="${dir.target}/reports"/>
+
+    <property name="jar.file" value="panicplayer"/>
+    <property name="jar.binaries" value="${dir.binaries}/${jar.file}.bin"/>
+    <property name="tar.sources" value="${dir.sources}/${jar.file}.src"/>
 
     <property name="test.sources" value="**/*Test.java"/>
     <property name="test.classes" value="**/*Test*.class"/>
@@ -32,6 +39,7 @@
     </path>
 
     <target name="init" description="Creates the Target and Deployment Directories.">
+        <tstamp/>
         <mkdir dir="${dir.target}"/>
         <mkdir dir="${dir.deploy}"/>
         <mkdir dir="${dir.build}"/>
@@ -47,10 +55,12 @@
     <target name="compile" description="Builds the sources in ${dir.build}" depends="init">
     	<!-- compile classes to build -->
         <javac srcdir="${src}" destdir="${dir.build}" source="1.4">
+            <classpath refid="project.classpath"/>
             <exclude name="${test.sources}"/>
         </javac>
         <!-- compile test classes to test-build, remove non-test classes from dir -->
-        <javac srcdir="${src}" destdir="${dir.build-test}" source="1.4">
+        <javac srcdir="${testsrc}" classpath="${dir.build}" destdir="${dir.build-test}" source="1.4">
+            <classpath refid="project.classpath"/>
             <include name="${test.sources}"/>
         </javac>
         <delete>
@@ -63,14 +73,13 @@
         <copy todir="${dir.build}" verbose="${show.output}">
             <fileset dir="${src}">
                 <exclude name="**/*.java"/>
-                <exclude name="${test.dirs}"/>
             </fileset>
+            <fileset dir="${res}"/>
         </copy>
         <!-- copy test resources to test-classes directory -->
         <copy todir="${dir.build-test}" verbose="${show.output}">
-            <fileset dir="${src}">
+            <fileset dir="${testsrc}">
                 <exclude name="**/*.java"/>
-                <include name="${test.dirs}"/>
             </fileset>
         </copy>
         <!-- delete empty directories in build and test-build directories -->
@@ -97,7 +106,7 @@
             </classpath>
             <!-- run all test classes in source tree -->
             <batchtest fork="yes" todir="${dir.reports}">
-                <fileset dir="${src}">
+                <fileset dir="${testsrc}">
                     <include name="${test.sources}"/>
                 </fileset>
             </batchtest>
@@ -105,9 +114,58 @@
     </target>
 
 
-    <target name="source-distro" description="Creates a source distribution in directory ${dir.sources}" depends="test, javadoc"/>
-    <target name="binary-distro" description="Creates a binary distribution in directory ${dir.binaries}" depends="test"/>
+    <target name="source-distro" description="Creates a source distribution in directory ${dir.sources}" depends="test, javadoc">
+        <!-- create tar gzip bzip2 and zip files -->
+        <property name="name" value="${tar.sources}-${DSTAMP}"/>
+        <tar destfile="${name}.tar">
+            <tarfileset dir="${src}" prefix="/src"/>
+            <tarfileset dir="${testsrc}" prefix="/testsrc"/>
+            <tarfileset dir="${doc}/api" prefix="/doc/api"/>
+            <tarfileset dir="${res}" prefix="/res"/>
+           	<tarfileset dir="${lib}" prefix="/lib"/>
+           	<tarfileset dir="${conf}" prefix="/conf"/>
+           	<tarfileset dir="sounds" prefix="/sounds"/>
+            <tarfileset dir=".">
+            	<include name="*ant*"/>
+            	<include name="build.xml"/>
+            	<include name="javadoc.xml"/>
+            	<include name="README.txt"/>
+           	</tarfileset>
+        </tar>
+        <gzip src="${name}.tar" zipfile="${name}.tar.gz"/>
+        <bzip2 src="${name}.tar" zipfile="${name}.tar.bz2"/>
+        <zip destfile="${name}.zip">
+            <zipfileset dir="${src}" prefix="src"/>
+            <zipfileset dir="${testsrc}" prefix="testsrc"/>
+            <zipfileset dir="${doc}/api" prefix="docs/api"/>
+            <zipfileset dir="${res}" prefix="res"/>
+           	<zipfileset dir="${lib}" prefix="lib"/>
+           	<zipfileset dir="${conf}" prefix="conf"/>
+           	<zipfileset dir="sounds" prefix="sounds"/>
+            <zipfileset dir=".">
+            	<include name="*ant*"/>
+            	<include name="build.xml"/>
+            	<include name="javadoc.xml"/>
+           	</zipfileset>
+        </zip>
+    </target>
+    <target name="binary-distro" description="Creates a binary distribution in directory ${dir.binaries}" depends="test">
+        <jar basedir="${dir.build}"
+             jarfile="${jar.binaries}-${DSTAMP}.jar"
+             manifest="${conf}/MANIFEST.MF"
+             index="true"/>
+    </target>
 
+    <target name="run" description="Executes the binary distro" depends="binary-distro">
+    	<java fork="true" classname="b12.panik.Massenpanik">
+    		<classpath>
+    			<path refid="project.classpath"/>
+    			<pathelement location="${jar.binaries}-${DSTAMP}.jar"/>
+    		</classpath>
+    	</java>
+    </target>
+    
+    
     <target name="all" description="Runs all tasks" depends="binary-distro, source-distro"/>
 
     <target name="javadoc" description="Generates javadoc Documentation.">

@@ -4,7 +4,7 @@
 	<property name="doc" value="docs"/>
 	
     <target name="javadoc">
-        <javadoc destdir="${doc}/api" access="protected" source="1.4"
+        <javadoc verbose="off" destdir="${doc}/api" access="protected" source="1.4"
             use="false" notree="true" nonavbar="false" noindex="true"
             splitindex="false" author="false" version="false"
             nodeprecatedlist="true" nodeprecated="true"
