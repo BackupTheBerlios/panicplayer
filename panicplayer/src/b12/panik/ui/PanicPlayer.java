@@ -1,7 +1,7 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: PanicPlayer
 //                created: 26.10.2003
-//              $Revision: 1.5 $
+//              $Revision: 1.6 $
 // ----------------------------------------------------------------------------
 package b12.panik.ui;
 
@@ -11,15 +11,13 @@ import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
-import java.io.IOException;
-import java.net.MalformedURLException;
 
-import javax.media.NoPlayerException;
 import javax.media.Player;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 
-import b12.panik.io.IOUtils;
+import b12.panik.io.MediaIOException;
+import b12.panik.io.MediaInput;
 import b12.panik.player.PanicAudioPlayer;
 import b12.panik.util.Logging;
 
@@ -33,6 +31,8 @@ public class PanicPlayer extends JFrame {
     private PanicAudioPlayer panicAudioPlayer;
     private PlayerControlPanel panelPlayerControl;
 
+    MediaInput input = new MediaInput();
+    
     private JMenuBar menuBar;
     private FileMenu fileMenu;
 
@@ -70,20 +70,12 @@ public class PanicPlayer extends JFrame {
 
 
     protected void loadSoundFile(File f) {
+        Player player;
         try {
-            Player player = IOUtils.getSimplePlayer(f.toURL());
+            player = input.read(f);
             panelPlayerControl.setPlayer(player);
-            validate();
-        } catch (NoPlayerException e) {
-            String errorCause = "No player found.";
-            Logging.info(errorCause);
-            UIUtils.openExceptionDialog(this, e, errorCause);
-        } catch (MalformedURLException e) {
-            String errorCause = "Path to sound file could not be parsed as URL.";
-            Logging.info(errorCause);
-            UIUtils.openExceptionDialog(this, e, errorCause);
-        } catch (IOException e) {
-            String errorCause = "Problem connecting with the source of the audio.";
+        } catch (MediaIOException e) {
+            String errorCause = "Problem while trying to play sound file.";
             Logging.info(errorCause);
             UIUtils.openExceptionDialog(this, e, errorCause);
         } catch (Throwable t) {

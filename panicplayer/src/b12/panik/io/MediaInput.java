@@ -1,11 +1,13 @@
 // ----------------------------------------------------------------------------
 // [b12] Java Source File: MediaInput.java
 //                created: 02.11.2003
-//              $Revision: 1.1 $
+//              $Revision: 1.2 $
 // ----------------------------------------------------------------------------
 package b12.panik.io;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import javax.media.*;
@@ -13,6 +15,7 @@ import javax.media.*;
 import b12.panik.util.Logging;
 
 /**
+ * Input class for generic media.
  * @author kariem
  */
 public class MediaInput implements ControllerListener {
@@ -42,13 +45,20 @@ public class MediaInput implements ControllerListener {
         // Create a player for this rtp session
         try {
             Player p = Manager.createPlayer(locator);
-            p.addControllerListener(this);
-            p.realize();
+            // p.addControllerListener(this);
             return p;
         } catch (NoPlayerException e) {
             throw new MediaIOException("No player can be found.", e);
         } catch (IOException e) {
             throw new MediaIOException("Problem when trying to connect to source", e);
+        }
+    }
+    
+    public Player read(File f) throws MediaIOException {
+        try {
+            return read(f.toURL());
+        } catch (MalformedURLException e) {
+            throw new MediaIOException("Path to file could not be parsed as URL.", e);
         }
     }
 
